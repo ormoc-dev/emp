@@ -14,12 +14,12 @@
 -composer install
 -npm i
 
-** how to run it?
+* how to run it?
 -npm run dev
 -php artisan serve
 
-** how to migrate databases or to create?
-php artisan migrate
+* how to migrate databases or to create?
+-php artisan migrate
 
 ## About Laravel
 
