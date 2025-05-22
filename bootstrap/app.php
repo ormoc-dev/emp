@@ -1,0 +1,36 @@
+<?php
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'user' => \App\Http\Middleware\User::class,
+            'admin' => \App\Http\Middleware\Admin::class,
+            'judges' => \App\Http\Middleware\Judges::class,
+            'Sadmin' => \App\Http\Middleware\Sadmin::class,
+            'redirectIfAuthenticated' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        ]);
+
+        // Register global middleware for 'web' group
+        $middleware->group('web', [
+            StartSession::class, // Ensure session is started
+            ShareErrorsFromSession::class, // Ensure validation errors are shared
+            \App\Http\Middleware\AutoLogout::class, // Your custom auto logout middleware
+            \App\Http\Middleware\UpdateLastActive::class, // Register your custom middleware here
+            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        // Exception handling configuration goes here if needed
+    })
+    ->create();

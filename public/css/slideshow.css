@@ -1,0 +1,32 @@
+.slideshow-container {
+    max-width: 800px;
+    position: relative;
+    margin: auto;
+}
+
+.mySlides {
+    display: none;
+    
+}
+
+img {
+    width: 2300px;
+    height: 700px;
+    
+}
+.glasswelcome{
+    background: linear-gradient(135deg, rgba(246, 246, 246, 0.77), rgba(255, 255, 255, 0.605));
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(10px);
+    border:1px solid rgba(240, 240, 240, 0.721);
+    box-shadow: 0 8px 32px 0 rgba(179, 179, 179, 0.411);
+}
+.text-left{
+    position: absolute;
+    font-size: x-large;
+    font-weight: bolder;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
+

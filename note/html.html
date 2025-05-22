@@ -1,0 +1,38 @@
+<div class="relative z-0 w-full mb-5 group">
+    <select
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        id="minor_awards_description_select" name="minor_awards_description" required>
+        <option value="" disabled selected>Select Criteria</option>
+        <option value="Production Number">Production Number</option>
+        <option value="Swimwear/fun Wear">Swimwear/fun Wear</option>
+        <option value="Formal Wear">Formal Wear</option>
+        <option value="Other">Other</option> <!-- New option for custom input -->
+    </select>
+    <label
+        class="absolute text-sm text-gray-500 peer-focus:text-blue-600 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+        for="minor_awards_description_select">
+        Criteria Description
+    </label>
+</div>
+
+<div class="relative z-0 w-full mb-5 group" id="custom-criteria-input" style="display: none;">
+    <input
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        id="custom_criteria" name="custom_criteria" type="text" placeholder="Enter custom criteria" />
+    <label
+        class="absolute text-sm text-gray-500 peer-focus:text-blue-600 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+        for="custom_criteria">
+        Custom Criteria
+    </label>
+</div>
+
+<script>
+    document.getElementById('minor_awards_description_select').addEventListener('change', function() {
+        const customInput = document.getElementById('custom-criteria-input');
+        if (this.value === 'Other') {
+            customInput.style.display = 'block';
+        } else {
+            customInput.style.display = 'none';
+        }
+    });
+</script>

@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+class SupperAdminTabulatorsController extends Controller
+{
+    //
+    public function index_Tabulators()
+    {
+        // Get all users with level 'user'
+        $users = User::where('level', 'admin')->get();
+
+        return view('SupperAdmin_dashboard.Authentication.Tabulators', [
+            'users' => $users
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:3',
+            'level' => ['required', Rule::in(['user', 'judge', 'admin'])],
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        try {
+            // Create the user
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
+                'level' => $validatedData['level'],
+            ]);
+
+            return response()->json(['message' => 'User created successfully.'], 200);
+        } catch (\Exception $e) {
+            return redirect()->route('Tabulators')->with('error', 'Failed to create user. Please try again later.');
+        }
+    }
+    public function destroy($id)
+    {
+        $User = User::findOrFail($id);
+        $User->delete();
+    
+        // Redirect back with a success message
+        return redirect()->route('Tabulators')->with('success', 'User deleted successfully.');
+    }
+}

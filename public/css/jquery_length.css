@@ -1,0 +1,22 @@
+    /* Style the length change dropdown */
+    .dataTables_length label {
+        font-family: 'Arial', sans-serif;
+        font-size: 14px;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .dataTables_length select {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        margin-left: 10px;
+        background-color: #f9f9f9;
+        color: #333;
+        width: 80px; /* Adjust the width of the dropdown */
+        height: 35px; /* Adjust the height of the dropdown */
+        font-size: 14px; /* Adjust the font size */
+    }
+    
+ 

@@ -1,0 +1,33 @@
+
+.table {
+  border-spacing: 0 20px;
+}
+
+i {
+  font-size: 1rem !important;
+}
+
+
+
+tr td:nth-child(n+5),
+tr th:nth-child(n+5) {
+  border-radius: 0 .625rem .625rem 0;
+  padding: 20px;
+}
+
+tr td:nth-child(1),
+tr th:nth-child(1) {
+  border-radius: .625rem 0 0 .625rem;
+  
+}
+.glass{
+  background: linear-gradient(135deg, rgba(30, 29, 29, 0.714), rgba(33, 32, 32, 0.615));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border:1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+}
+
+
