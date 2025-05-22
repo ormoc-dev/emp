@@ -6,6 +6,20 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+** Installation
+* first install 'XAMPP' for database
+-git init
+-git clone ssh
+-cd emp
+-composer install
+-npm i
+
+** how to run it?
+-npm run dev
+-php artisan serve
+
+** how to migrate databases or to create?
+php artisan migrate
 
 ## About Laravel
 
