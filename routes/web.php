@@ -31,6 +31,7 @@ use App\Http\Controllers\SupperAdminTabulatorsController;
 use App\Http\Controllers\SupperAdminMessageController;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\SupperAdminInformationController;
 use App\Http\Controllers\SupperAdminMyProfileController;
 use App\Http\Controllers\WelcomeBackgroundController;
 use App\Http\Controllers\EventHighlightController;
@@ -40,6 +41,7 @@ use App\Http\Controllers\TimeScheduleController;
 use App\Http\Controllers\VotingCategoryController;
 use App\Http\Controllers\LiveLinkController;
 use App\Http\Controllers\PaypalTransactionController;
+
 Route::get('/', [WelcomeBackgroundController::class, 'Show_to_welcome_page'])->name('welcome');
 
 Route::get('/contact-us', function () {
@@ -54,6 +56,7 @@ Auth::routes();
 Route::get('/login/start', function () {
     return view('auth.login');
 })->middleware('redirectIfAuthenticated');
+
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 // Welcome Background Routes - Protected by auth and admin middleware
@@ -170,8 +173,8 @@ Route::middleware(['admin'])->group(function () {
     //live link
     Route::post('/events/{event}/live-link', [LiveLinkController::class, 'store'])->name('live-link.store');
     Route::delete('/events/{event}/live-link', [LiveLinkController::class, 'destroy'])->name('live-link.destroy');
-    
-  
+
+
 
     //STARTED AND PENDING START BUTTON
     Route::get('/start/or/pending', [ST_or_PD::class, 'SP'])->name('events.Start');
@@ -183,9 +186,9 @@ Route::middleware(['admin'])->group(function () {
 
     //
     Route::post('/events/{event}/calculate-combined-scores', [ShowScore_in_admin::class, 'calculateCombinedScores'])
-    ->name('events.calculate_combined_scores');
+        ->name('events.calculate_combined_scores');
     Route::get('/admin/events/{event}/print-scores', [ShowScore_in_admin::class, 'printScores'])
-    ->name('admin.events.print-scores');
+        ->name('admin.events.print-scores');
     //SCORES VIEW FOR ADMIN
     Route::get('/events/{event}/results', [ShowScore_in_admin::class, 'showEventResults'])->name('events.showEventResults');
     Route::get('/events/{event}/user_vote', [ShowScore_in_admin::class, 'Uservote_results'])->name('events.user_vote');
@@ -260,10 +263,10 @@ Route::middleware(['Sadmin'])->group(function () {
     Route::post('/reset-password/{userId}/{userType}', [SupperAdminForgotPasswordController::class, 'resetPassword'])->name('reset.password.action');
 
 
-   //SALES
-     Route::get('/transactions', [PaypalTransactionController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('transactions.index');
+    //SALES
+    Route::get('/transactions', [PaypalTransactionController::class, 'index'])
+        ->middleware(['auth'])
+        ->name('transactions.index');
 
     //SETTINGS PAGES
 
@@ -288,6 +291,13 @@ Route::middleware(['Sadmin'])->group(function () {
     Route::get('/video_highlights/{id}/edit', [VideoHighlightController::class, 'edit'])->name('video-highlights.edit');
     Route::put('/video_highlights/{id}', [VideoHighlightController::class, 'update'])->name('video-highlights.update');
     Route::delete('/video_highlights/{id}', [VideoHighlightController::class, 'destroy'])->name('video-highlights.destroy');
+
+
+    // Supper Admin Information Routes for docs
+    Route::get('/documents', [SupperAdminInformationController::class, 'docs_index'])->name('docs_index');
+    Route::post('/documents/store', [SupperAdminInformationController::class, 'docs_store'])->name('docs_store');
+    Route::put('/documents/{id}', [SupperAdminInformationController::class, 'docs_update'])->name('docs_update');
+    Route::delete('/documents/{id}', [SupperAdminInformationController::class, 'docs_destroy'])->name('docs_delete');
 });
 
 

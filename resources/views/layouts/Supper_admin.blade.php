@@ -136,31 +136,10 @@
                                 <a class="flex px-4 py-3 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
                                     href="#">
                                     <div class="flex-shrink-0">
-                                        <img class="rounded-full w-11 h-11"
-                                            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/roberta-casas.png"
-                                            alt="Roberta Casas image" />
-                                        <div
-                                            class="absolute flex items-center justify-center w-5 h-5 ml-6 -mt-5 bg-green-400 border border-white rounded-full dark:border-gray-700">
-                                            <svg class="w-3 h-3 text-white" aria-hidden="true" fill="currentColor"
-                                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                        </div>
+                                      
                                     </div>
                                     <div class="w-full pl-3">
-                                        <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                                            <span class="font-semibold text-gray-900 dark:text-white">Leslie
-                                                Livingston</span>
-                                            mentioned you in a comment:
-                                            <span
-                                                class="font-medium text-primary-600 dark:text-primary-500">@bonnie.green</span>
-                                            what do you say?
-                                        </div>
-                                        <div class="text-xs font-medium text-primary-600 dark:text-primary-500">
-                                            1 hour ago
-                                        </div>
+                                      
                                     </div>
                                 </a>
 
@@ -185,37 +164,23 @@
                         <button class="" id="user-menu-button" data-dropdown-toggle="dropdown" type="button"
                             aria-expanded="false">
                             <span class="sr-only">Open user menu</span>
-
-                            @php
-                                $user = auth()->user();
-                            @endphp
-
-                            @if ($user)
-                                @if ($user->profile)
-                                    <div class="relative ">
-                                        <img class="w-10 h-10 mr-3 rounded-full" src="{{ asset($user->profile) }}"
-                                            alt="User Profile Image">
-
-                                        <span
-                                            class="top-0 start-7 absolute w-3.5 h-3.5 {{ $user->is_online ? 'bg-green-500' : 'bg-red-500' }} border-2 border-white rounded-full"></span>
-                                    </div>
-                                @else
-                                    @php
-                                        $defaultAvatars = [
-                                            'avatar/bear.png',
-                                            'avatar/cat.png',
-                                            'avatar/dog.png',
-                                            'avatar/giraffe.png',
-                                            'avatar/gorilla.png',
-                                            'avatar/meerkat.png',
-                                            'avatar/panda.png',
-                                        ];
-                                        $randomAvatar = $defaultAvatars[array_rand($defaultAvatars)];
-                                    @endphp
-                                    <img class="w-8 h-8 rounded-full" src="{{ asset($randomAvatar) }}"
-                                        alt="Random Default Profile Image" />
-                                @endif
-                            @endif
+                            <span>
+                                @php
+                                    $user = auth()->user();
+                                @endphp
+    
+                                <div class="relative">
+                                    @if ($user->profile && file_exists(public_path($user->profile)))
+                                        <img class="h-8 w-8 rounded-full object-cover border-4 border-white shadow-lg"
+                                            src="{{ asset($user->profile) }}" alt="User Profile Image"
+                                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random';" />
+                                    @else
+                                        <img class="h-8 w-8 rounded-full object-cover border-4 border-white shadow-lg"
+                                            src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
+                                            alt="Default Profile Image" />
+                                    @endif
+                                </div>
+                            </span>
                         </button>
                         <!-- Dropdown menu -->
                         <div class="z-50 hidden w-56 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 rounded-xl"
@@ -418,7 +383,7 @@
                     <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
                         <li>
                             <a class="flex items-center p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-                                href="#">
+                                href="{{route ('docs_index')}}">
                                 <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -430,19 +395,7 @@
                                 <span class="ml-3">Docs</span>
                             </a>
                         </li>
-                        <li>
-                            <a class="flex items-center p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-                                href="#">
-                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                    aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z">
-                                    </path>
-                                </svg>
-                                <span class="ml-3">Components</span>
-                            </a>
-                        </li>
+                  
                         <li>
                             <a class="flex items-center p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
                                 href="#">
@@ -524,11 +477,39 @@
         <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+ 
         <script>
             function confirmLogout() {
-                if (confirm('Are you sure you want to logout?')) {
-                    document.getElementById('logout-form').submit();
-                }
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You will be logged out of your account",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#EF4444', // Red-500 color
+                    cancelButtonColor: '#6B7280', // Gray-500 color
+                    confirmButtonText: 'Yes, logout',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Logging out...',
+                            text: 'Please wait',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Submit the logout form
+                        document.getElementById('logout-form').submit();
+                    }
+                });
             }
         </script>
        

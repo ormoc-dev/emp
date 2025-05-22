@@ -36,18 +36,23 @@
             
             <div class="flex items-center">
                 <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center mr-4">
-                    @php
-                    $user = auth()->user();
-                    @endphp
+                    <span>
+                        @php
+                            $user = auth()->user();
+                        @endphp
 
-                    @if ($user && $user->profile)
                         <div class="relative">
-                            <img src="{{ asset($user->profile) }}" alt="User Profile Image" class="w-full h-full object-cover" />
-                            <span class="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                            @if ($user->profile && file_exists(public_path($user->profile)))
+                                <img class="h-24 w-24 rounded-full object-cover border-4 border-white shadow-lg"
+                                    src="{{ asset($user->profile) }}" alt="User Profile Image"
+                                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random';" />
+                            @else
+                                <img class="h-24 w-24 rounded-full object-cover border-4 border-white shadow-lg"
+                                    src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
+                                    alt="Default Profile Image" />
+                            @endif
                         </div>
-                    @else
-                        <span class="text-gray-500">No Image</span>
-                    @endif
+                    </span>
                 </div>
                 <div>
                     <label class="block text-gray-700 text-sm font-semibold mb-2" for="imageUpload">
