@@ -47,7 +47,7 @@ Route::get('/contact-us', function () {
 })->name('contact_us.admin');
 
 // ... existing code ...
-Route::get('/service', [App\Http\Controllers\ServiceController::class, 'index'])->name('service.admin');
+Route::get('/event', [App\Http\Controllers\ServiceController::class, 'index'])->name('events');
 
 
 Auth::routes();

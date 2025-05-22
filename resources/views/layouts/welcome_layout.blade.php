@@ -149,7 +149,7 @@
 
 
                             <li class=" text-white rounded-lg whitespace-nowrap">
-                                <a class="flex items-center gap-2" href="{{ route('service.admin') }}" wire:navigate>
+                                <a class="flex items-center gap-2" href="{{ route('events') }}" wire:navigate>
                                     <i class="fa-regular fa-calendar-check"></i>
                                     <span
                                         class="hover:underline underline-offset-4 decoration-2 decoration-white">Events</span>
@@ -209,7 +209,7 @@
 
 
                         <li class="px-3 py-2 text-white rounded-lg whitespace-nowrap">
-                            <a class="flex items-center gap-2" href="{{ route('service.admin') }}" wire:navigate>
+                            <a class="flex items-center gap-2" href="{{ route('events') }}" wire:navigate>
                                 <i class="fa-regular fa-calendar-check"></i>
                                 <span
                                     class="hover:underline underline-offset-4 decoration-2 decoration-white">Events</span>

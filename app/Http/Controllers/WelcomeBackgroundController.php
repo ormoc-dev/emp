@@ -6,23 +6,37 @@ use App\Models\WelcomeBackground;
 use Illuminate\Http\Request;
 use App\Models\VideoHighlight;
 use App\Models\Event;
+use Illuminate\Support\Facades\Cache;
 
 class WelcomeBackgroundController extends Controller
 { 
 
     public function Show_to_welcome_page()
-    {
-        
-        $events = Event::with('timeSchedule')
-            ->where('date_start', '>=', now())
-            ->orderBy('date_start', 'asc')
+{
+    $events = Event::with(['timeSchedule' => function ($query) {
+        $query->select('id', 'event_id', 'start_time', 'end_time'); // Adjust columns
+    }])
+    ->select('id', 'title', 'date_start') // Only needed fields
+    ->where('date_start', '>=', now())
+    ->orderBy('date_start', 'asc')
+    ->take(3)
+    ->get();
+
+    $background = Cache::remember('active_welcome_background', now()->addHours(1), function () {
+        return WelcomeBackground::select('id', 'image_url') // Just needed columns
+            ->where('is_active', true)
+            ->first();
+    });
+
+    $videos = Cache::remember('recent_videos', now()->addMinutes(5), function () {
+        return VideoHighlight::select('id', 'title', 'video_url')
+            ->latest()
             ->take(3)
             ->get();
-        $background = WelcomeBackground::where('is_active', true)->first();
-        $videos = VideoHighlight::latest()->take(3)->get(); // Get the 3 most recent videos
-        
-        return view('welcome', compact('background', 'videos','events'));
-    }
+    });
+
+    return view('welcome', compact('background', 'videos', 'events'));
+}
 
 
     public function settings()
