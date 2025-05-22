@@ -16,7 +16,7 @@ Note: first install 'XAMPP' for database
 - npm i
 
 1. how to migrate databases or to create?
-- php artisan serve
+- php artisan migrate
 
 2.how to run it?
 - npm run dev
