@@ -14,11 +14,14 @@ Note: first install 'XAMPP' for database
 - cd emp
 - composer install
 - npm i
-1.how to run it?
--npm run dev
--php artisan serve
-2.how to migrate databases or to create?
--php artisan migrate
+
+1. how to migrate databases or to create?
+- php artisan serve
+
+2.how to run it?
+- npm run dev
+- php artisan serve
+
 
 
 
