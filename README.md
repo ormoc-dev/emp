@@ -9,8 +9,8 @@
 
 ** INSTALLATION
 Note: first install 'XAMPP' for database
-- git init
-- git clone ssh
+
+- git clone git@github.com:ormoc-dev/emp.git
 - cd emp
 - composer install
 - npm i
