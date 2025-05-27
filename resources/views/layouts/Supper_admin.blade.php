@@ -19,7 +19,7 @@
         <!-- Include jQuery -->
         <link href="{{ asset('css/jquery_length.css') }}" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
         <!-- Include Select2 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <!-- Include Select2 JS -->
@@ -92,10 +92,10 @@
                         </button>
                         <a class="flex items-center justify-between mr-4" href="">
                             <img class="h-8 w-8 mr-3" src="{{ asset('img/emp-logo.png') }}" alt="" />
-                            <span
-                                class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">EVENT MASTER-PRO</span>
+                            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">EVENT
+                                MASTER-PRO</span>
                         </a>
-                        
+
                     </div>
                     <div class="flex items-center lg:order-2">
                         <button
@@ -136,10 +136,10 @@
                                 <a class="flex px-4 py-3 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
                                     href="#">
                                     <div class="flex-shrink-0">
-                                      
+
                                     </div>
                                     <div class="w-full pl-3">
-                                      
+
                                     </div>
                                 </a>
 
@@ -168,7 +168,7 @@
                                 @php
                                     $user = auth()->user();
                                 @endphp
-    
+
                                 <div class="relative">
                                     @if ($user->profile && file_exists(public_path($user->profile)))
                                         <img class="h-8 w-8 rounded-full object-cover border-4 border-white shadow-lg"
@@ -192,10 +192,10 @@
                                     class="block text-sm text-gray-900 truncate dark:text-white">{{ Auth::user()->email }}</span>
                             </div>
                             <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
-                               
+
                                 <li>
                                     <a class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
-                                    href="{{ route('MyProfile') }}" wire:navigate>Account
+                                        href="{{ route('MyProfile') }}" wire:navigate>Account
                                         settings</a>
                                 </li>
                             </ul>
@@ -205,10 +205,11 @@
                                     <a class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                         href="#" onclick="confirmLogout();">Sign
                                         out</a>
-                                       
-                                        <form class="d-none" id="logout-form" action="{{ route('logout') }}" method="POST">
-                                            @csrf
-                                        </form>
+
+                                    <form class="d-none" id="logout-form" action="{{ route('logout') }}"
+                                        method="POST">
+                                        @csrf
+                                    </form>
                                 </li>
                             </ul>
                         </div>
@@ -275,16 +276,12 @@
                                     <a class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg ajax-link pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                         href="{{ route('settings') }}" wire:navigate>Welcome Page</a>
                                 </li>
+                                <li>
+                                    <a class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg ajax-link pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                        href="{{ route('video-highlights.index') }}" wire:navigate>Video
+                                        Highlights</a>
+                                </li>
 
-                                <li>
-                                    <a class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg ajax-link pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                        href="{{ route('event_highlights') }}" wire:navigate>Event Highlights</a>
-                                </li>
-                                <li>
-                                    <a class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg ajax-link pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                        href="{{ route('video-highlights.index') }}" wire:navigate>Video Highlights</a>
-                                </li>
-                             
                             </ul>
                         </li>
                         <li>
@@ -309,9 +306,9 @@
                             <ul class="hidden py-2 space-y-2" id="dropdown-sales">
                                 <li>
                                     <a class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                        href="{{route('transactions.index')}}">Payments</a>
+                                        href="{{ route('transactions.index') }}">Payments</a>
                                 </li>
-                              
+
                             </ul>
                         </li>
                         <li>
@@ -383,7 +380,7 @@
                     <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
                         <li>
                             <a class="flex items-center p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-                                href="{{route ('docs_index')}}">
+                                href="{{ route('docs_index') }}">
                                 <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -395,48 +392,21 @@
                                 <span class="ml-3">Docs</span>
                             </a>
                         </li>
-                  
-                        <li>
-                            <a class="flex items-center p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-                                href="#">
-                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                    aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="ml-3">Help</span>
-                            </a>
-                        </li>
+
+
                     </ul>
                 </div>
                 <div
-                    class="absolute bottom-0 left-0 z-20 justify-center hidden w-full p-4 space-x-4 bg-white lg:flex dark:bg-gray-800">
-                    <a class="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
-                        href="#">
-                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z">
-                            </path>
-                        </svg>
-                    </a>
-                    <a class="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    class="absolute bottom-0 left-0 z-20 hidden w-full p-4 space-x-4 bg-white lg:flex dark:bg-gray-800">
+                    <a class="inline-flex items-center justify-center p-2 text-red-500 rounded cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600"
                         data-tooltip-target="tooltip-settings" href="#">
-                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                clip-rule="evenodd"></path>
-                        </svg>
+                        <i class="fa-solid fa-right-from-bracket mr-2"></i> LOG OUT
                     </a>
                     <div class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip"
                         id="tooltip-settings" role="tooltip">
-                        Settings page
+                        Logout page
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
-
                 </div>
             </aside>
 
@@ -477,7 +447,7 @@
         <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
- 
+
         <script>
             function confirmLogout() {
                 Swal.fire({
@@ -512,7 +482,7 @@
                 });
             }
         </script>
-       
+
         <script>
             document.addEventListener('livewire:navigated', () => {
 

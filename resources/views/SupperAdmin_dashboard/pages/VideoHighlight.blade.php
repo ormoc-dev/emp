@@ -2,6 +2,7 @@
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
 @section('content')
+<div class="  min-h-screen">
     <section class="text-gray-600 body-font" id="ratings">
         <div class="container px-5 mx-auto">
             <!-- Header Section -->

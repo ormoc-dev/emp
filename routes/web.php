@@ -254,10 +254,14 @@ Route::middleware(['Sadmin'])->group(function () {
     Route::get('/audience', [SupperAdminAudienceController::class, 'index_audience'])->name('audience');
     Route::post('/audience', [SupperAdminAudienceController::class, 'store'])->name('audience.store');
     Route::delete('/audience/{id}', [SupperAdminAudienceController::class, 'destroy'])->name('audience.destroy');
+    Route::get('/audience/{id}/edit', [SupperAdminAudienceController::class, 'edit'])->name('audience.edit');
+    Route::put('/audience/{id}', [SupperAdminAudienceController::class, 'update'])->name('audience.update');
     //Tabulators
     Route::get('/Tabulators', [SupperAdminTabulatorsController::class, 'index_Tabulators'])->name('Tabulators');
     Route::post('/Tabulators', [SupperAdminTabulatorsController::class, 'store'])->name('Tabulators.store');
     Route::delete('/Tabulators/{id}', [SupperAdminTabulatorsController::class, 'destroy'])->name('Tabulators.destroy');
+    Route::get('/tabulators/{id}/edit', [SupperAdminTabulatorsController::class, 'edit'])->name('tabulators.edit');
+    Route::put('/tabulators/{id}', [SupperAdminTabulatorsController::class, 'update'])->name('tabulators.update'); 
     // Forgot Password routes
     Route::get('/ForgotPassword', [SupperAdminForgotPasswordController::class, 'index_ForgotPassword'])->name('ForgotPassword');
     Route::post('/reset-password/{userId}/{userType}', [SupperAdminForgotPasswordController::class, 'resetPassword'])->name('reset.password.action');
@@ -275,8 +279,6 @@ Route::middleware(['Sadmin'])->group(function () {
         ->name('welcome-background.update');
 
 
-    //EVENT HIGHLIGHTS
-    Route::get('/event_highlights', [EventHighlightController::class, 'index'])->name('event_highlights');
 
 
     // Additional routes for ordering and activation

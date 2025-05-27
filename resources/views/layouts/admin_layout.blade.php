@@ -8,7 +8,7 @@
         <link type="image/png" href="{{ asset('img/emp-logo.png') }}" rel="icon">
         <link href="{{ asset('css/all.min.css') }}" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.1.0/main.min.css" rel="stylesheet">
-        
+
         <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
         <link href="{{ asset('css/loader.css') }}" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -59,28 +59,28 @@
                     </a>
                 </li>
                 <li>
-                    <a id="management-link" href="{{route('events.create')}}">
+                    <a id="management-link" href="{{ route('events.create') }}">
                         <i class="fa-solid fa-list-check bx"></i>
                         <span class="text">Management</span>
                     </a>
                 </li>
                 <li>
-                    <a id="start_event-link" href="{{route('events.Start')}}">
+                    <a id="start_event-link" href="{{ route('events.Start') }}">
                         <i class="fa-solid fa-power-off bx"></i>
                         <span class="text">Start Events</span>
                     </a>
                 </li>
                 <li>
-                    <a id="result-link" href="{{route('events.showResultsAdmin')}}">
+                    <a id="result-link" href="{{ route('events.showResultsAdmin') }}">
                         <i class="fa-solid fa-square-poll-vertical bx"></i>
                         <span class="text">Results</span>
                     </a>
                 </li>
-             
-            </ul>
-            
 
-           
+            </ul>
+
+
+
 
             <style>
                 @keyframes rotate {
@@ -101,11 +101,11 @@
                 <li>
                     <a id="users-link" href="{{ route('showUsersTable') }}">
                         <i class="fa-solid fa-users bx"></i>
-                     Users
+                        Users
                     </a>
                 </li>
                 <li>
-                    <a  href="{{route('profile_settings')}}">
+                    <a href="{{ route('profile_settings') }}">
                         <i class="fa-solid fa-gear bx rotate-icon"></i>
                         <span class="text">Settings</span>
                     </a>
@@ -121,8 +121,8 @@
                 </li>
             </ul>
 
-       
-           
+
+
         </section>
 
 
@@ -146,16 +146,14 @@
                         $user = auth()->user();
                     @endphp
 
-                    @if ($user)
-                        @if ($user->profile)
-                            <!-- Use asset() to generate the correct URL -->
-                            <div class="relative">
-                                <img class="w-8 h-8 rounded-full" src="{{ asset($user->profile) }}"
-                                    alt="User Profile Image" />
-                                <span
-                                    class="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
-                            </div>
-                        @endif
+                    @if ($user->profile && file_exists(public_path($user->profile)))
+                        <img class="h-8 w-8 rounded-full object-cover border-4 border-white shadow-lg"
+                            src="{{ asset($user->profile) }}" alt="User Profile Image"
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random';" />
+                    @else
+                        <img class="h-8 w-8 rounded-full object-cover border-4 border-white shadow-lg"
+                            src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
+                            alt="Default Profile Image" />
                     @endif
                 </button>
                 <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
@@ -172,8 +170,8 @@
                         </li>
                         <li>
                             <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                href="{{route('profile_settings')}}">Profile Settings</a>
-                                
+                                href="{{ route('profile_settings') }}">Profile Settings</a>
+
                         </li>
                         <li>
                             <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
@@ -181,7 +179,7 @@
                                 out</a>
                         </li>
                     </ul>
-                    
+
                 </div>
             </nav>
 
@@ -196,7 +194,7 @@
             </main>
 
 
-        
+
 
             <script src="https://cdn.lordicon.com/lordicon.js"></script>
             <!-- Include SweetAlert2 JS -->
@@ -256,7 +254,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                </script>
+            </script>
     </body>
 
 </html>

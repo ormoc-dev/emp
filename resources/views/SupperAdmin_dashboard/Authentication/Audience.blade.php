@@ -139,10 +139,7 @@
                                                 title="Edit" onclick="openEditDrawer({{ $user->id }})">
                                                 <i class="bx bx-edit text-xl"></i>
                                             </button>
-                                            <button class="text-blue-600 hover:text-blue-900 transition-colors duration-200"
-                                                title="View">
-                                                <i class="bx bx-show text-xl"></i>
-                                            </button>
+
                                             <form style="display:inline;"
                                                 action="{{ route('audience.destroy', $user->id) }}" method="POST">
                                                 @csrf
@@ -221,7 +218,121 @@
     </dialog>
 
 
+    <!-- Edit User Modal -->
+    <dialog class="modal" id="edit_modal">
+        <div class="modal-box bg-white">
+            <form id="editUserForm" method="POST">
+                @csrf
+                @method('PUT')
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" type="button"
+                    onclick="edit_modal.close()">✕</button>
+                <h3 class="text-xl font-bold mb-6">Edit User</h3>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2" for="edit_name">Name</label>
+                    <input
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        id="edit_name" name="name" type="text" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2" for="edit_email">Email</label>
+                    <input
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        id="edit_email" name="email" type="email" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2" for="edit_password">Password (leave blank to
+                        keep current)</label>
+                    <input
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        id="edit_password" name="password" type="password">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2" for="edit_level">Level</label>
+                    <select
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        id="edit_level" name="level" required>
+                        <option value="">Select Level</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                        <option value="judge">Judge</option>
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors duration-200"
+                        type="submit">
+                        <i class="fas fa-save"></i>
+                        <span id="editButtonText">Update User</span>
+                        <div class="hidden" id="editLoadingAnimation"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </dialog>
 
+    <script>
+        function openEditDrawer(userId) {
+            // Fetch user data
+            fetch(`/audience/${userId}/edit`)
+                .then(response => response.json())
+                .then(user => {
+                    // Populate form fields
+                    document.getElementById('edit_name').value = user.name;
+                    document.getElementById('edit_email').value = user.email;
+                    document.getElementById('edit_level').value = user.level;
+
+                    // Set form action
+                    document.getElementById('editUserForm').action = `/audience/${userId}`;
+
+                    // Show modal
+                    edit_modal.showModal();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to load user data');
+                });
+        }
+
+        document.getElementById('editUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const buttonText = document.getElementById('editButtonText');
+            const loadingAnimation = document.getElementById('editLoadingAnimation');
+
+            buttonText.innerHTML = `
+        <span>Updating User</span>
+        <div class="inline-block ml-2">
+            <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+        </div>
+    `;
+            loadingAnimation.classList.remove('hidden');
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        edit_modal.close();
+                        location.reload();
+                    } else {
+                        throw new Error(data.error || 'Failed to update user');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(error.message);
+                })
+                .finally(() => {
+                    buttonText.innerHTML = 'Update User';
+                    loadingAnimation.classList.add('hidden');
+                });
+        });
+    </script>
 
 
     <script>
@@ -291,11 +402,6 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function openEditDrawer(userId) {
-            // Add your edit drawer logic here
-            console.log('Edit user:', userId);
-        }
-
         function deleteUser(userId) {
             if (confirm('Are you sure you want to delete this user?')) {
                 // Add your delete logic here
