@@ -1,27 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Round;
 use Illuminate\Support\Facades\Auth;
+
 class EventController extends Controller
 {
 
 
     public function create()
-{
-    $events = Event::where('user_id', Auth::id())
-        ->orderBy('event_name', 'desc')
-        ->get();
+    {
+        $events = Event::where('user_id', Auth::id())
+            ->orderBy('event_name', 'desc')
+            ->get();
 
-    if (request()->ajax()) {
-        return response()->json(['events' => $events]);
-    } else {
-        return View::make('admin_dashboard.Categories.add_event', ['events' => $events]);
+        if (request()->ajax()) {
+            return response()->json(['events' => $events]);
+        } else {
+            return View::make('admin_dashboard.Categories.add_event', ['events' => $events]);
+        }
     }
-}
 
     public function store(Request $request)
     {
@@ -30,16 +32,16 @@ class EventController extends Controller
             'event_subtitle' => 'required|string',
             'event_rounds' => 'required|integer',
             'event_year' => 'required|integer',
-            'date_start' => 'required|date',
-            'date_end' => 'required|date',
+            'date_start' => 'nullable|date',
+            'date_end' => 'nullable|date',
             'event_venue' => 'required|string',
         ]);
-    
+
         // Add the user_id to the validated data
         $validatedData['user_id'] = Auth::id();
-        
+
         $event = Event::create($validatedData);
-        
+
         // Create rounds
         $roundsCount = $request->input('event_rounds');
         for ($i = 1; $i <= $roundsCount; $i++) {
@@ -48,7 +50,7 @@ class EventController extends Controller
                 'round_number' => $i,
             ]);
         }
-    
+
         return response()->json(['success' => 'submitted successfully', 'event' => $event]);
     }
 

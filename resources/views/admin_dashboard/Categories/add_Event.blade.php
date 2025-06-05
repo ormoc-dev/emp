@@ -92,7 +92,7 @@
 
     <div class="flex">
         <div class="w-1/3 mt-8 pr-12 ">
-            <div class=" rounded-lg  p-4" style="background-color:#F9F9F9">
+            <div class=" rounded-xl  p-4" style="background-color:#F9F9F9">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Event</h2>
                 <form class="space-y-6" id="addEvent" method="POST" action="{{ url('/events/create/store') }}">
                     @csrf
@@ -138,27 +138,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Date Start -->
-                        <div class="relative z-0 w-full group">
-                            <input
-                                class="block py-2.5 px-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                id="date_start" name="date_start" type="date" placeholder=" " required />
-                            <label
-                                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                                for="date_start">Date Start</label>
-                        </div>
 
-                        <!-- Date End -->
-                        <div class="relative z-0 w-full group">
-                            <input
-                                class="block py-2.5 px-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                id="date_end" name="date_end" type="date" placeholder=" " required />
-                            <label
-                                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 dark:bg-gray-700 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-                                for="date_end">Date End</label>
-                        </div>
-                    </div>
 
                     <!-- Event Venue -->
                     <div class="relative z-0 w-full group">
@@ -265,7 +245,7 @@
 
         <!--Tables-->
         <div class="flex-1" id="events-container">
-            <div class="table-data" >
+            <div class="table-data">
                 <div class="order">
                     <div class="head">
                         <h3>Added Events</h3>

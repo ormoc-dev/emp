@@ -288,10 +288,10 @@
 
 
                             <!-- Main modal -->
-                            <div   style="z-index: 9999;" 
-                             class="hidden  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0
+                            <div class="hidden  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0
                              justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full   "
-                                id="add-judge-modal" data-modal-backdrop="static" aria-hidden="true" tabindex="-1">
+                                id="add-judge-modal" data-modal-backdrop="static" aria-hidden="true" tabindex="-1"
+                                style="z-index: 9999;">
                                 <!-- Increased max-width for better content fit -->
                                 <div class="relative p-4 w-full max-w-4xl max-h-full">
                                     <!-- Modal content -->

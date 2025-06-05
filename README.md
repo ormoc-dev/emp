@@ -82,3 +82,94 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+env file
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=base64:rdCXQ8V1vll7TQg56Ygmelm+A/gUDNFhss42Ns6B++4=
+APP_DEBUG=true
+APP_TIMEZONE=UTC
+APP_URL=http://localhost
+
+APP_LOCALE=en
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=en_US
+
+APP_MAINTENANCE_DRIVER=file
+APP_MAINTENANCE_STORE=database
+
+BCRYPT_ROUNDS=12
+
+LOG_CHANNEL=stack
+LOG_STACK=single
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=emp_app
+DB_USERNAME=root
+DB_PASSWORD=
+
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=database
+
+CACHE_STORE=database
+CACHE_PREFIX=
+
+MEMCACHED_HOST=127.0.0.1
+
+REDIS_CLIENT=phpredis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# local testing 
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=465
+MAIL_USERNAME=event.masterpro2024@gmail.com
+MAIL_PASSWORD=dhykbtyoguapmzpt
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS="event.masterpro2024@gmail.com"
+MAIL_FROM_NAME="EVENT MASTER-PRO"
+
+# deployment smtp
+#MAIL_MAILER=smtp
+#MAIL_HOST=mail.csitcicte.com
+#MAIL_PORT=465
+#MAIL_USERNAME=event.masterpro2024@csitcicte.com
+#MAIL_PASSWORD=eventPro2024
+#MAIL_ENCRYPTION=ssl
+#MAIL_FROM_ADDRESS="event.masterpro2024@csitcicte.com"
+#MAIL_FROM_NAME="EVENT MASTER-PRO"
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+
+VITE_APP_NAME="${APP_NAME}"
+APP_TIMEZONE=Asia/Manila
+
+#PayPal API Mode
+# Values: sandbox or live (Default: live)
+PAYPAL_MODE=sandbox
+
+#PayPal Setting & API Credentials - sandbox
+PAYPAL_SANDBOX_CLIENT_ID=AejWAYVCxIUqPrwFmZdCzyGx_qVCLbkm6BDxPSa_7MNvVE7F_VsuBSgTSGfa5IwzK_DNkn8YZ7WmVhrq
+PAYPAL_SANDBOX_CLIENT_SECRET=EKCheL3NYR7EPKHOm7A3ZtgkWflaXj4PytB8kQ76gEyYwqPAppR1OyjbpGKVAKnqesxjcf3Q6DiRWr9t
+
+PAYMONGO_SECRET_KEY=sk_test_X1QjdbwwRyPnS4q5y1pMaaUE

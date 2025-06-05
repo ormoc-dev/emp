@@ -16,8 +16,8 @@ public function up()
         $table->string('event_status')->default('pending');
         $table->integer('event_rounds');
         $table->integer('event_year');
-        $table->date('date_start');
-        $table->date('date_end');
+        $table->date('date_start')->nullable();
+        $table->date('date_end')->nullable();
         $table->string('event_venue');
         $table->unsignedBigInteger('views_count')->default(0);
         $table->timestamps();
