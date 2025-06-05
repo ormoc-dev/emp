@@ -252,8 +252,15 @@
 
         <!-- Judges Table Section -->
         <div class="flex-1 pt-14 w-full">
+           
             <div class="table-data">
+              
                 <div class="order">
+                    <div class="flex flex-col md:flex-grid justify-between  mb-6">
+                        <h3 class="text-xl font-semibold text-gray-900">Added Judges</h3>
+                        <p class="text-sm text-gray-500 mt-1">Manage judge assignments for different events</p>
+                    </div>
+                   
                     <div class="head">
 
                         <input class="border-none rounded-lg bg-opacity-10" id="myInput-for-added-judges" name="keyword"
@@ -278,217 +285,285 @@
                                 });
                             });
                         </script>
-                        <i class='bx bx-filter'></i> <i class="fa-solid fa-sort-down"></i>
                         <div>
 
-                            <a class="inline-block" data-modal-target="add-judge-modal"
-                                data-modal-toggle="add-judge-modal">
-                                <i class="fa-solid text-green-500 fa-user-plus hover:text-green-500"></i>
-                            </a>
+                            <!-- Add Judge Button -->
+                            <button
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                data-modal-target="add-judge-modal" data-modal-toggle="add-judge-modal">
+                                <i class="fa-solid fa-user-plus text-lg"></i>
+                                <span class="font-medium">Add </span>
+                            </button>
 
 
                             <!-- Main modal -->
-                            <div class="hidden  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0
-                             justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full   "
-                                id="add-judge-modal" data-modal-backdrop="static" aria-hidden="true" tabindex="-1"
-                                style="z-index: 9999;">
-                                <!-- Increased max-width for better content fit -->
-                                <div class="relative p-4 w-full max-w-4xl max-h-full">
+                            <div class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                                id="add-judge-modal" data-modal-backdrop="static" aria-hidden="true" tabindex="-1">
+                                <div class="relative p-4 w-full max-w-4xl">
                                     <!-- Modal content -->
-                                    <div class="relative bg-white rounded-lg shadow ">
+                                    <div class="relative bg-white rounded-xl shadow-2xl">
                                         <!-- Modal header -->
+                                        <div class="flex items-center justify-between p-2 border-b rounded-t">
+                                            <h3 class="text-lg font-semibold text-gray-900">
+                                                Register New Judge
+                                            </h3>
+                                            <button
+                                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                                data-modal-hide="add-judge-modal" type="button">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
 
-                                        <!-- Modal body -->
-                                        <div class="p-4 md:p-5">
-                                            <form method="POST" action="{{ route('register_judge.store') }}"
+                                        <!-- Modal body with fixed height and scrollable content -->
+                                        <div class="p-6 h-[500px] overflow-y-auto">
+                                            <form class="space-y-6" method="POST"
+                                                action="{{ route('register_judge.store') }}"
                                                 enctype="multipart/form-data">
                                                 @csrf
-                                                <!-- Two-column layout for basic info -->
-                                                <div class="grid md:grid-cols-2 gap-4 mb-5">
-                                                    <div>
-                                                        <!-- Judge Name Input -->
-                                                        <div class="relative z-0 w-full mb-5 group">
+
+                                                <!-- Profile Section -->
+                                                <div class="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-100">
+                                                    <div class="flex flex-col md:flex-row items-center gap-8">
+                                                        <!-- Profile Image Upload -->
+                                                        <div class="relative group">
+                                                            <div
+                                                                class="w-40 h-40 rounded-xl overflow-hidden shadow-lg border-4 border-white bg-gradient-to-br from-gray-100 to-gray-200">
+                                                                <!-- Default Background Pattern -->
+                                                                <div
+                                                                    class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGMwLTIuMjA5IDEuNzkxLTQgNC00czQgMS43OTEgNCA0LTEuNzkxIDQtNCA0LTQtMS43OTEtNC00eiIgZmlsbD0iI2U1ZTdlYiIvPjxwYXRoIGQ9Ik0yNCAyNGMwLTIuMjA5IDEuNzkxLTQgNC00czQgMS43OTEgNCA0LTEuNzkxIDQtNCA0LTQtMS43OTEtNC00eiIgZmlsbD0iI2U1ZTdlYiIvPjxwYXRoIGQ9Ik00OCAyNGMwLTIuMjA5IDEuNzkxLTQgNC00czQgMS43OTEgNCA0LTEuNzkxIDQtNCA0LTQtMS43OTEtNC00eiIgZmlsbD0iI2U1ZTdlYiIvPjxwYXRoIGQ9Ik0zNiAxMmMwLTIuMjA5IDEuNzkxLTQgNC00czQgMS43OTEgNCA0LTEuNzkxIDQtNCA0LTQtMS43OTEtNC00eiIgZmlsbD0iI2U1ZTdlYiIvPjxwYXRoIGQ9Ik0yNCA0OGMwLTIuMjA5IDEuNzkxLTQgNC00czQgMS43OTEgNCA0LTEuNzkxIDQtNCA0LTQtMS43OTEtNC00eiIgZmlsbD0iI2U1ZTdlYiIvPjxwYXRoIGQ9Ik00OCA0OGMwLTIuMjA5IDEuNzkxLTQgNC00czQgMS43OTEgNCA0LTEuNzkxIDQtNCA0LTQtMS43OTEtNC00eiIgZmlsbD0iI2U1ZTdlYiIvPjwvZz48L3N2Zz4=')] opacity-50">
+                                                                </div>
+
+                                                                <!-- Profile Image -->
+                                                                <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 relative z-10"
+                                                                    id="profile-preview"
+                                                                    src="{{ asset('images/default-profile.png') }}"
+                                                                    alt="Profile Preview"
+                                                                    onerror="this.onerror=null; this.src=''; this.classList.add('hidden');">
+
+                                                                <!-- Upload Overlay -->
+                                                                <div
+                                                                    class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 z-20">
+                                                                    <label
+                                                                        class="cursor-pointer flex items-center gap-2 text-white text-sm font-medium hover:text-blue-200 transition-colors"
+                                                                        for="profile">
+                                                                        <i class="fas fa-camera text-lg"></i>
+                                                                        <span>Change Photo</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Upload Input -->
+                                                            <input class="hidden" id="profile" name="profile"
+                                                                type="file" accept="image/*"
+                                                                onchange="previewImage(this)">
+
+                                                            <!-- Upload Status -->
+                                                            <div class="mt-2 text-center text-xs text-gray-500"
+                                                                id="upload-status">
+                                                                No file chosen
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Profile Information -->
+                                                        <div class="flex-1 space-y-4">
+                                                            <div>
+                                                                <h4 class="text-xl font-semibold text-gray-900 mb-1">
+                                                                    Profile Photo (Optional)</h4>
+                                                                <p class="text-sm text-gray-600">Add a professional photo
+                                                                    of the judge to help with identification.</p>
+                                                            </div>
+
+                                                            <!-- Upload Guidelines -->
+                                                            <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                                                <h5 class="text-sm font-medium text-gray-900 mb-2">Upload
+                                                                    Guidelines:</h5>
+                                                                <ul class="text-xs text-gray-600 space-y-1">
+                                                                    <li class="flex items-center gap-2">
+                                                                        <i class="fas fa-check-circle text-green-500"></i>
+                                                                        <span>Recommended size: 400x400 pixels</span>
+                                                                    </li>
+                                                                    <li class="flex items-center gap-2">
+                                                                        <i class="fas fa-check-circle text-green-500"></i>
+                                                                        <span>Maximum file size: 2MB</span>
+                                                                    </li>
+                                                                    <li class="flex items-center gap-2">
+                                                                        <i class="fas fa-check-circle text-green-500"></i>
+                                                                        <span>Supported formats: JPG, PNG, GIF</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Basic Information -->
+                                                <div class="grid md:grid-cols-2 gap-6">
+                                                    <!-- Left Column -->
+                                                    <div class="space-y-4">
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-gray-700 mb-1"
+                                                                for="name">Full Name</label>
                                                             <input
-                                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                                 id="name" name="name" type="text"
-                                                                value="{{ old('name') }}" required autocomplete="name"
-                                                                autofocus />
-                                                            <label
-                                                                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                                for="name">Judge Name</label>
+                                                                value="{{ old('name') }}" required
+                                                                placeholder="Enter judge's full name">
                                                             @error('name')
                                                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                                             @enderror
                                                         </div>
-                                                        <!-- Email Input -->
-                                                        <div class="relative z-0 w-full mb-5 group">
-                                                            <input
-                                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                                id="email" name="email" type="email"
-                                                                value="{{ old('email') }}" required />
-                                                            <label
-                                                                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                                for="email">Email (@wlcormoc.edu.ph)</label>
+
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-gray-700 mb-1"
+                                                                for="email">Email Address</label>
+                                                            <div class="relative">
+                                                                <input
+                                                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                    id="email" name="email" type="email"
+                                                                    value="{{ old('email') }}" required
+                                                                    placeholder="username@wlcormoc.edu.ph">
+
+                                                            </div>
                                                             @error('email')
                                                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                                             @enderror
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <!-- Password Input -->
-                                                        <div class="relative z-0 w-full mb-5 group">
-                                                            <input
-                                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                                id="password" name="password" type="password"
-                                                                required />
-                                                            <label
-                                                                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+
+                                                    <!-- Right Column -->
+                                                    <div class="space-y-4">
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-gray-700 mb-1"
                                                                 for="password">Password</label>
+                                                            <div class="relative">
+                                                                <input
+                                                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                    id="password" name="password" type="password"
+                                                                    required placeholder="Enter password">
+                                                                <button
+                                                                    class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                                                                    type="button" onclick="togglePassword('password')">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </button>
+                                                            </div>
                                                             @error('password')
                                                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                                             @enderror
                                                         </div>
-                                                        <!-- Confirm Password Input -->
-                                                        <div class="relative z-0 w-full mb-5 group">
-                                                            <input
-                                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                                id="password-confirm" name="password_confirmation"
-                                                                type="password" required />
-                                                            <label
-                                                                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+
+                                                        <div>
+                                                            <label class="block text-sm font-medium text-gray-700 mb-1"
                                                                 for="password-confirm">Confirm Password</label>
+                                                            <div class="relative">
+                                                                <input
+                                                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                    id="password-confirm" name="password_confirmation"
+                                                                    type="password" required
+                                                                    placeholder="Confirm password">
+                                                                <button
+                                                                    class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                                                                    type="button"
+                                                                    onclick="togglePassword('password-confirm')">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- Hidden Level Select -->
+
+                                                <!-- Biography Section -->
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1"
+                                                            for="biography-template">Biography Template (Optional)</label>
+                                                        <select
+                                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            id="biography-template" onchange="updateBiography()">
+                                                            <option value="">Select a template or write custom
+                                                            </option>
+                                                            <option
+                                                                value="Is a distinguished professional with extensive experience in judging beauty pageants and cultural events. Known for fair evaluation and commitment to identifying authentic talent.">
+                                                                Beauty Pageant Expert</option>
+                                                            <option
+                                                                value="Has served as a judge in numerous talent competitions, bringing years of expertise in performing arts and entertainment industry knowledge.">
+                                                                Entertainment Industry Professional</option>
+                                                            <option
+                                                                value="An accomplished academic with expertise in cultural studies and event management, known for balanced and objective assessment approaches.">
+                                                                Academic Professional</option>
+                                                            <option
+                                                                value="A respected figure in the fashion industry with experience in modeling and talent development, bringing valuable insights to contestant evaluation.">
+                                                                Fashion Industry Professional</option>
+                                                            <option value="custom">Write Custom Biography</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1"
+                                                            for="biography">Biography (Optional)</label>
+                                                        <textarea
+                                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            id="biography" name="biography" rows="4"
+                                                            placeholder="Enter judge's biography, background, and expertise...">{{ old('biography') }}</textarea>
+                                                        @error('biography')
+                                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
+                                                <!-- Achievements Section -->
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1"
+                                                            for="achievements-template">Achievements Template
+                                                            (Optional)</label>
+                                                        <select
+                                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            id="achievements-template" onchange="updateAchievements()">
+                                                            <option value="">Select a template or write custom
+                                                            </option>
+                                                            <option
+                                                                value="• Best Judge Award (National Beauty Pageant Association)&#10;• Certified International Beauty Pageant Judge&#10;• Member of the Professional Beauty Association&#10;• Featured Judge in Major Regional Competitions">
+                                                                Beauty Pageant Awards</option>
+                                                            <option
+                                                                value="• Excellence in Judging Award&#10;• Certified Event Judge (International Events Association)&#10;• Distinguished Service Award in Cultural Events&#10;• Regional Judge of the Year">
+                                                                Event Judge Awards</option>
+                                                            <option
+                                                                value="• Industry Leadership Award&#10;• Professional Achievement in Entertainment&#10;• Outstanding Contribution to Performing Arts&#10;• Celebrity Judge Recognition">
+                                                                Entertainment Industry Awards</option>
+                                                            <option
+                                                                value="• Fashion Industry Excellence Award&#10;• Style Icon Recognition&#10;• Professional Fashion Judge Certification&#10;• International Fashion Week Judge">
+                                                                Fashion Industry Awards</option>
+                                                            <option value="custom">Write Custom Achievements</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1"
+                                                            for="achievements">Achievements & Awards (Optional)</label>
+                                                        <textarea
+                                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            id="achievements" name="achievements" rows="4"
+                                                            placeholder="Enter judge's achievements, awards, and recognitions...">{{ old('achievements') }}</textarea>
+                                                        @error('achievements')
+                                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
+                                                <!-- Hidden Level Input -->
                                                 <input name="level" type="hidden" value="judge">
-                                                <!-- Profile Upload -->
-                                                <div class="mb-5">
-                                                    <label
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                                        for="profile">Profile Image (Optional)</label>
-                                                    <input
-                                                        class="file-input file-input-bordered file-input-sm w-full max-w-xs"
-                                                        id="profile" name="profile" type="file" accept="image/*" />
-                                                    @error('profile')
-                                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-                                                <!-- Biography Input -->
-                                                <div class="mb-5">
-                                                    <label
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                                        for="biography">Biography</label>
-                                                    <select
-                                                        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                                        id="biography-template" onchange="updateBiography()">
-                                                        <option value="">Select a template or write custom</option>
-                                                        <option
-                                                            value="Is a distinguished professional with extensive experience in judging beauty pageants and cultural events. Known for fair evaluation and commitment to identifying authentic talent.">
-                                                            Beauty Pageant Expert</option>
-                                                        <option
-                                                            value="Has served as a judge in numerous talent competitions, bringing years of expertise in performing arts and entertainment industry knowledge.">
-                                                            Entertainment Industry Professional</option>
-                                                        <option
-                                                            value="An accomplished academic with expertise in cultural studies and event management, known for balanced and objective assessment approaches.">
-                                                            Academic Professional</option>
-                                                        <option
-                                                            value="A respected figure in the fashion industry with experience in modeling and talent development, bringing valuable insights to contestant evaluation.">
-                                                            Fashion Industry Professional</option>
-                                                        <option value="custom">Write Custom Biography</option>
-                                                    </select>
 
-                                                    <textarea
-                                                        class="block w-full text-sm text-gray-900 bg-transparent border-2 border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                        id="biography" name="biography" rows="4"
-                                                        placeholder="Enter judge's biography, background, and expertise...">{{ old('biography') }}</textarea>
-                                                    @error('biography')
-                                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                                <!-- Achievements Input -->
-                                                <div class="mb-5">
-                                                    <label
-                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                                        for="achievements">Achievements & Awards</label>
-                                                    <select
-                                                        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                                        id="achievements-template" onchange="updateAchievements()">
-                                                        <option value="">Select a template or write custom</option>
-                                                        <option
-                                                            value="• Best Judge Award (National Beauty Pageant Association)
-• Certified International Beauty Pageant Judge
-• Member of the Professional Beauty Association
-• Featured Judge in Major Regional Competitions">
-                                                            Beauty Pageant Awards</option>
-                                                        <option
-                                                            value="• Excellence in Judging Award
-• Certified Event Judge (International Events Association)
-• Distinguished Service Award in Cultural Events
-• Regional Judge of the Year">
-                                                            Event Judge Awards</option>
-                                                        <option
-                                                            value="• Industry Leadership Award
-• Professional Achievement in Entertainment
-• Outstanding Contribution to Performing Arts
-• Celebrity Judge Recognition">
-                                                            Entertainment Industry Awards</option>
-                                                        <option
-                                                            value="• Fashion Industry Excellence Award
-• Style Icon Recognition
-• Professional Fashion Judge Certification
-• International Fashion Week Judge">
-                                                            Fashion Industry Awards</option>
-                                                        <option value="custom">Write Custom Achievements</option>
-                                                    </select>
-
-                                                    <textarea
-                                                        class="block w-full text-sm text-gray-900 bg-transparent border-2 border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                        id="achievements" name="achievements" rows="4"
-                                                        placeholder="Enter judge's achievements, awards, and recognitions...">{{ old('achievements') }}</textarea>
-                                                    @error('achievements')
-                                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                                    @enderror
-                                                </div>
-
-                                                <script>
-                                                    function updateBiography() {
-                                                        const template = document.getElementById('biography-template');
-                                                        const biography = document.getElementById('biography');
-
-                                                        if (template.value && template.value !== 'custom') {
-                                                            biography.value = template.value;
-                                                        } else if (template.value === 'custom') {
-                                                            biography.value = '';
-                                                            biography.focus();
-                                                        }
-                                                    }
-
-                                                    function updateAchievements() {
-                                                        const template = document.getElementById('achievements-template');
-                                                        const achievements = document.getElementById('achievements');
-
-                                                        if (template.value && template.value !== 'custom') {
-                                                            achievements.value = template.value;
-                                                        } else if (template.value === 'custom') {
-                                                            achievements.value = '';
-                                                            achievements.focus();
-                                                        }
-                                                    }
-                                                </script>
-                                                <!-- Submit Button -->
-                                                <div>
+                                                <!-- Action Buttons -->
+                                                <div class="flex items-center justify-end space-x-3 pt-4 border-t">
                                                     <button
-                                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                         data-modal-hide="add-judge-modal" type="button">
-                                                        close
+                                                        Cancel
                                                     </button>
                                                     <button
-                                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                         type="submit">
-                                                        <i
-                                                            class="fa-solid fa-user-check mr-2"></i>{{ __('Register Judge') }}
+                                                        <i class="fas fa-user-check mr-2"></i>Register Judge
                                                     </button>
                                                 </div>
                                             </form>
@@ -498,6 +573,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Judges Table -->
                     <div class="overflow-x-auto">
                         <table class="table table-xs" id="myTable-judge">
                             <thead>
@@ -538,76 +615,108 @@
                             id="edit-judge-modal" data-modal-backdrop="static" aria-hidden="true" tabindex="-1">
                             <div class="relative p-4 w-full max-w-2xl max-h-full">
                                 <!-- Modal content -->
-                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <div class="relative bg-white rounded-xl shadow-2xl">
                                     <!-- Modal header -->
-                                    <div
-                                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                            Edit Judge
-                                        </h3>
-                                        <button
-                                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                                        <div>
+                                            <h3 class="text-xl font-semibold text-gray-900">
+                                                Edit Judge Profile
+                                            </h3>
+                                            <p class="text-sm text-gray-500 mt-1">Update judge information and profile
+                                                details</p>
+                                        </div>
+                                        <button class="text-gray-400 hover:text-gray-500 transition-colors"
                                             data-modal-hide="edit-judge-modal" type="button">
-                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                fill="none" viewBox="0 0 14 14">
-                                                <path stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2"
-                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                            </svg>
+                                            <i class="fas fa-times text-xl"></i>
                                             <span class="sr-only">Close modal</span>
                                         </button>
                                     </div>
+
                                     <!-- Modal body -->
-                                    <div class="p-4 md:p-5 space-y-4">
+                                    <div class="p-6">
                                         <form id="edit-judge-form" method="POST" action=""
                                             enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
-                                            <div class="relative z-0 w-full mb-5 group">
-                                                <input
-                                                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    id="edit-name" name="name" type="text" required />
-                                                <label
-                                                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                    for="edit-name">Judge Name</label>
+
+                                            <!-- Profile Image Section -->
+                                            <div class="mb-6">
+                                                <div class="flex items-center gap-6">
+                                                    <div class="relative group">
+                                                        <div
+                                                            class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
+                                                            <img class="w-full h-full object-cover" id="current-profile"
+                                                                src="" alt="Current Profile">
+                                                        </div>
+                                                        <div
+                                                            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-full flex items-center justify-center">
+                                                            <label
+                                                                class="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                                                for="edit-profile">
+                                                                <i class="fas fa-camera text-white text-xl"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                                                            for="edit-profile">
+                                                            Profile Image
+                                                        </label>
+                                                        <input class="hidden" id="edit-profile" name="profile"
+                                                            type="file" accept="image/*">
+                                                        <p class="text-sm text-gray-500">Click the camera icon to change
+                                                            profile photo</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="relative z-0 w-full mb-5 group">
-                                                <input
-                                                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-500 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                    id="edit-email" name="email" type="email" required />
-                                                <label
-                                                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                    for="edit-email">Email</label>
-                                            </div>
-                                            <div class="relative z-0 w-full mb-5 group">
-                                                <label
-                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                                    for="edit-profile">Profile Image</label>
-                                                <input
-                                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                                    id="edit-profile" name="profile" type="file" accept="image/*">
-                                                <img class="mt-2 w-20 h-20 object-cover rounded-full hidden"
-                                                    id="current-profile" src="" alt="Current Profile">
+
+                                            <!-- Basic Information -->
+                                            <div class="space-y-6">
+                                                <!-- Name Field -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                                                        for="edit-name">
+                                                        Full Name
+                                                    </label>
+                                                    <input
+                                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                                        id="edit-name" name="name" type="text" required
+                                                        placeholder="Enter judge's full name">
+                                                </div>
+
+                                                <!-- Email Field -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                                                        for="edit-email">
+                                                        Email Address
+                                                    </label>
+                                                    <input
+                                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                                        id="edit-email" name="email" type="email" required
+                                                        placeholder="Enter judge's email address">
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
+
                                     <!-- Modal footer -->
-                                    <div
-                                        class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                    <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
                                         <button
-                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                            form="edit-judge-form" type="submit"><i class="fa-solid fa-file-pen"></i>
-                                            Update Judge</button>
+                                            class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                                            data-modal-hide="edit-judge-modal" type="button">
+                                            <i class="fas fa-times mr-2"></i>
+                                            Cancel
+                                        </button>
                                         <button
-                                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                                            data-modal-hide="edit-judge-modal" type="button"><i
-                                                class="fa-solid fa-xmark"></i> Cancel</button>
+                                            class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                                            form="edit-judge-form" type="submit">
+                                            <i class="fas fa-save mr-2"></i>
+                                            Save Changes
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -617,63 +726,127 @@
 
     <div class="table-data">
         <div class="order">
-            <div class="head">
-                <h3>Assign Events</h3>
-                <input class="border-none rounded-lg bg-opacity-10" id="myInput" name="keyword" type="text"
-                    placeholder="Search...">
-                <i class='bx bx-filter'></i>
-            </div>
+
             <div class="overflow-x-auto">
-                <form id="multiple-delete-form" action="{{ route('event-judges.multiple-destroy') }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <table class="table table-xs" id="myTable">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                        id="select-all-checkbox" type="checkbox">
-                                </th>
-                                <th>ID</th>
-                                <th>Judge Name</th>
-                                <th>Event Name</th>
-                                <th>Event Venue</th>
-                                <th>Created At</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($eventJudges as $eventJudge)
-                                <tr>
-                                    <td>
-                                        <input
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                            name="selected_items[]" type="checkbox" value="{{ $eventJudge->id }}">
-                                    </td>
-                                    <td>{{ $eventJudge->id }}</td>
-                                    <td>{{ $eventJudge->judge->name }}</td>
-                                    <td>{{ $eventJudge->event->event_name }}</td>
-                                    <td>{{ $eventJudge->event->event_venue }}</td>
-                                    <td>{{ $eventJudge->judge->created_at }}</td>
-                                    <td class="flex gap-2">
-                                        <button
-                                            class="bg-red-400 hover:bg-red-600 text-white pl-2 pr-2 rounded-sm delete-btn"
-                                            type="button" onclick="confirmDelete({{ $eventJudge->id }})">
-                                            <i class="fa-solid fa-trash-can-arrow-up"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="mt-4">
-                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" type="button"
-                            onclick="confirmMultipleDelete()">
-                            <i class="fa-solid fa-trash-can-arrow-up"></i> Delete Selected
+                <div class=" rounded-xl shadow-lg p-6">
+                    <!-- Section Header -->
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">Assign Events</h3>
+                            <p class="text-sm text-gray-500 mt-1">Manage judge assignments for different events</p>
+                        </div>
+
+                        <!-- Search and Filter -->
+                        <div class="flex items-center gap-4 mt-4 md:mt-0">
+                            <div class="relative">
+                                <input
+                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64"
+                                    id="myInput" name="keyword" type="text" placeholder="Search assignments...">
+                                <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                            </div>
+                            <button
+                                class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                                <i class='bx bx-filter'></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Table Section -->
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+                        <form id="multiple-delete-form" action="{{ route('event-judges.multiple-destroy') }}"
+                            method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <table class="min-w-full divide-y divide-gray-200" id="myTable">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3" scope="col">
+                                            <div class="flex items-center">
+                                                <input
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                    id="select-all-checkbox" type="checkbox">
+                                            </div>
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            ID
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            Judge Name
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            Event Name
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            Event Venue
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            Created At
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach ($eventJudges as $eventJudge)
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <input
+                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                                        name="selected_items[]" type="checkbox"
+                                                        value="{{ $eventJudge->id }}">
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                #{{ $eventJudge->id }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        {{ $eventJudge->judge->name }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $eventJudge->event->event_name }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $eventJudge->event->event_venue }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ $eventJudge->judge->created_at }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                <button
+                                                    class="text-red-600 hover:text-red-900 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                                                    type="button" onclick="confirmDelete({{ $eventJudge->id }})">
+                                                    <i class="fa-solid fa-trash-can-arrow-up"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+
+                    <!-- Bulk Actions -->
+                    <div class="mt-4 flex justify-end">
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                            type="button" onclick="confirmMultipleDelete()">
+                            <i class="fa-solid fa-trash-can-arrow-up mr-2"></i>
+                            Delete Selected
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -818,6 +991,84 @@
                 modalInstance.show();
             } else {
                 modal.showModal();
+            }
+        }
+    </script>
+
+    <script>
+        function previewImage(input) {
+            const status = document.getElementById('upload-status');
+            const preview = document.getElementById('profile-preview');
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+
+                // Validate file size (2MB limit)
+                if (file.size > 2 * 1024 * 1024) {
+                    status.innerHTML = '<span class="text-red-500">File size exceeds 2MB limit</span>';
+                    input.value = '';
+                    return;
+                }
+
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    status.innerHTML =
+                        '<span class="text-red-500">Invalid file type. Please upload JPG, PNG, or GIF</span>';
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    status.innerHTML = `<span class="text-green-500">${file.name}</span>`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+                status.innerHTML = 'No file chosen';
+            }
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function updateBiography() {
+            const template = document.getElementById('biography-template');
+            const biography = document.getElementById('biography');
+
+            if (template.value && template.value !== 'custom') {
+                biography.value = template.value;
+            } else if (template.value === 'custom') {
+                biography.value = '';
+                biography.focus();
+            }
+        }
+
+        function updateAchievements() {
+            const template = document.getElementById('achievements-template');
+            const achievements = document.getElementById('achievements');
+
+            if (template.value && template.value !== 'custom') {
+                achievements.value = template.value;
+            } else if (template.value === 'custom') {
+                achievements.value = '';
+                achievements.focus();
             }
         }
     </script>
