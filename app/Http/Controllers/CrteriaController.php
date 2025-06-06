@@ -13,53 +13,65 @@ use App\Models\MinorAward;
 use App\Models\TimeStatus;
 use App\Models\VotingCategory;
 use App\Models\Users_vote;
+use App\Models\User;
+
 class CrteriaController extends Controller
 {
 
     public function create($eventId)
-{
-    // Find the event
-    $timeStatus = TimeStatus::where('event_id', $eventId)->first();
-    $event = Event::findOrFail($eventId);
-    $minorAwards = MinorAward::where('event_id', $eventId)->get();
-    
-    // Get rounds associated with the event
-    $rounds = $event->rounds;
+    {
+        // Find the event
+        $timeStatus = TimeStatus::where('event_id', $eventId)->first();
+        $event = Event::findOrFail($eventId);
+        $minorAwards = MinorAward::where('event_id', $eventId)->get();
 
-    // Fetch criteria associated with the rounds
-    $criteria = Criteria::whereIn('round_id', $rounds->pluck('id'))
-        ->with('round')
-        ->get();
+        // Get rounds associated with the event
+        $rounds = $event->rounds;
 
-    // Fetch voting categories for this event
-    $votingCategories = VotingCategory::where('event_id', $eventId)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        // Get contestants for this event
+        $contestants = $event->contestants()
+            ->orderBy('number')
+            ->get();
 
-    // Get total votes count
-    $totalVotes = Users_vote::where('event_id', $eventId)->count();
+        // Fetch criteria associated with the rounds
+        $criteria = Criteria::whereIn('round_id', $rounds->pluck('id'))
+            ->with('round')
+            ->get();
 
-    // Get or create voting settings
-    $votingSettings = (object)[
-        'max_votes_per_user' => 100, // Default value
-        'vote_cost' => 5 // Default value
-    ];
+        // Fetch voting categories for this event
+        $votingCategories = VotingCategory::where('event_id', $eventId)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    // Fetch all events (if needed)
-    $events = Event::all();
+        // Get total votes count
+        $totalVotes = Users_vote::where('event_id', $eventId)->count();
 
-    return view('admin_dashboard.Categories.add_Criteria', compact(
-        'event',
-        'rounds',
-        'events',
-        'criteria',
-        'minorAwards',
-        'timeStatus',
-        'votingCategories',
-        'votingSettings',
-        'totalVotes'
-    ));
-}
+        // Get or create voting settings
+        $votingSettings = (object)[
+            'max_votes_per_user' => 100, // Default value
+            'vote_cost' => 5 // Default value
+        ];
+
+        // Fetch all events (if needed)
+        $events = Event::all();
+
+        // Get judges for this event using the level column
+        $judges = User::where('level', 'judge')->get();
+
+        return view('admin_dashboard.Categories.add_Criteria', compact(
+            'event',
+            'rounds',
+            'events',
+            'criteria',
+            'minorAwards',
+            'timeStatus',
+            'votingCategories',
+            'votingSettings',
+            'totalVotes',
+            'contestants',
+            'judges'
+        ));
+    }
 
 
 
@@ -72,41 +84,41 @@ class CrteriaController extends Controller
             'round_description' => 'required|string|max:255',
             'top_contestants' => 'required|integer|min:1',
         ]);
-    
+
         // Find the round based on event_id and round_number
         $round = Round::where('event_id', $validatedData['event_id'])
             ->where('round_number', $validatedData['round_number'])
             ->first();
-    
-            if ($round) {
-                // Update the round's description and number of top contestants
-                $round->update([
-                    'round_description' => $validatedData['round_description'],
-                    'top_contestants' => (int) $validatedData['top_contestants'], // Ensure it's cast to integer
+
+        if ($round) {
+            // Update the round's description and number of top contestants
+            $round->update([
+                'round_description' => $validatedData['round_description'],
+                'top_contestants' => (int) $validatedData['top_contestants'], // Ensure it's cast to integer
+            ]);
+
+            // Logic to determine top contestants based on scores
+            $topContestants = Score::where('round_id', $round->id)
+                ->orderByDesc('rate') // Assuming 'rate' is the score field
+                ->take($validatedData['top_contestants'])
+                ->get();
+
+            // Store the top contestants in the 'top_contestants' table
+            foreach ($topContestants as $contestant) {
+                TopContestant::create([
+                    'round_id' => $round->id,
+                    'contestant_id' => $contestant->contestant_id,
+                    'score' => $contestant->rate, // Optionally store the score itself
                 ]);
-            
-                // Logic to determine top contestants based on scores
-                $topContestants = Score::where('round_id', $round->id)
-                    ->orderByDesc('rate') // Assuming 'rate' is the score field
-                    ->take($validatedData['top_contestants'])
-                    ->get();
-            
-                // Store the top contestants in the 'top_contestants' table
-                foreach ($topContestants as $contestant) {
-                    TopContestant::create([
-                        'round_id' => $round->id,
-                        'contestant_id' => $contestant->contestant_id,
-                        'score' => $contestant->rate, // Optionally store the score itself
-                    ]);
-                }
-            
-                return redirect()->back()->with('success', 'Round description and top contestants updated successfully.');
-            } else {
-                // If round is not found, return an error message
-                return redirect()->back()->with('error', 'Round not found.');
             }
+
+            return redirect()->back()->with('success', 'Round description and top contestants updated successfully.');
+        } else {
+            // If round is not found, return an error message
+            return redirect()->back()->with('error', 'Round not found.');
+        }
     }
-    
+
 
 
 

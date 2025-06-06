@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -35,8 +36,8 @@ class User extends Authenticatable
         'password' => 'hashed',
         'last_active_at' => 'datetime',
     ];
-   
-     
+
+
 
     public function events_judge()
     {
@@ -69,11 +70,11 @@ class User extends Authenticatable
     }
 
     public function votes()
-{
-    return $this->hasMany(Users_vote::class, 'user_id');
-}
+    {
+        return $this->hasMany(Users_vote::class, 'user_id');
+    }
 
-public function paypalTransactions()
+    public function paypalTransactions()
     {
         return $this->hasMany(PaypalTransaction::class);
     }

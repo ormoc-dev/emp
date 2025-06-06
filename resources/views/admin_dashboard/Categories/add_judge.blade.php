@@ -366,7 +366,7 @@
 
                                                         <!-- Profile Information -->
                                                         <div class="flex-1 space-y-4">
-                                                            <div>
+                                                    <div>
                                                                 <h4 class="text-xl font-semibold text-gray-900 mb-1">
                                                                     Profile Photo (Optional)</h4>
                                                                 <p class="text-sm text-gray-600">Add a professional photo
@@ -417,9 +417,9 @@
                                                             <label class="block text-sm font-medium text-gray-700 mb-1"
                                                                 for="email">Email Address</label>
                                                             <div class="relative">
-                                                                <input
+                                                            <input
                                                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                                    id="email" name="email" type="email"
+                                                                id="email" name="email" type="email"
                                                                     value="{{ old('email') }}" required
                                                                     placeholder="username@wlcormoc.edu.ph">
 
@@ -432,13 +432,13 @@
 
                                                     <!-- Right Column -->
                                                     <div class="space-y-4">
-                                                        <div>
+                                                    <div>
                                                             <label class="block text-sm font-medium text-gray-700 mb-1"
                                                                 for="password">Password</label>
                                                             <div class="relative">
-                                                                <input
+                                                            <input
                                                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                                    id="password" name="password" type="password"
+                                                                id="password" name="password" type="password"
                                                                     required placeholder="Enter password">
                                                                 <button
                                                                     class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
@@ -455,9 +455,9 @@
                                                             <label class="block text-sm font-medium text-gray-700 mb-1"
                                                                 for="password-confirm">Confirm Password</label>
                                                             <div class="relative">
-                                                                <input
+                                                            <input
                                                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                                    id="password-confirm" name="password_confirmation"
+                                                                id="password-confirm" name="password_confirmation"
                                                                     type="password" required
                                                                     placeholder="Confirm password">
                                                                 <button
@@ -466,9 +466,9 @@
                                                                     onclick="togglePassword('password-confirm')">
                                                                     <i class="fas fa-eye"></i>
                                                                 </button>
-                                                            </div>
                                                         </div>
                                                     </div>
+                                                </div>
                                                 </div>
 
                                                 <!-- Biography Section -->
@@ -476,37 +476,37 @@
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1"
                                                             for="biography-template">Biography Template (Optional)</label>
-                                                        <select
+                                                    <select
                                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                            id="biography-template" onchange="updateBiography()">
+                                                        id="biography-template" onchange="updateBiography()">
                                                             <option value="">Select a template or write custom
                                                             </option>
-                                                            <option
-                                                                value="Is a distinguished professional with extensive experience in judging beauty pageants and cultural events. Known for fair evaluation and commitment to identifying authentic talent.">
-                                                                Beauty Pageant Expert</option>
-                                                            <option
-                                                                value="Has served as a judge in numerous talent competitions, bringing years of expertise in performing arts and entertainment industry knowledge.">
-                                                                Entertainment Industry Professional</option>
-                                                            <option
-                                                                value="An accomplished academic with expertise in cultural studies and event management, known for balanced and objective assessment approaches.">
-                                                                Academic Professional</option>
-                                                            <option
-                                                                value="A respected figure in the fashion industry with experience in modeling and talent development, bringing valuable insights to contestant evaluation.">
-                                                                Fashion Industry Professional</option>
-                                                            <option value="custom">Write Custom Biography</option>
-                                                        </select>
+                                                        <option
+                                                            value="Is a distinguished professional with extensive experience in judging beauty pageants and cultural events. Known for fair evaluation and commitment to identifying authentic talent.">
+                                                            Beauty Pageant Expert</option>
+                                                        <option
+                                                            value="Has served as a judge in numerous talent competitions, bringing years of expertise in performing arts and entertainment industry knowledge.">
+                                                            Entertainment Industry Professional</option>
+                                                        <option
+                                                            value="An accomplished academic with expertise in cultural studies and event management, known for balanced and objective assessment approaches.">
+                                                            Academic Professional</option>
+                                                        <option
+                                                            value="A respected figure in the fashion industry with experience in modeling and talent development, bringing valuable insights to contestant evaluation.">
+                                                            Fashion Industry Professional</option>
+                                                        <option value="custom">Write Custom Biography</option>
+                                                    </select>
                                                     </div>
 
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1"
                                                             for="biography">Biography (Optional)</label>
-                                                        <textarea
+                                                    <textarea
                                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                            id="biography" name="biography" rows="4"
-                                                            placeholder="Enter judge's biography, background, and expertise...">{{ old('biography') }}</textarea>
-                                                        @error('biography')
-                                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                                        @enderror
+                                                        id="biography" name="biography" rows="4"
+                                                        placeholder="Enter judge's biography, background, and expertise...">{{ old('biography') }}</textarea>
+                                                    @error('biography')
+                                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                    @enderror
                                                     </div>
                                                 </div>
 
@@ -516,37 +516,37 @@
                                                         <label class="block text-sm font-medium text-gray-700 mb-1"
                                                             for="achievements-template">Achievements Template
                                                             (Optional)</label>
-                                                        <select
+                                                    <select
                                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                            id="achievements-template" onchange="updateAchievements()">
+                                                        id="achievements-template" onchange="updateAchievements()">
                                                             <option value="">Select a template or write custom
                                                             </option>
-                                                            <option
+                                                        <option
                                                                 value="• Best Judge Award (National Beauty Pageant Association)&#10;• Certified International Beauty Pageant Judge&#10;• Member of the Professional Beauty Association&#10;• Featured Judge in Major Regional Competitions">
-                                                                Beauty Pageant Awards</option>
-                                                            <option
+                                                            Beauty Pageant Awards</option>
+                                                        <option
                                                                 value="• Excellence in Judging Award&#10;• Certified Event Judge (International Events Association)&#10;• Distinguished Service Award in Cultural Events&#10;• Regional Judge of the Year">
-                                                                Event Judge Awards</option>
-                                                            <option
+                                                            Event Judge Awards</option>
+                                                        <option
                                                                 value="• Industry Leadership Award&#10;• Professional Achievement in Entertainment&#10;• Outstanding Contribution to Performing Arts&#10;• Celebrity Judge Recognition">
-                                                                Entertainment Industry Awards</option>
-                                                            <option
+                                                            Entertainment Industry Awards</option>
+                                                        <option
                                                                 value="• Fashion Industry Excellence Award&#10;• Style Icon Recognition&#10;• Professional Fashion Judge Certification&#10;• International Fashion Week Judge">
-                                                                Fashion Industry Awards</option>
-                                                            <option value="custom">Write Custom Achievements</option>
-                                                        </select>
+                                                            Fashion Industry Awards</option>
+                                                        <option value="custom">Write Custom Achievements</option>
+                                                    </select>
                                                     </div>
 
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1"
                                                             for="achievements">Achievements & Awards (Optional)</label>
-                                                        <textarea
+                                                    <textarea
                                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                            id="achievements" name="achievements" rows="4"
-                                                            placeholder="Enter judge's achievements, awards, and recognitions...">{{ old('achievements') }}</textarea>
-                                                        @error('achievements')
-                                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                                        @enderror
+                                                        id="achievements" name="achievements" rows="4"
+                                                        placeholder="Enter judge's achievements, awards, and recognitions...">{{ old('achievements') }}</textarea>
+                                                    @error('achievements')
+                                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                    @enderror
                                                     </div>
                                                 </div>
 
@@ -621,7 +621,7 @@
                                         <div>
                                             <h3 class="text-xl font-semibold text-gray-900">
                                                 Edit Judge Profile
-                                            </h3>
+                                        </h3>
                                             <p class="text-sm text-gray-500 mt-1">Update judge information and profile
                                                 details</p>
                                         </div>
@@ -650,12 +650,12 @@
                                                         </div>
                                                         <div
                                                             class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 rounded-full flex items-center justify-center">
-                                                            <label
+                                                <label
                                                                 class="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                                                 for="edit-profile">
                                                                 <i class="fas fa-camera text-white text-xl"></i>
                                                             </label>
-                                                        </div>
+                                            </div>
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-2"
@@ -678,11 +678,11 @@
                                                         for="edit-name">
                                                         Full Name
                                                     </label>
-                                                    <input
+                                                <input
                                                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                                         id="edit-name" name="name" type="text" required
                                                         placeholder="Enter judge's full name">
-                                                </div>
+                                            </div>
 
                                                 <!-- Email Field -->
                                                 <div>
@@ -690,7 +690,7 @@
                                                         for="edit-email">
                                                         Email Address
                                                     </label>
-                                                    <input
+                                                <input
                                                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                                         id="edit-email" name="email" type="email" required
                                                         placeholder="Enter judge's email address">
@@ -746,27 +746,27 @@
                             </div>
                             <button
                                 class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                                <i class='bx bx-filter'></i>
+                <i class='bx bx-filter'></i>
                             </button>
-                        </div>
+            </div>
                     </div>
 
                     <!-- Table Section -->
                     <div class="overflow-x-auto rounded-lg border border-gray-200">
                         <form id="multiple-delete-form" action="{{ route('event-judges.multiple-destroy') }}"
                             method="POST">
-                            @csrf
-                            @method('DELETE')
+                    @csrf
+                    @method('DELETE')
                             <table class="min-w-full divide-y divide-gray-200" id="myTable">
                                 <thead class="bg-gray-50">
-                                    <tr>
+                            <tr>
                                         <th class="px-6 py-3" scope="col">
                                             <div class="flex items-center">
-                                                <input
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                                    id="select-all-checkbox" type="checkbox">
+                                    <input
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                        id="select-all-checkbox" type="checkbox">
                                             </div>
-                                        </th>
+                                </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                             scope="col">
                                             ID
@@ -791,19 +791,19 @@
                                             scope="col">
                                             Action
                                         </th>
-                                    </tr>
-                                </thead>
+                            </tr>
+                        </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach ($eventJudges as $eventJudge)
+                            @foreach ($eventJudges as $eventJudge)
                                         <tr class="hover:bg-gray-50 transition-colors">
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
-                                                    <input
-                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                        <input
+                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                                                         name="selected_items[]" type="checkbox"
                                                         value="{{ $eventJudge->id }}">
                                                 </div>
-                                            </td>
+                                    </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 #{{ $eventJudge->id }}
                                             </td>
@@ -824,16 +824,16 @@
                                                 {{ $eventJudge->judge->created_at }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                <button
+                                        <button
                                                     class="text-red-600 hover:text-red-900 hover:bg-red-50 p-2 rounded-lg transition-colors"
-                                                    type="button" onclick="confirmDelete({{ $eventJudge->id }})">
-                                                    <i class="fa-solid fa-trash-can-arrow-up"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                            type="button" onclick="confirmDelete({{ $eventJudge->id }})">
+                                            <i class="fa-solid fa-trash-can-arrow-up"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                         </form>
                     </div>
 

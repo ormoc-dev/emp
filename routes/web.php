@@ -31,6 +31,7 @@ use App\Http\Controllers\SupperAdminTabulatorsController;
 use App\Http\Controllers\SupperAdminMessageController;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\SupperAdminInformationController;
 use App\Http\Controllers\SupperAdminMyProfileController;
 use App\Http\Controllers\WelcomeBackgroundController;
@@ -174,6 +175,10 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/events/{event}/live-link', [LiveLinkController::class, 'store'])->name('live-link.store');
     Route::delete('/events/{event}/live-link', [LiveLinkController::class, 'destroy'])->name('live-link.destroy');
 
+   // Committee scoring routes
+   Route::post('/committee/scores', [CommitteeController::class, 'storeScores'])->name('committee.scores.store');
+   Route::get('/committee/scores', [CommitteeController::class, 'getScores'])->name('committee.scores.get');
+   Route::put('/committee/scores', [CommitteeController::class, 'updateScores'])->name('committee.scores.update');
 
 
     //STARTED AND PENDING START BUTTON
