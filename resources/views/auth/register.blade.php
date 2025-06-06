@@ -104,7 +104,7 @@
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600 animate-slideIn">
                         Already have an account?
-                        <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('login') }}">
+                        <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('login') }}" wire:navigate>
                             Login here
                         </a>
                     </p>
