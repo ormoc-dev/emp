@@ -125,8 +125,6 @@
 
         </section>
 
-
-
         <!-- CONTENT -->
         <section id="content">
             <!-- NAVBAR -->
@@ -239,11 +237,38 @@
                     });
                 });
             </script>
-            <script>
+               <script>
                 function confirmLogout() {
-                    if (confirm('Are you sure you want to logout?')) {
-                        document.getElementById('logout-form').submit();
-                    }
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You will be logged out of your account",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#EF4444', // Red-500 color
+                        cancelButtonColor: '#6B7280', // Gray-500 color
+                        confirmButtonText: 'Yes, logout',
+                        cancelButtonText: 'Cancel',
+                        reverseButtons: true,
+                        customClass: {
+                            popup: 'animate__animated animate__fadeInDown'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Show loading state
+                            Swal.fire({
+                                title: 'Logging out...',
+                                text: 'Please wait',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                willOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+    
+                            // Submit the logout form
+                            document.getElementById('logout-form').submit();
+                        }
+                    });
                 }
             </script>
 

@@ -1,3 +1,4 @@
+// Constants
 const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 const menuBar = document.querySelector('#content nav .bx.bx-menu');
 const sidebar = document.getElementById('sidebar');
@@ -58,6 +59,43 @@ window.addEventListener('load', function () {
     applyDarkModeStyles();
 });
 
+// Function to handle sidebar state
+function toggleSidebar() {
+    if (sidebar) {
+        const isHidden = sidebar.classList.contains('hide');
+        if (isHidden) {
+            sidebar.classList.remove('hide');
+            localStorage.setItem('sidebarHidden', 'false');
+        } else {
+            sidebar.classList.add('hide');
+            localStorage.setItem('sidebarHidden', 'true');
+        }
+    }
+}
+
+// Set initial sidebar state
+function initializeSidebar() {
+    if (sidebar) {
+        const isHidden = localStorage.getItem('sidebarHidden') === 'true';
+        if (isHidden) {
+            sidebar.classList.add('hide');
+        } else {
+            sidebar.classList.remove('hide');
+        }
+    }
+}
+
+// Initialize sidebar state immediately when the script loads
+initializeSidebar();
+
+// Menu bar click handler
+if (menuBar) {
+    menuBar.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleSidebar();
+    });
+}
+
 // Usage of collapsible functions
 if (allSideMenu.length > 0) {
     allSideMenu.forEach(item => {
@@ -68,14 +106,6 @@ if (allSideMenu.length > 0) {
             });
             li.classList.add('active');
         });
-    });
-}
-
-if (menuBar) {
-    menuBar.addEventListener('click', function () {
-        if (sidebar) {
-            sidebar.classList.toggle('hide');
-        }
     });
 }
 

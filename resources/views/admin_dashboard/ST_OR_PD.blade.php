@@ -105,7 +105,7 @@
                             <td>
                                 <p>{{ $event->event_venue }}</p>
                             </td>
-                            <td>{{ $event->date_start }}</td>
+                            <td>{{ $event->created_at }}</td>
                             <td class="flex gap-1">
                                 <form action="{{ route('events.toggle', ['id' => $event->id]) }}" method="POST">
                                     @csrf
