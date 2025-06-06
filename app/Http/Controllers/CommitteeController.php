@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Score;
 use App\Models\Event;
 use App\Models\Contestant;
@@ -14,33 +15,37 @@ class CommitteeController extends Controller
 {
     public function storeScores(Request $request)
     {
-        $request->validate([
-            'event_id' => 'required|exists:events,id',
-            'round_id' => 'required|exists:rounds,id',
-            'criteria_id' => 'required|exists:criteria,id',
-            'scores' => 'required|array',
-            'scores.*.*' => 'required|numeric|min:1|max:10'
-        ]);
+        try {
+            $request->validate([
+                'event_id' => 'required|exists:events,id',
+                'round_id' => 'required|exists:rounds,id',
+                'criteria_id' => 'required|exists:criteria,id',
+                'scores' => 'required|array',
+                'scores.*.*' => 'required|numeric|min:1|max:10'
+            ]);
 
-        $scores = [];
-        foreach ($request->scores as $contestant_id => $judge_scores) {
-            foreach ($judge_scores as $judge_id => $rate) {
-                $scores[] = [
-                    'contestant_id' => $contestant_id,
-                    'user_id' => $judge_id,
-                    'round_id' => $request->round_id,
-                    'criteria_id' => $request->criteria_id,
-                    'event_id' => $request->event_id,
-                    'rate' => $rate,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
+            $scores = [];
+            foreach ($request->scores as $contestant_id => $judgeScores) {
+                foreach ($judgeScores as $judge_id => $score) {
+                    $scores[] = [
+                        'contestant_id' => $contestant_id,
+                        'user_id' => $judge_id,
+                        'round_id' => $request->round_id,
+                        'criteria_id' => $request->criteria_id,
+                        'event_id' => $request->event_id,
+                        'rate' => $score,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+                }
             }
+
+            Score::insert($scores);
+
+            return redirect()->back()->with('success', 'Scores saved successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error saving scores: ' . $e->getMessage());
         }
-
-        Score::insert($scores);
-
-        return redirect()->back()->with('success', 'Scores saved successfully');
     }
 
     public function getScores(Request $request)

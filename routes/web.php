@@ -157,6 +157,8 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/rounds/add-criteria',  [CrteriaController::class, 'addcriteria'])->name('rounds.add-criteria');
     Route::delete('/criteria/{criterion}', [CrteriaController::class, 'destroy'])->name('criteria.destroy');
     Route::get('/events/{eventId}/proceed-next-round', [ScoreController::class, 'proceedToNextRound'])->name('proceed_next_round');
+
+    Route::post('/criteria/{criteria}/toggle-visibility', [CrteriaController::class, 'toggleVisibility'])->name('criteria.toggle-visibility');
     // ADD TIME FOR CRITERIA 
     Route::post('/events/{event}/schedule', [TimeScheduleController::class, 'store'])->name('schedule.store');
     Route::put('/events/{event}/schedule', [TimeScheduleController::class, 'update'])->name('schedule.update');
@@ -169,16 +171,13 @@ Route::middleware(['admin'])->group(function () {
         Route::put('/{category}/toggle-status', [VotingCategoryController::class, 'toggleStatus'])->name('voting-categories.toggle-status');
         Route::put('/settings', [VotingCategoryController::class, 'updateSettings'])->name('voting-categories.settings.update');
     });
-
-
     //live link
     Route::post('/events/{event}/live-link', [LiveLinkController::class, 'store'])->name('live-link.store');
     Route::delete('/events/{event}/live-link', [LiveLinkController::class, 'destroy'])->name('live-link.destroy');
-
-   // Committee scoring routes
-   Route::post('/committee/scores', [CommitteeController::class, 'storeScores'])->name('committee.scores.store');
-   Route::get('/committee/scores', [CommitteeController::class, 'getScores'])->name('committee.scores.get');
-   Route::put('/committee/scores', [CommitteeController::class, 'updateScores'])->name('committee.scores.update');
+    // Committee scoring routes
+    Route::post('/committee/scores', [CommitteeController::class, 'storeScores'])->name('committee.scores.store');
+    Route::get('/committee/scores', [CommitteeController::class, 'getScores'])->name('committee.scores.get');
+    Route::put('/committee/scores', [CommitteeController::class, 'updateScores'])->name('committee.scores.update');
 
 
     //STARTED AND PENDING START BUTTON
@@ -266,7 +265,7 @@ Route::middleware(['Sadmin'])->group(function () {
     Route::post('/Tabulators', [SupperAdminTabulatorsController::class, 'store'])->name('Tabulators.store');
     Route::delete('/Tabulators/{id}', [SupperAdminTabulatorsController::class, 'destroy'])->name('Tabulators.destroy');
     Route::get('/tabulators/{id}/edit', [SupperAdminTabulatorsController::class, 'edit'])->name('tabulators.edit');
-    Route::put('/tabulators/{id}', [SupperAdminTabulatorsController::class, 'update'])->name('tabulators.update'); 
+    Route::put('/tabulators/{id}', [SupperAdminTabulatorsController::class, 'update'])->name('tabulators.update');
     // Forgot Password routes
     Route::get('/ForgotPassword', [SupperAdminForgotPasswordController::class, 'index_ForgotPassword'])->name('ForgotPassword');
     Route::post('/reset-password/{userId}/{userType}', [SupperAdminForgotPasswordController::class, 'resetPassword'])->name('reset.password.action');

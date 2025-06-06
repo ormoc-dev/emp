@@ -161,4 +161,15 @@ class CrteriaController extends Controller
             return redirect()->back()->with('error', 'An error occurred while deleting the criterion.');
         }
     }
+
+    public function toggleVisibility(Criteria $criteria)
+{
+    $criteria->is_hidden = !$criteria->is_hidden;
+    $criteria->save();
+
+    return response()->json([
+        'success' => true,
+        'is_hidden' => $criteria->is_hidden
+    ]);
+}
 }

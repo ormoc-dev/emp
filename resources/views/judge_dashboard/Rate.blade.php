@@ -172,17 +172,20 @@
                                             value="{{ $contestant->id }}">
                                         <div class="space-y-3">
                                             @foreach ($currentRound->criteria as $criteria)
-                                                <div>
-                                                    <label class="block mb-1 text-sm font-medium text-gray-700">
-                                                        {{ $criteria->criteria_description }}
-                                                    </label>
-                                                    <input
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md rate-input focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                                                        name="rates[{{ $contestant->id }}][criteria][{{ $criteria->id }}][rate]"
-                                                        type="number" step="0.01" min="{{ $criteria->lowest_rate }}"
-                                                        max="{{ $criteria->highest_rate }}" required
-                                                        placeholder="{{ $criteria->lowest_rate }} - {{ $criteria->highest_rate }}">
-                                                </div>
+                                                @if (!$criteria->is_hidden)
+                                                    <div>
+                                                        <label class="block mb-1 text-sm font-medium text-gray-700">
+                                                            {{ $criteria->criteria_description }}
+                                                        </label>
+                                                        <input
+                                                            class="w-full px-3 py-2 border border-gray-300 rounded-md rate-input focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                                            name="rates[{{ $contestant->id }}][criteria][{{ $criteria->id }}][rate]"
+                                                            type="number" step="0.01"
+                                                            min="{{ $criteria->lowest_rate }}"
+                                                            max="{{ $criteria->highest_rate }}" required
+                                                            placeholder="{{ $criteria->lowest_rate }} - {{ $criteria->highest_rate }}">
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         </div>
                                     </div>
@@ -264,17 +267,20 @@
                                             value="{{ $contestant->id }}">
                                         <div class="space-y-3">
                                             @foreach ($currentRound->criteria as $criteria)
-                                                <div>
-                                                    <label class="block mb-1 text-sm font-medium text-gray-700">
-                                                        {{ $criteria->criteria_description }}
-                                                    </label>
-                                                    <input
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md rate-input focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                                                        name="rates[{{ $contestant->id }}][criteria][{{ $criteria->id }}][rate]"
-                                                        type="number" step="0.01" min="{{ $criteria->lowest_rate }}"
-                                                        max="{{ $criteria->highest_rate }}" required
-                                                        placeholder="{{ $criteria->lowest_rate }} - {{ $criteria->highest_rate }}">
-                                                </div>
+                                                @if (!$criteria->is_hidden)
+                                                    <div>
+                                                        <label class="block mb-1 text-sm font-medium text-gray-700">
+                                                            {{ $criteria->criteria_description }}
+                                                        </label>
+                                                        <input
+                                                            class="w-full px-3 py-2 border border-gray-300 rounded-md rate-input focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                                            name="rates[{{ $contestant->id }}][criteria][{{ $criteria->id }}][rate]"
+                                                            type="number" step="0.01"
+                                                            min="{{ $criteria->lowest_rate }}"
+                                                            max="{{ $criteria->highest_rate }}" required
+                                                            placeholder="{{ $criteria->lowest_rate }} - {{ $criteria->highest_rate }}">
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         </div>
                                     </div>
@@ -324,17 +330,20 @@
                                             </div>
                                         @elseif ($currentRound)
                                             @foreach ($currentRound->criteria as $criteria)
-                                                <div>
-                                                    <label class="block mb-1 text-sm font-medium text-gray-700">
-                                                        {{ $criteria->criteria_description }}
-                                                    </label>
-                                                    <input
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md rate-input focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                                                        name="rates[{{ $contestant->id }}][criteria][{{ $criteria->id }}][rate]"
-                                                        type="number" step="0.01" min="{{ $criteria->lowest_rate }}"
-                                                        max="{{ $criteria->highest_rate }}" required
-                                                        placeholder="{{ $criteria->lowest_rate }} - {{ $criteria->highest_rate }}">
-                                                </div>
+                                                @if (!$criteria->is_hidden)
+                                                    <div>
+                                                        <label class="block mb-1 text-sm font-medium text-gray-700">
+                                                            {{ $criteria->criteria_description }}
+                                                        </label>
+                                                        <input
+                                                            class="w-full px-3 py-2 border border-gray-300 rounded-md rate-input focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                                            name="rates[{{ $contestant->id }}][criteria][{{ $criteria->id }}][rate]"
+                                                            type="number" step="0.01"
+                                                            min="{{ $criteria->lowest_rate }}"
+                                                            max="{{ $criteria->highest_rate }}" required
+                                                            placeholder="{{ $criteria->lowest_rate }} - {{ $criteria->highest_rate }}">
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         @endif
                                     </div>

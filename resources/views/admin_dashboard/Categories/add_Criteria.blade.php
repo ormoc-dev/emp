@@ -31,6 +31,18 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
     }
+
+    .table-container {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .action-button {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .action-button:hover {
+        transform: scale(1.1);
+    }
 </style>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @section('content')
@@ -179,6 +191,8 @@
 
                 <!-- Awards Content (flex layout for form and table) -->
                 <div class="tab-content" id="awards-content">
+
+
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Set Minor Awards</h3>
                     <p class="mb-4">The section below is optional and intended for pageant events.</p>
 
@@ -717,7 +731,7 @@
 
                 <!-- Committee Content -->
                 <div class="tab-content" id="committee-content" style="display: none;">
-                    <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="">
                         <!-- Header Section -->
                         <div class="flex justify-between items-center mb-6">
                             <div>
@@ -733,7 +747,8 @@
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Round</label>
-                                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                <select
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                     id="round_id" name="round_id">
                                     @foreach ($rounds as $round)
                                         <option value="{{ $round->id }}">{{ $round->round_description }}</option>
@@ -742,17 +757,20 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Criteria</label>
-                                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                <select
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                     id="criteria_id" name="criteria_id">
                                     @foreach ($criteria as $criterion)
-                                        <option value="{{ $criterion->id }}">{{ $criterion->criteria_description }}</option>
+                                        <option value="{{ $criterion->id }}">{{ $criterion->criteria_description }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
                         <!-- Scoring Form -->
-                        <form class="space-y-6" id="scoringForm" action="{{ route('committee.scores.store') }}" method="POST">
+                        <form class="space-y-6" id="scoringForm" action="{{ route('committee.scores.store') }}"
+                            method="POST">
                             @csrf
                             <input name="event_id" type="hidden" value="{{ $event->id }}">
                             <input id="form_round_id" name="round_id" type="hidden">
@@ -763,57 +781,61 @@
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
                                         <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Contestant
                                             </th>
-                                            @foreach($judges as $judge)
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Judge {{ $judge->name }}
-                                            </th>
+                                            @foreach ($judges as $judge)
+                                                <th
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Judge {{ $judge->name }}
+                                                </th>
                                             @endforeach
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Average Score
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($contestants as $contestant)
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <div class="flex-shrink-0 h-10 w-10">
-                                                        @if($contestant->image)
-                                                            <img class="h-10 w-10 rounded-full" src="{{ asset('storage/' . $contestant->image) }}" alt="">
-                                                        @else
-                                                            <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                                                <i class="fas fa-user text-gray-400"></i>
+                                        @foreach ($contestants as $contestant)
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-10 w-10">
+                                                            @if ($contestant->image)
+                                                                <img class="h-10 w-10 rounded-full"
+                                                                    src="{{ asset('storage/' . $contestant->image) }}"
+                                                                    alt="">
+                                                            @else
+                                                                <div
+                                                                    class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                                    <i class="fas fa-user text-gray-400"></i>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                        <div class="ml-4">
+                                                            <div class="text-sm font-medium text-gray-900">
+                                                                {{ $contestant->name }}
                                                             </div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="ml-4">
-                                                        <div class="text-sm font-medium text-gray-900">
-                                                            {{ $contestant->name }}
-                                                        </div>
-                                                        <div class="text-sm text-gray-500">
-                                                            #{{ $contestant->contestant_number }}
+                                                            <div class="text-sm text-gray-500">
+                                                                #{{ $contestant->contestant_number }}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            @foreach($judges as $judge)
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <input type="number" 
-                                                       name="scores[{{ $contestant->id }}][{{ $judge->id }}]" 
-                                                       min="1" 
-                                                       max="10" 
-                                                       class="score-input rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                                       required>
-                                            </td>
-                                            @endforeach
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="average-score text-sm font-medium text-gray-900">-</span>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                @foreach ($judges as $judge)
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            class="score-input rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                                            name="scores[{{ $contestant->id }}][{{ $judge->id }}]"
+                                                            type="number" min="1" max="10" required>
+                                                    </td>
+                                                @endforeach
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span class="average-score text-sm font-medium text-gray-900">-</span>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -821,8 +843,9 @@
 
                             <!-- Submit Button -->
                             <div class="flex justify-end mt-6">
-                                <button type="submit" 
-                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <button
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                    type="submit">
                                     <i class="fas fa-save mr-2"></i>
                                     Save Scores
                                 </button>
@@ -966,103 +989,142 @@
                 </div>
 
 
-
                 <!-- Update the delete form -->
                 <form id="delete-live-link-form-{{ $event->id }}" style="display: none;"
                     action="{{ route('live-link.destroy', $event->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
                 </form>
-                _
-                <script>
-                    function confirmLiveLinkDelete(eventId) {
-                        Swal.fire({
-                            title: 'Are you sure?',
-                            text: "This will remove the live stream link. This action cannot be undone.",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#EF4444',
-                            cancelButtonColor: '#6B7280',
-                            confirmButtonText: 'Yes, remove it',
-                            cancelButtonText: 'Cancel'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                document.getElementById(`delete-live-link-form-${eventId}`).submit();
-                            }
-                        });
-                    }
-                </script>
 
 
-
-                <!-- View Content -->
+                <!-- View Content data -->
                 <div class="tab-content" id="view-content">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">View data</h3>
-                    <p class="mb-4">Content for the View tab goes here.</p>
+                    <!-- Header Section -->
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Criteria Management</h3>
+                        <p class="mt-2 text-sm text-gray-600">View and manage all criteria for the competition rounds</p>
+                    </div>
 
-                    <div class="table-data">
-                        <div class="order">
-                            @if (session('successDelete'))
-                                <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
-                                    role="alert">
-                                    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                                    </svg>
-                                    <span class="sr-only">Info</span>
-                                    <div>
-                                        <span class="font-medium">Success alert!</span> {{ session('successDelete') }}
+                    <!-- Success Alert -->
+                    @if (session('successDelete'))
+                        <div class="flex items-center p-4 mb-6 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
+                            role="alert">
+                            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div>
+                                <span class="font-medium">Success!</span> {{ session('successDelete') }}
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Main Content Card -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <!-- Table Header with Stats -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-list-check text-blue-600 mr-2"></i>
+                                        <span class="text-sm font-medium text-gray-700">Total Criteria:
+                                            {{ $criteria->count() }}</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-eye-slash text-gray-600 mr-2"></i>
+                                        <span class="text-sm font-medium text-gray-700">Hidden:
+                                            {{ $criteria->where('is_hidden', true)->count() }}</span>
                                     </div>
                                 </div>
-                            @endif
-                            <table class="table-auto w-full text-left border-collapse" id="myTable">
-                                <thead class="bg-gray-100 dark:bg-gray-700">
+                                <div class="flex items-center space-x-2">
+                                    <button
+                                        class="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <i class="fas fa-download mr-1"></i> Export
+                                    </button>
+                                    <button
+                                        class="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <i class="fas fa-plus mr-1"></i> Add New
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200" id="myTable">
+                                <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="p-2">#</th>
-                                        <th class="p-2">Round Description</th>
-                                        <th class="p-2">Criteria Description</th>
-                                        <th class="p-2">Highest Rate</th>
-                                        <th class="p-2">Lowest Rate</th>
-                                        <th class="p-2">Action</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">Round</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">Criteria</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">Rating Range</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach ($criteria as $criterion)
-                                        <tr class="border-b dark:border-gray-600">
-                                            <td class="p-2">{{ $criterion->id }}</td>
-                                            <td class="p-2">{{ $criterion->round->round_description }}</td>
-                                            <td class="p-2">{{ $criterion->criteria_description }}</td>
-                                            <td class="p-2">{{ $criterion->highest_rate }}</td>
-                                            <td class="p-2">{{ $criterion->lowest_rate }}</td>
-                                            <td class="p-2 flex gap-2">
-                                                <form id="deleteForm-{{ $criterion->id }}"
-                                                    action="{{ route('criteria.destroy', $criterion->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button
-                                                        class="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded-sm"
-                                                        type="button" onclick="confirmDelete({{ $criterion->id }})">
-                                                        <i class="fa-solid fa-trash-can"></i>
+                                        <tr
+                                            class="hover:bg-gray-50 transition-colors duration-200 {{ $criterion->is_hidden ? 'opacity-50' : '' }}">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                #{{ $criterion->id }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    {{ $criterion->round->round_description }}</div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="text-sm text-gray-900">{{ $criterion->criteria_description }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <span
+                                                        class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
+                                                        {{ $criterion->lowest_rate }} - {{ $criterion->highest_rate }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span
+                                                    class="px-2 py-1 text-xs font-medium rounded-full {{ $criterion->is_hidden ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800' }}">
+                                                    {{ $criterion->is_hidden ? 'Hidden' : 'Visible' }}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex items-center space-x-3">
+                                                    <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                                                        <i class="fas fa-edit"></i>
                                                     </button>
-                                                </form>
-                                                <a class="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-sm"
-                                                    id="openModalButton{{ $criterion->id }}">
-                                                    <i class="fa-solid fa-file-pen"></i>
-                                                </a>
+                                                    <button class="text-red-600 hover:text-red-900" title="Delete"
+                                                        onclick="confirmDelete({{ $criterion->id }})">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                    <button class="text-gray-600 hover:text-gray-900"
+                                                        data-criteria-id="{{ $criterion->id }}"
+                                                        title="{{ $criterion->is_hidden ? 'Show' : 'Hide' }}"
+                                                        onclick="toggleCriteriaVisibility({{ $criterion->id }})">
+                                                        <i
+                                                            class="fas {{ $criterion->is_hidden ? 'fa-eye' : 'fa-eye-slash' }}"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td class="p-2" colspan="6">
-                                            <div id="roundTotals"></div>
-                                        </td>
-                                    </tr>
-                                </tfoot>
                             </table>
+                        </div>
+
+                        <!-- Table Footer with Summary -->
+                        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                            <div class="text-sm text-gray-600" id="roundTotals"></div>
                         </div>
                     </div>
                 </div>
@@ -1077,6 +1139,24 @@
 
 
     <!-- Script for calculating round totals -->
+    <script>
+        function confirmLiveLinkDelete(eventId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will remove the live stream link. This action cannot be undone.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF4444',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Yes, remove it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-live-link-form-${eventId}`).submit();
+                }
+            });
+        }
+    </script>
     <script>
         function calculateRoundTotals() {
             const table = document.getElementById('myTable');
@@ -1340,6 +1420,100 @@
 
             // Load scores on page load
             loadExistingScores();
+        });
+    </script>
+
+    <script>
+        function toggleCriteriaVisibility(criteriaId) {
+            $.ajax({
+                url: `/criteria/${criteriaId}/toggle-visibility`,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Get the button and its row
+                        const button = $(`button[data-criteria-id="${criteriaId}"]`);
+                        const row = button.closest('tr');
+                        const icon = button.find('i');
+                        const statusSpan = row.find('td:nth-child(5) span');
+
+                        if (response.is_hidden) {
+                            // Update icon
+                            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                            // Update row opacity
+                            row.addClass('opacity-50');
+                            // Update status text and style
+                            statusSpan.text('Hidden')
+                                .removeClass('bg-green-100 text-green-800')
+                                .addClass('bg-gray-100 text-gray-800');
+                            // Update button title
+                            button.attr('title', 'Show');
+                        } else {
+                            // Update icon
+                            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                            // Update row opacity
+                            row.removeClass('opacity-50');
+                            // Update status text and style
+                            statusSpan.text('Visible')
+                                .removeClass('bg-gray-100 text-gray-800')
+                                .addClass('bg-green-100 text-green-800');
+                            // Update button title
+                            button.attr('title', 'Hide');
+                        }
+
+                        // Update the hidden count in the header
+                        const hiddenCount = $('tr.opacity-50').length;
+                        $('.fa-eye-slash').closest('.flex').find('span').text(`Hidden: ${hiddenCount}`);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error toggling visibility:', xhr);
+                    alert('Failed to update visibility. Please try again.');
+                }
+            });
+        }
+    </script>
+
+    <!-- Add this script section at the bottom of your committee-content div -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('scoringForm');
+            const roundSelect = document.getElementById('round_id');
+            const criteriaSelect = document.getElementById('criteria_id');
+            const formRoundId = document.getElementById('form_round_id');
+            const formCriteriaId = document.getElementById('form_criteria_id');
+
+            // Update hidden form fields when selections change
+            roundSelect.addEventListener('change', function() {
+                formRoundId.value = this.value;
+            });
+
+            criteriaSelect.addEventListener('change', function() {
+                formCriteriaId.value = this.value;
+            });
+
+            // Set initial values
+            formRoundId.value = roundSelect.value;
+            formCriteriaId.value = criteriaSelect.value;
+
+            // Calculate average scores
+            function calculateAverage(row) {
+                const inputs = row.querySelectorAll('.score-input');
+                const values = Array.from(inputs).map(input => parseFloat(input.value) || 0);
+                const average = values.reduce((a, b) => a + b, 0) / values.length;
+                return average.toFixed(2);
+            }
+
+            // Update average when scores change
+            document.querySelectorAll('.score-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const row = this.closest('tr');
+                    const averageScore = row.querySelector('.average-score');
+                    averageScore.textContent = calculateAverage(row);
+                });
+            });
         });
     </script>
 @endsection
