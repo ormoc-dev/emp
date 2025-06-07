@@ -1,7 +1,91 @@
 @extends('layouts.welcome_layout')
+
+<!-- Loading Screen -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800"
+    id="loading-screen">
+    <div class="text-center relative">
+        <!-- Logo Container -->
+        <div class="relative">
+            <img class="w-40 h-40 mx-auto animate-float" src="{{ asset('img/emp-logo.png') }}" alt="Logo">
+            <!-- Glowing Effect -->
+            <div class="absolute inset-0 bg-red-500 opacity-20 blur-xl rounded-full animate-pulse"></div>
+        </div>
+
+        <!-- Loading Text -->
+        <h2 class="mt-6 text-2xl font-bold text-white animate-fade-in">Event Master Pro</h2>
+        <p class="mt-2 text-gray-400 text-sm animate-fade-in-delay">Your Complete Event Management Solution</p>
+
+        <!-- Loading Bar -->
+        <div class="mt-8 w-48 h-1 bg-gray-700 rounded-full overflow-hidden mx-auto">
+            <div class="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full animate-loading-bar"></div>
+        </div>
+    </div>
+</div>
+
 <style>
     html {
         scroll-behavior: smooth;
+    }
+
+    /* Loading Screen Animations */
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes loading-bar {
+        0% {
+            width: 0%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .animate-loading-bar {
+        animation: loading-bar 4s ease-in-out forwards;
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.8s ease-out forwards;
+    }
+
+    .animate-fade-in-delay {
+        animation: fade-in 0.8s ease-out 0.3s forwards;
+        opacity: 0;
+    }
+
+    #loading-screen {
+        transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+    }
+
+    #loading-screen.fade-out {
+        opacity: 0;
+        visibility: hidden;
     }
 
     @media screen and (max-width: 640px) {
@@ -37,6 +121,23 @@
         }
     }
 </style>
+
+<!-- Loading Screen Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hide the loading screen after 4 seconds
+        setTimeout(function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.classList.add('fade-out');
+
+            // Remove the loading screen from DOM after fade out
+            setTimeout(function() {
+                loadingScreen.remove();
+            }, 800);
+        }, 4000);
+    });
+</script>
+
 @section('content')
     <!--HEAD CONTENT SECTION-->
     <div class="headers relative max-w-full ">
@@ -490,45 +591,68 @@
         </div>
 
         <!-- Timeline -->
-        <div class="max-w-4xl mx-auto mt-8 sm:mt-12">
-            <h3 class="text-lg sm:text-2xl font-bold text-center mb-4 sm:mb-8">Event Process Flow</h3>
+        <div class="max-w-6xl mx-auto mt-16 sm:mt-24 px-4 sm:px-6 lg:px-8">
+            <h3 class="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900">Event Process Flow</h3>
             <div class="relative timeline-container">
                 <!-- Timeline Line -->
-                <div class="absolute timeline-line h-full w-1 bg-gradient-to-b from-red-600 via-blue-600 to-red-600"></div>
+                <div
+                    class="absolute left-4 sm:left-1/2 transform sm:-translate-x-1/2 h-full w-1 bg-gradient-to-b from-red-600 via-blue-600 to-red-600">
+                </div>
 
                 <!-- Timeline Items -->
                 <div class="space-y-8 sm:space-y-12">
-                    <!-- Timeline Item -->
-                    <div class="relative timeline-item">
-                        <div class="timeline-dot w-3 h-3 sm:w-4 sm:h-4 bg-pink-500 rounded-full"></div>
-                        <div class="timeline-content">
-                            <h4 class="text-base sm:text-lg font-semibold text-pink-400">Registration Phase</h4>
-                            <p class="text-xs sm:text-sm text-gray-400">Step 1</p>
-                            <p class="text-xs sm:text-sm text-gray-500 mt-2">Submit application forms and requirements for
-                                event participation.</p>
+                    <!-- Timeline Item 1 -->
+                    <div class="relative timeline-item flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="w-full sm:w-5/12 sm:pr-8 sm:text-right order-2 sm:order-1">
+                            <div
+                                class="bg-white p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ml-8 sm:ml-0">
+                                <h4 class="text-lg sm:text-xl font-semibold text-pink-500 mb-2">Registration Phase</h4>
+                                <p class="text-sm text-gray-500 mb-2">Step 1</p>
+                                <p class="text-sm sm:text-base text-gray-600">Submit application forms and requirements for
+                                    event participation.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-0 sm:left-1/2 transform sm:-translate-x-1/2 order-1 sm:order-2">
+                            <div class="w-4 h-4 sm:w-6 sm:h-6 bg-pink-500 rounded-full border-4 border-white shadow-lg">
+                            </div>
+                        </div>
+                        <div class="w-full sm:w-5/12 sm:pl-8 order-3"></div>
+                    </div>
+
+                    <!-- Timeline Item 2 -->
+                    <div class="relative timeline-item flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="w-full sm:w-5/12 sm:pr-8 order-2 sm:order-1"></div>
+                        <div class="absolute left-0 sm:left-1/2 transform sm:-translate-x-1/2 order-1 sm:order-2">
+                            <div class="w-4 h-4 sm:w-6 sm:h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg">
+                            </div>
+                        </div>
+                        <div class="w-full sm:w-5/12 sm:pl-8 order-3">
+                            <div
+                                class="bg-white p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ml-8 sm:ml-0">
+                                <h4 class="text-lg sm:text-xl font-semibold text-blue-500 mb-2">Screening Process</h4>
+                                <p class="text-sm text-gray-500 mb-2">Step 2</p>
+                                <p class="text-sm sm:text-base text-gray-600">Evaluation of applications and selection of
+                                    qualified participants.</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Timeline Item -->
-                    <div class="relative timeline-item">
-                        <div class="timeline-dot w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded-full"></div>
-                        <div class="timeline-content">
-                            <h4 class="text-base sm:text-lg font-semibold text-blue-400">Screening Process</h4>
-                            <p class="text-xs sm:text-sm text-gray-400">Step 2</p>
-                            <p class="text-xs sm:text-sm text-gray-500 mt-2">Evaluation of applications and selection of
-                                qualified participants.</p>
+                    <!-- Timeline Item 3 -->
+                    <div class="relative timeline-item flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="w-full sm:w-5/12 sm:pr-8 sm:text-right order-2 sm:order-1">
+                            <div
+                                class="bg-white p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ml-8 sm:ml-0">
+                                <h4 class="text-lg sm:text-xl font-semibold text-purple-500 mb-2">Competition Day</h4>
+                                <p class="text-sm text-gray-500 mb-2">Final Step</p>
+                                <p class="text-sm sm:text-base text-gray-600">Main event competition and awarding ceremony.
+                                </p>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Timeline Item -->
-                    <div class="relative timeline-item">
-                        <div class="timeline-dot w-3 h-3 sm:w-4 sm:h-4 bg-purple-500 rounded-full"></div>
-                        <div class="timeline-content">
-                            <h4 class="text-base sm:text-lg font-semibold text-purple-400">Competition Day</h4>
-                            <p class="text-xs sm:text-sm text-gray-400">Final Step</p>
-                            <p class="text-xs sm:text-sm text-gray-500 mt-2">Main event competition and awarding ceremony.
-                            </p>
+                        <div class="absolute left-0 sm:left-1/2 transform sm:-translate-x-1/2 order-1 sm:order-2">
+                            <div class="w-4 h-4 sm:w-6 sm:h-6 bg-purple-500 rounded-full border-4 border-white shadow-lg">
+                            </div>
                         </div>
+                        <div class="w-full sm:w-5/12 sm:pl-8 order-3"></div>
                     </div>
                 </div>
             </div>

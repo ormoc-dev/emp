@@ -4,6 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ config('app.name', 'E.M.P') }}</title>
         <link type="image/png" href="{{ asset('img/emp-logo.png') }}" rel="icon">
         <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
@@ -106,24 +107,15 @@
                     transform: scale(1);
                 }
             }
-
-            .animate-grow {
-                opacity: 0;
-                /* Initial state */
-            }
-
-            .animate-grow.visible {
-                animation: grow 1s ease-out forwards;
-            }
         </style>
 
     </head>
 
     <body class="wlecomebody">
+        <!-- Include Loading Screen Component -->
+        <x-loading-screen />
 
-
-
-        <nav class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-500 to-blue-700">
+        <nav class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-blue-500 to-blue-700">
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto ">
                 <!-- Logo -->
                 <a class="flex items-center space-x-3 rtl:space-x-reverse" href="{{ url('/') }}">
