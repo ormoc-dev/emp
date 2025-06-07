@@ -3,6 +3,39 @@
     html {
         scroll-behavior: smooth;
     }
+
+    @media screen and (max-width: 640px) {
+
+        /* Timeline line adjustments for mobile */
+        .timeline-line {
+            left: 0 !important;
+            transform: none !important;
+            margin-left: 1rem !important;
+        }
+
+        /* Timeline container adjustments */
+        .timeline-container {
+            padding-left: 2rem !important;
+        }
+
+        /* Timeline items adjustments */
+        .timeline-item {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            margin-bottom: 2rem !important;
+        }
+
+        .timeline-content {
+            width: 100% !important;
+            text-align: left !important;
+            padding-left: 1.5rem !important;
+        }
+
+        .timeline-dot {
+            position: absolute !important;
+            left: -0.5rem !important;
+        }
+    }
 </style>
 @section('content')
     <!--HEAD CONTENT SECTION-->
@@ -205,30 +238,32 @@
 
     <!--VIDEO HIGHLIGHTS-->
     <section class="text-gray-600 body-font" id="ratings">
-        <div class="container px-5 py-24 mx-auto">
+        <div class="container px-4 sm:px-5 py-12 sm:py-24 mx-auto">
             <div class="flex flex-col">
                 <div class="h-1 bg-gray-200 rounded overflow-hidden">
                     <div class="w-24 h-full bg-red-500"></div>
                 </div>
-                <div class="flex flex-wrap sm:flex-row flex-col py-6 mb-12">
+                <div class="flex flex-wrap sm:flex-row flex-col py-4 sm:py-6 mb-8 sm:mb-12">
                     <h1
-                        class="sm:w-2/5 text-gray-900 font-medium title-font text-2xl mb-2 sm:mb-0 animate-grow flex items-center">
+                        class="w-full sm:w-2/5 text-gray-900 font-medium title-font text-xl sm:text-2xl mb-4 sm:mb-0 animate-grow flex items-center justify-center sm:justify-start">
                         <span class="mr-2">Event Video Highlights</span>
-                        <lord-icon src="https://cdn.lordicon.com/pjwsjrxf.json" style="width:50px;height:50px"
-                            trigger="loop" delay="2000" colors="primary:#3a3347,secondary:#e86830">
+                        <lord-icon src="https://cdn.lordicon.com/pjwsjrxf.json"
+                            style="width:40px;height:40px;sm:width:50px;sm:height:50px" trigger="loop" delay="2000"
+                            colors="primary:#3a3347,secondary:#e86830">
                         </lord-icon>
                     </h1>
-                    <p class="sm:w-3/5 leading-relaxed text-base sm:pl-10 pl-0 animate-slideIn">
+                    <p
+                        class="w-full sm:w-3/5 leading-relaxed text-sm sm:text-base text-center sm:text-left sm:pl-10 pl-0 animate-slideIn">
                         Relive the magic of our past events through these captivating video highlights.
                         Each clip showcases the talent, beauty, and excitement that define our pageants and competitions.
                     </p>
                 </div>
             </div>
 
-            <div class="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4">
+            <div class="flex flex-wrap -mx-2 sm:-mx-4 -mb-6 sm:-mb-10 -mt-2 sm:-mt-4">
                 @forelse($videos as $video)
-                    <div class="p-4 md:w-1/3 sm:mb-0 mb-6">
-                        <div class="rounded-lg h-64 overflow-hidden">
+                    <div class="w-full sm:w-1/2 lg:w-1/3 p-2 sm:p-4 mb-6 sm:mb-0">
+                        <div class="rounded-lg h-48 sm:h-64 overflow-hidden">
                             <div class="relative" style="padding-top: 56.25%;">
                                 <iframe class="absolute inset-0 w-full h-full rounded-lg shadow-xl"
                                     src="{{ $video->video_url }}" title="{{ $video->title }}" frameborder="0"
@@ -237,62 +272,70 @@
                                 </iframe>
                             </div>
                         </div>
-                        <h2 class="text-xl font-medium title-font text-gray-900 mt-5 animate-fadeIn">
+                        <h2 class="text-lg sm:text-xl font-medium title-font text-gray-900 mt-3 sm:mt-5 animate-fadeIn">
                             {{ $video->title }}
                         </h2>
-                        <p class="text-base leading-relaxed mt-2 animate-slideIn">
+                        <p class="text-sm sm:text-base leading-relaxed mt-2 animate-slideIn">
                             {{ $video->description }}
                         </p>
-                        <a class="text-red-500 inline-flex items-center mt-3" href="{{ $video->video_url }}"
-                            target="_blank">
+                        <a class="text-red-500 inline-flex items-center mt-2 sm:mt-3 text-sm sm:text-base"
+                            href="{{ $video->video_url }}" target="_blank">
                             Watch Video
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-2" fill="none" stroke="currentColor"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M5 12h14M12 5l7 7-7 7"></path>
                             </svg>
                         </a>
                     </div>
-                    @empty
-                    <div class="w-full py-16">
-                        <div class="max-w-2xl mx-auto  rounded-lg shadow-sm border  p-8">
+                @empty
+                    <div class="w-full py-8 sm:py-16">
+                        <div class="max-w-2xl mx-auto rounded-lg shadow-sm border p-4 sm:p-8">
                             <div class="flex flex-col items-center justify-center text-center">
                                 <!-- Animated Icon -->
-                                <lord-icon
-                                    src="https://cdn.lordicon.com/nocovwne.json"
-                                    trigger="loop"
-                                    delay="2000"
-                                    colors="primary:#666666,secondary:#e83a3a"
-                                    style="width:85px;height:85px">
+                                <lord-icon src="https://cdn.lordicon.com/nocovwne.json"
+                                    style="width:60px;height:60px;sm:width:85px;sm:height:85px" trigger="loop"
+                                    delay="2000" colors="primary:#666666,secondary:#e83a3a">
                                 </lord-icon>
-                
+
                                 <!-- Title -->
-                                <h2 class="mt-6 text-2xl font-bold text-gray-900">No Video Highlights Yet</h2>
-                                
+                                <h2 class="mt-4 sm:mt-6 text-xl sm:text-2xl font-bold text-gray-900">
+                                    No Video Highlights Yet
+                                </h2>
+
                                 <!-- Description -->
-                                <div class="mt-3 space-y-2">
-                                    <p class="text-gray-600">We're currently preparing amazing content for you.</p>
-                                    <p class="text-gray-500 text-sm">Our team is working on capturing the best moments from our events.</p>
+                                <div class="mt-2 sm:mt-3 space-y-1 sm:space-y-2">
+                                    <p class="text-sm sm:text-base text-gray-600">
+                                        We're currently preparing amazing content for you.
+                                    </p>
+                                    <p class="text-xs sm:text-sm text-gray-500">
+                                        Our team is working on capturing the best moments from our events.
+                                    </p>
                                 </div>
-                
+
                                 <!-- Divider -->
-                                <div class="w-16 h-1 bg-red-500 mx-auto my-6"></div>
-                
+                                <div class="w-12 sm:w-16 h-1 bg-red-500 mx-auto my-4 sm:my-6"></div>
+
                                 <!-- Call to Action -->
                                 <div class="mt-2">
-                                    <button onclick="window.location.reload()" 
-                                            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    <button
+                                        class="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 
+                                        rounded-md shadow-sm text-xs sm:text-sm font-medium text-gray-700 
+                                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 
+                                        transition-all duration-300"
+                                        onclick="window.location.reload()">
+                                        <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                         </svg>
                                         Refresh Page
                                     </button>
                                 </div>
-                
+
                                 <!-- Additional Info -->
-                                <p class="mt-6 text-sm text-gray-500">
-                                    Want to stay updated? 
-                                    <a href="#" class="text-red-600 hover:text-red-700 font-medium">
+                                <p class="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-500">
+                                    Want to stay updated?
+                                    <a class="text-red-600 hover:text-red-700 font-medium" href="#">
                                         Subscribe to our newsletter
                                     </a>
                                 </p>
@@ -305,7 +348,7 @@
     </section>
 
     <!--UPCOMING EVENTS SECTION-->
-    <section class=" py-20" id="learn" id="events-section">
+    <section class=" py-20 p-4" id="learn" id="events-section">
         <div class="container mx-auto px-4">
             <!-- Header -->
             <div class="text-center mb-16">
@@ -322,84 +365,124 @@
             <!-- Featured Events Grid -->
             <!-- Table Container -->
             <div class="mt-4 flex flex-col">
+                <!-- Search Input -->
+                <div class="mb-4">
+                    <div class="relative">
+                        <input
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                            id="eventSearch" type="text" placeholder="Search events...">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
-                            <table class="min-w-full divide-y divide-gray-300">
-                                <thead class="">
-                                    <tr>
-                                        <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                            scope="col">Event Name</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                            scope="col">Date</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                            scope="col">Time</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                            scope="col">Venue</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                            scope="col">Status</th>
-                                        <th class="relative py-3.5 pl-3 pr-4 sm:pr-6" scope="col">
-                                            <span class="sr-only">Actions</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    @forelse($events as $event)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class=" py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                                <div>
-                                                    <div class="font-medium text-gray-900">{{ $event->event_name }}</div>
-                                                    <div class="text-gray-500">{{ $event->event_subtitle }}</div>
-                                                </div>
-                                            </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                <div class="font-medium text-gray-900">
-                                                    {{ \Carbon\Carbon::parse($event->date_start)->format('M d, Y') }}
-                                                </div>
-                                                @if ($event->date_end)
-                                                    <div class="text-gray-500">
-                                                        to {{ \Carbon\Carbon::parse($event->date_end)->format('M d, Y') }}
-                                                    </div>
-                                                @endif
-                                            </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                {{ $event->timeSchedule ? \Carbon\Carbon::parse($event->timeSchedule->start_time)->format('g:i A') : 'TBA' }}
-                                            </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                {{ $event->event_venue }}
-                                            </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                                <span
-                                                    class="inline-flex rounded-full px-2 text-xs font-semibold leading-5 
-                                                    {{ $event->event_status === 'FEATURED'
-                                                        ? 'bg-yellow-100 text-yellow-800'
-                                                        : ($event->event_status === 'NEW'
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : 'bg-blue-100 text-blue-800') }}">
-                                                    {{ $event->event_status }}
-                                                </span>
-                                            </td>
-
-                                        </tr>
-                                    @empty
+                        <div class=" shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+                            <div class="max-h-[300px] overflow-y-auto">
+                                <table class="min-w-full divide-y divide-gray-300">
+                                    <thead class="bg-gray-50 sticky top-0">
                                         <tr>
-                                            <td class="px-3 py-8 text-center text-sm text-gray-500" colspan="6">
-                                                <div class="flex flex-col items-center justify-center">
-                                                    <svg class="h-12 w-12 text-gray-400" fill="none"
-                                                        viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                    <h3 class="mt-2 text-sm font-medium text-gray-900">No events</h3>
-                                                    <p class="mt-1 text-sm text-gray-500">No upcoming events at this time.
-                                                    </p>
-                                                </div>
-                                            </td>
+                                            <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                                scope="col">Event Name</th>
+                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                                scope="col">Date</th>
+                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                                scope="col">Time</th>
+                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                                scope="col">Venue</th>
+                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                                scope="col">Status</th>
+                                            <th class="relative py-3.5 pl-3 pr-4 sm:pr-6" scope="col">
+                                                <span class="sr-only">Actions</span>
+                                            </th>
                                         </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        @forelse($events as $event)
+                                            <tr class="">
+                                                <td class=" py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                                    <div>
+                                                        <div class="font-medium text-gray-900">{{ $event->event_name }}
+                                                        </div>
+                                                        <div class="text-gray-500">{{ $event->event_subtitle }}</div>
+                                                    </div>
+                                                </td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                    <div class="font-medium text-gray-900">
+                                                        @if ($event->timeSchedule)
+                                                            {{ \Carbon\Carbon::parse($event->timeSchedule->time_start)->format('M d, Y') }}
+                                                        @else
+                                                            {{ \Carbon\Carbon::parse($event->date_start)->format('M d, Y') }}
+                                                        @endif
+                                                    </div>
+                                                    @if ($event->timeSchedule && $event->timeSchedule->time_end)
+                                                        <div class="text-gray-500">
+                                                            to
+                                                            {{ \Carbon\Carbon::parse($event->timeSchedule->time_end)->format('M d, Y') }}
+                                                        </div>
+                                                    @elseif($event->date_end)
+                                                        <div class="text-gray-500">
+                                                            to
+                                                            {{ \Carbon\Carbon::parse($event->date_end)->format('M d, Y') }}
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                    <div class="flex items-center text-gray-900">
+                                                        <i class="fas fa-clock text-blue-600 mr-2"></i>
+                                                        @if ($event->timeSchedule)
+                                                            {{ \Carbon\Carbon::parse($event->timeSchedule->time_start)->format('g:i A') }}
+                                                            @if ($event->timeSchedule->time_end)
+                                                                <span class="text-gray-500 mx-1">to</span>
+                                                                {{ \Carbon\Carbon::parse($event->timeSchedule->time_end)->format('g:i A') }}
+                                                            @endif
+                                                        @else
+                                                            TBA
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                    {{ $event->event_venue }}
+                                                </td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                                    <span
+                                                        class="inline-flex rounded-full px-2 text-xs font-semibold leading-5 
+                                                        {{ $event->event_status === 'FEATURED'
+                                                            ? 'bg-yellow-100 text-yellow-800'
+                                                            : ($event->event_status === 'NEW'
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-blue-100 text-blue-800') }}">
+                                                        {{ $event->event_status }}
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td class="px-3 py-8 text-center text-sm text-gray-500" colspan="6">
+                                                    <div class="flex flex-col items-center justify-center">
+                                                        <svg class="h-12 w-12 text-gray-400" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                        <h3 class="mt-2 text-sm font-medium text-gray-900">No events</h3>
+                                                        <p class="mt-1 text-sm text-gray-500">No upcoming events at this
+                                                            time.
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -407,57 +490,44 @@
         </div>
 
         <!-- Timeline -->
-        <div class="max-w-4xl mx-auto">
-            <h3 class="text-2xl font-bold text-center mb-8">Event Process Flow</h3>
-            <div class="relative">
+        <div class="max-w-4xl mx-auto mt-8 sm:mt-12">
+            <h3 class="text-lg sm:text-2xl font-bold text-center mb-4 sm:mb-8">Event Process Flow</h3>
+            <div class="relative timeline-container">
                 <!-- Timeline Line -->
-                <div
-                    class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-pink-500 via-blue-500 to-purple-500">
-                </div>
+                <div class="absolute timeline-line h-full w-1 bg-gradient-to-b from-red-600 via-blue-600 to-red-600"></div>
 
                 <!-- Timeline Items -->
-                <div class="space-y-12">
+                <div class="space-y-8 sm:space-y-12">
                     <!-- Timeline Item -->
-                    <div class="flex items-center justify-between">
-                        <div class="w-5/12 text-right pr-8">
-                            <h4 class="text-lg font-semibold text-pink-400">Registration Phase</h4>
-                            <p class="text-sm text-gray-400">Step 1</p>
-                        </div>
-                        <div class="w-2/12 flex justify-center">
-                            <div class="w-4 h-4 bg-pink-500 rounded-full"></div>
-                        </div>
-                        <div class="w-5/12 pl-8">
-                            <p class="text-sm text-gray-500">Submit application forms and requirements for event
-                                participation.</p>
+                    <div class="relative timeline-item">
+                        <div class="timeline-dot w-3 h-3 sm:w-4 sm:h-4 bg-pink-500 rounded-full"></div>
+                        <div class="timeline-content">
+                            <h4 class="text-base sm:text-lg font-semibold text-pink-400">Registration Phase</h4>
+                            <p class="text-xs sm:text-sm text-gray-400">Step 1</p>
+                            <p class="text-xs sm:text-sm text-gray-500 mt-2">Submit application forms and requirements for
+                                event participation.</p>
                         </div>
                     </div>
 
                     <!-- Timeline Item -->
-                    <div class="flex items-center justify-between">
-                        <div class="w-5/12 text-right pr-8">
-                            <p class="text-sm text-gray-500">Evaluation of applications and selection of qualified
-                                participants.</p>
-                        </div>
-                        <div class="w-2/12 flex justify-center">
-                            <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
-                        </div>
-                        <div class="w-5/12 pl-8">
-                            <h4 class="text-lg font-semibold text-blue-400">Screening Process</h4>
-                            <p class="text-sm text-gray-400">Step 2</p>
+                    <div class="relative timeline-item">
+                        <div class="timeline-dot w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded-full"></div>
+                        <div class="timeline-content">
+                            <h4 class="text-base sm:text-lg font-semibold text-blue-400">Screening Process</h4>
+                            <p class="text-xs sm:text-sm text-gray-400">Step 2</p>
+                            <p class="text-xs sm:text-sm text-gray-500 mt-2">Evaluation of applications and selection of
+                                qualified participants.</p>
                         </div>
                     </div>
 
                     <!-- Timeline Item -->
-                    <div class="flex items-center justify-between">
-                        <div class="w-5/12 text-right pr-8">
-                            <h4 class="text-lg font-semibold text-purple-400">Competition Day</h4>
-                            <p class="text-sm text-gray-400">Final Step</p>
-                        </div>
-                        <div class="w-2/12 flex justify-center">
-                            <div class="w-4 h-4 bg-purple-500 rounded-full"></div>
-                        </div>
-                        <div class="w-5/12 pl-8">
-                            <p class="text-sm text-gray-500">Main event competition and awarding ceremony.</p>
+                    <div class="relative timeline-item">
+                        <div class="timeline-dot w-3 h-3 sm:w-4 sm:h-4 bg-purple-500 rounded-full"></div>
+                        <div class="timeline-content">
+                            <h4 class="text-base sm:text-lg font-semibold text-purple-400">Competition Day</h4>
+                            <p class="text-xs sm:text-sm text-gray-400">Final Step</p>
+                            <p class="text-xs sm:text-sm text-gray-500 mt-2">Main event competition and awarding ceremony.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -812,4 +882,35 @@
             </div>
         </div>
     </section>
+
+    <!-- Add this script at the bottom of your file, before the closing -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('eventSearch');
+            const tableRows = document.querySelectorAll('tbody tr');
+
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    const eventName = row.querySelector('.font-medium').textContent.toLowerCase();
+                    const eventSubtitle = row.querySelector('.text-gray-500').textContent
+                        .toLowerCase();
+                    const eventVenue = row.querySelector('td:nth-child(4)').textContent
+                        .toLowerCase();
+                    const eventStatus = row.querySelector('td:nth-child(5) span').textContent
+                        .toLowerCase();
+
+                    if (eventName.includes(searchTerm) ||
+                        eventSubtitle.includes(searchTerm) ||
+                        eventVenue.includes(searchTerm) ||
+                        eventStatus.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

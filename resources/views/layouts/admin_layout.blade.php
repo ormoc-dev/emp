@@ -238,7 +238,7 @@
                     });
                 });
             </script>
-               <script>
+            <script>
                 function confirmLogout() {
                     Swal.fire({
                         title: 'Are you sure?',
@@ -265,7 +265,7 @@
                                     Swal.showLoading();
                                 }
                             });
-    
+
                             // Submit the logout form
                             document.getElementById('logout-form').submit();
                         }
@@ -282,15 +282,24 @@
                 });
             </script>
 
-<script>
-    document.addEventListener('livewire:navigated', () => {
+            <!-- Livewire Scripts -->
+            @livewireScripts
+            <script>
+                // Initialize Flowbite and other components after Livewire navigation
+                document.addEventListener('livewire:init', () => {
+                    // Initial initialization
+                    if (typeof initFlowbite === 'function') {
+                        initFlowbite();
+                    }
+                });
 
-        console.log('livewire:navigated');
-        initFlowbite();
-
-    })
-</script>
-@livewireScripts
+                document.addEventListener('livewire:navigated', () => {
+                    // Re-initialize after navigation
+                    if (typeof initFlowbite === 'function') {
+                        initFlowbite();
+                    }
+                });
+            </script>
     </body>
 
 </html>

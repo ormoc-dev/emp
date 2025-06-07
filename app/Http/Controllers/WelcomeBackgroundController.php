@@ -14,10 +14,10 @@ class WelcomeBackgroundController extends Controller
     {
         
         $events = Event::with('timeSchedule')
-            ->where('date_start', '>=', now())
-            ->orderBy('date_start', 'asc')
-            ->take(3)
-            ->get();
+      //  ->where('date_start', '>=', now())
+        ->orderBy('date_start', 'asc')
+      //  ->take(3)
+        ->get();
         $background = WelcomeBackground::where('is_active', true)->first();
         $videos = VideoHighlight::latest()->take(3)->get(); // Get the 3 most recent videos
         

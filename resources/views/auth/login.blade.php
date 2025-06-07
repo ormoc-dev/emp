@@ -84,7 +84,7 @@
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600 py-2">
                         Don't have an account?
-                        <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('register') }}">
+                        <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('register') }}"  wire:navigate>
                             Register here
                         </a>
                     </p>
