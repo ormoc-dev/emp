@@ -108,13 +108,68 @@
                 }
             }
         </style>
+<style>
+    @keyframes blob {
+        0% {
+            transform: translate(0px, 0px) scale(1);
+        }
+
+        33% {
+            transform: translate(30px, -50px) scale(1.1);
+        }
+
+        66% {
+            transform: translate(-20px, 20px) scale(0.9);
+        }
+
+        100% {
+            transform: translate(0px, 0px) scale(1);
+        }
+    }
+
+    .animate-blob {
+        animation: blob 7s infinite;
+    }
+
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
 
     </head>
 
     <body class="wlecomebody">
-        <!-- Include Loading Screen Component -->
-        <x-loading-screen />
-
+   
         <nav class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-blue-500 to-blue-700">
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto ">
                 <!-- Logo -->
