@@ -82,8 +82,8 @@ class JudgeController extends Controller
     public function store_judge(Request $request)
     {
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'name' => 'required|string|max:255|unique:users',
+            'email' => 'nullable|string|email|max:255|unique:users',
             'password' => 'required|string|min:3',
             'password_confirmation' => 'required|same:password',
             'level' => ['required', 'string', Rule::in(['judge', 'admin', 'user'])],
@@ -100,7 +100,7 @@ class JudgeController extends Controller
                 'avatar/woman3.png',
             ];
 
-            // Default avataruluu
+            // Default avatar
             $profilePath = Arr::random($defaultAvatars);
 
             // Handle profile image upload if provided
@@ -116,13 +116,13 @@ class JudgeController extends Controller
             // Create the user
             $user = User::create([
                 'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
+                'email' => $validatedData['email'] ?? null,
                 'password' => Hash::make($validatedData['password']),
                 'level' => $validatedData['level'],
                 'profile' => $profilePath,
                 'biography' => $validatedData['biography'],
                 'achievements' => $validatedData['achievements'],
-                'created_by' => auth()->id(),  
+                'created_by' => auth()->id(),
             ]);
 
             $judges = User::where('level', 'judge')->get();

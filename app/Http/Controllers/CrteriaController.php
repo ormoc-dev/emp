@@ -55,8 +55,8 @@ class CrteriaController extends Controller
         // Fetch all events (if needed)
         $events = Event::all();
 
-        // Get judges for this event using the level column
-        $judges = User::where('level', 'judge')->get();
+        // Get judges assigned to this specific event
+        $judges = $event->judges()->where('level', 'judge')->get();
 
         return view('admin_dashboard.Categories.add_Criteria', compact(
             'event',
@@ -163,13 +163,13 @@ class CrteriaController extends Controller
     }
 
     public function toggleVisibility(Criteria $criteria)
-{
-    $criteria->is_hidden = !$criteria->is_hidden;
-    $criteria->save();
+    {
+        $criteria->is_hidden = !$criteria->is_hidden;
+        $criteria->save();
 
-    return response()->json([
-        'success' => true,
-        'is_hidden' => $criteria->is_hidden
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'is_hidden' => $criteria->is_hidden
+        ]);
+    }
 }

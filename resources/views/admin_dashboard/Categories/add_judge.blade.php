@@ -340,12 +340,12 @@
                                                     <div class="space-y-4">
                                                         <div>
                                                             <label class="block text-sm font-medium text-gray-700 mb-1"
-                                                                for="name">Full Name</label>
+                                                                for="name">Full Name (Username)</label>
                                                             <input
                                                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                                 id="name" name="name" type="text"
                                                                 value="{{ old('name') }}" required
-                                                                placeholder="Enter judge's full name">
+                                                                placeholder="Enter judge's username">
                                                             @error('name')
                                                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                                             @enderror
@@ -353,13 +353,13 @@
 
                                                         <div>
                                                             <label class="block text-sm font-medium text-gray-700 mb-1"
-                                                                for="email">Email Address</label>
+                                                                for="email">Email Address (Optional)</label>
                                                             <div class="relative">
                                                             <input
                                                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                                 id="email" name="email" type="email"
-                                                                    value="{{ old('email') }}" required
-                                                                    placeholder="username@gmail.com">
+                                                                    value="{{ old('email') }}"
+                                                                    placeholder="username@gmail.com (optional)">
 
                                                             </div>
                                                             @error('email')

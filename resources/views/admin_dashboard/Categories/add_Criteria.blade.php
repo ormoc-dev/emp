@@ -58,7 +58,7 @@
 @endif
 
     <!-- Selected Event Section -->
-    <div class="mb-6">
+    <div class="mb-6 mt-2">
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2">
                 <i class="fas fa-calendar-check text-blue-600"></i>
