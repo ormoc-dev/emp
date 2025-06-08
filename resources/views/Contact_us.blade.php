@@ -1,7 +1,6 @@
 @extends('layouts.welcome_layout')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
 @section('content')
-   
     <!-- Add the background to the body -->
     <div class="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
         <!-- Decorative elements -->
@@ -213,6 +212,8 @@
                 </div>
             </section>
 
+            <!--DOCUMENTATIONS-->
+
             <!--FRAMEWORKS $ TEC SECTION-->
             <section class="text-gray-600 body-font">
                 <div class="container px-5 py-24 mx-auto">
@@ -342,7 +343,152 @@
                     </div>
                 </div>
             </section>
+
+            <!--DOCUMENTATIONS-->
+            <section class="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Documentation</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Explore our comprehensive documentation to help you get
+                            started and make the most of our platform.</p>
+                        <div class="flex mt-6 justify-center">
+                            <div class="w-16 h-1 rounded-full bg-red-500 inline-flex"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Getting Started -->
+                        <div
+                            class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:border-red-500/30 transition-all duration-300 group">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-500/20 transition-colors duration-300">
+                                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900">Getting Started</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        Quick Start Guide
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        Installation Guide
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        Basic Configuration
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- User Guides -->
+                        <div
+                            class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:border-red-500/30 transition-all duration-300 group">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-500/20 transition-colors duration-300">
+                                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900">User Guides</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        User Dashboard Guide
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        Event Management
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        Voting System Guide
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- API Documentation -->
+                        <div
+                            class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:border-red-500/30 transition-all duration-300 group">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-500/20 transition-colors duration-300">
+                                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900">API Documentation</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        API Reference
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        Authentication
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center text-gray-600 hover:text-red-500 transition-colors duration-300"
+                                        href="#">
+                                        <span class="mr-2 text-red-500">→</span>
+                                        Integration Guide
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Additional Resources -->
+                    <div class="mt-12 text-center">
+                        <a class="inline-flex items-center px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300 shadow-md hover:shadow-lg"
+                            href="#">
+                            <span>View All Documentation</span>
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </div>
-    </section>
 @endsection

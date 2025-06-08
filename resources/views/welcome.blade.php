@@ -179,43 +179,92 @@
                             <!-- Rating Display -->
                             <div class="flex mb-4 justify-center md:justify-start">
                                 <span class="flex items-center">
-                                    {!! str_repeat(
-                                        '<svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>',
-                                        5,
-                                    ) !!}
                                     <span class="text-gray-600 ml-3">Trusted by Industry Leaders</span>
                                 </span>
                             </div>
 
                             <p class="leading-relaxed animate-slideIn">
                             <div class="space-y-4 mb-6">
-                                <!-- Feature Items -->
-                                <div class="flex items-center justify-center md:justify-start">
-                                    <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7">
-                                        </path>
-                                    </svg>
-                                    <span class="text-gray-700">Real-time Scoring & Results</span>
-                                </div>
-                                <div class="flex items-center justify-center md:justify-start">
-                                    <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7">
-                                        </path>
-                                    </svg>
-                                    <span class="text-gray-700">Custom Judging Criteria</span>
-                                </div>
-                                <div class="flex items-center justify-center md:justify-start">
-                                    <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7">
-                                        </path>
-                                    </svg>
-                                    <span class="text-gray-700">Participant Management</span>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- First Column -->
+                                    <div class="space-y-4">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">User-Friendly Interface</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Customizable Scoring System</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Real-Time Tabulation and Updates</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Audience Voting System</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Second Column -->
+                                    <div class="space-y-4">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Secure Data Management</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Offline Voting Support (for Judges)</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Event Scheduling</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Interactive Commenting and Feedback</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             </p>
@@ -888,23 +937,7 @@
                                 </p>
                             </div>
 
-                            <!-- Email Subscription -->
-                            <div
-                                class="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Get Early Access</h3>
-                                <div class="flex flex-col sm:flex-row gap-4">
-                                    <div class="flex-grow">
-                                        <input
-                                            class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
-                                            type="email" placeholder="Enter your email">
-                                    </div>
-                                    <button
-                                        class="px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transform hover:-translate-y-1 transition-all duration-200">
-                                        Subscribe Now
-                                    </button>
-                                </div>
-                                <p class="text-sm text-gray-500 mt-3">Be the first to know when we launch!</p>
-                            </div>
+
 
                             <!-- Download Button -->
                             <div class="flex flex-col sm:flex-row gap-4">

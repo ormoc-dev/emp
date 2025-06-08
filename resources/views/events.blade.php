@@ -20,7 +20,7 @@
         <div class="relative">
             <!--UPCOMING EVENTS SECTION-->
             <section class="py-20" id="events-section">
-              
+
                 <div class="container mx-auto px-4">
                     <!-- Header -->
                     <div class="text-center mb-16">
@@ -51,21 +51,21 @@
                                 <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                     <div
                                         class="overflow-hidden shadow-lg ring-1 ring-black ring-opacity-5 rounded-xl bg-white">
-                                        <div class="table-container">
+                                        <div class="table-container max-h-[600px] overflow-y-auto">
                                             <table class="min-w-full divide-y divide-gray-200">
-                                                <thead class="bg-gray-50 sticky top-0">
+                                                <thead class="bg-gray-50 sticky top-0 z-10">
                                                     <tr>
-                                                        <th class="py-4 pl-6 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                                        <th class="py-4 pl-6 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 bg-gray-50"
                                                             scope="col">Event Name</th>
-                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900"
+                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900 bg-gray-50"
                                                             scope="col">Date</th>
-                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900"
+                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900 bg-gray-50"
                                                             scope="col">Time</th>
-                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900"
+                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900 bg-gray-50"
                                                             scope="col">Venue</th>
-                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900"
+                                                        <th class="px-3 py-4 text-left text-sm font-semibold text-gray-900 bg-gray-50"
                                                             scope="col">Status</th>
-                                                        <th class="relative py-4 pl-3 pr-6" scope="col">
+                                                        <th class="relative py-4 pl-3 pr-6 bg-gray-50" scope="col">
                                                             <span class="sr-only">Actions</span>
                                                         </th>
                                                     </tr>

@@ -30,7 +30,7 @@
         </div>
 
         <!-- Enhanced Loading Bar -->
-        <div class=" w-80 h-2.5 bg-gray-800/50 overflow-hidden mx-auto relative rounded-full backdrop-blur-sm">
+        <div class=" w-74 h-2.5  bg-gray-800/50 overflow-hidden mx-auto relative  backdrop-blur-sm">
             <div class="absolute inset-0 bg-gray-500 animate-pulse"></div>
             <div class="h-full bg-gradient-to-reload rounded-full animate-loading-bar relative">
                 <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"></div>
@@ -45,7 +45,7 @@
 
 <style>
     .bg-gradient-to-reload{
-        background-image: linear-gradient(120deg,rgb(191, 7, 105),rgb(225, 22, 130), rgb(215, 12, 171))
+       background-color: red;
     }
     /* Loading Screen Animations */
     @keyframes loading-bar {
