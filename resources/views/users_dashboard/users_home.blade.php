@@ -161,7 +161,7 @@
             <!-- ⁡⁢⁣⁢EVENT CARDS⁡ -->
             <div class="container mx-auto ">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
-                    @foreach ($events as $event)
+                    @foreach ($events->where('event_status', 'started') as $event)
                         <div class="event-card shadow-lg rounded-lg overflow-hidden bg-white">
 
                             <header class="bg-gradient-to-r from-red-600 to-red-500 text-white p-2 rounded-t-lg shadow-md">

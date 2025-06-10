@@ -21,7 +21,7 @@ class EventController extends Controller
         if (request()->ajax()) {
             return response()->json(['events' => $events]);
         } else {
-            return View::make('admin_dashboard.Categories.add_event', ['events' => $events]);
+            return View::make('admin_dashboard.Categories.add_Event', ['events' => $events]);
         }
     }
 

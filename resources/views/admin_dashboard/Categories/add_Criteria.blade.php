@@ -1027,7 +1027,7 @@
                                                 <div class="flex items-center">
                                                     <span
                                                         class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
-                                                        {{ $criterion->lowest_rate }} - {{ $criterion->highest_rate }}
+                                                        {{ $criterion->highest_rate }}  -   {{ $criterion->lowest_rate }} 
                                                     </span>
                                                 </div>
                                             </td>
@@ -1107,7 +1107,9 @@
                 const cells = rows[i].getElementsByTagName('td');
                 if (cells.length > 0) {
                     const roundDescription = cells[1].textContent.trim();
-                    const highestRate = parseFloat(cells[3].textContent);
+                    // Get the highest rate from the rating range cell
+                    const ratingRange = cells[3].textContent.trim();
+                    const highestRate = parseFloat(ratingRange.split('-')[0].trim());
 
                     if (!roundTotals[roundDescription]) {
                         roundTotals[roundDescription] = 0;
@@ -1119,10 +1121,17 @@
             // Display the totals
             const roundTotalsDiv = document.getElementById('roundTotals');
             roundTotalsDiv.innerHTML = ''; // Clear previous totals
+            
             for (const [round, total] of Object.entries(roundTotals)) {
                 const roundTotalP = document.createElement('p');
-                roundTotalP.textContent = `${round}: Total = ${total.toFixed(2)}%`;
-                roundTotalP.className = 'font-semibold text-blue-600 dark:text-blue-400';
+                roundTotalP.innerHTML = `
+                    <span class="font-semibold text-blue-600 dark:text-blue-400">
+                        ${round}: 
+                    </span>
+                    <span class="text-gray-700 dark:text-gray-300">
+                        Total Highest Rate = ${total.toFixed(2)}%
+                    </span>
+                `;
                 roundTotalsDiv.appendChild(roundTotalP);
             }
         }
