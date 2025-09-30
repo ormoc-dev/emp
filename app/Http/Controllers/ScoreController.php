@@ -16,6 +16,7 @@ use App\Models\MinorAward;
 use App\Models\MinorAwardScore;
 use App\Models\JudgeApproval;
 use App\Models\EventJudge;
+
 class ScoreController extends Controller
 {
     protected $scoreService;
@@ -119,57 +120,57 @@ class ScoreController extends Controller
             }
 
             // Mark this judge's status as completed for this round
-        RoundJudgeStatus::updateOrCreate(
-            ['round_id' => $roundId, 'user_id' => $userId],
-            ['completed' => true]
-        );
+            RoundJudgeStatus::updateOrCreate(
+                ['round_id' => $roundId, 'user_id' => $userId],
+                ['completed' => true]
+            );
 
-        $round = Round::with('event')->find($roundId);
-        
-        // Get count of all judges assigned to this event
-        $assignedJudges = EventJudge::where('event_id', $round->event_id)->pluck('judge_id');
-        $assignedJudgeCount = $assignedJudges->count();
-        
-        // Get count of judges who have completed this round
-        $completedJudgeCount = RoundJudgeStatus::where('round_id', $roundId)
-            ->whereIn('user_id', $assignedJudges)
-            ->where('completed', true)
-            ->count();
+            $round = Round::with('event')->find($roundId);
 
-        // If all assigned judges have submitted their scores
-        if ($completedJudgeCount >= $assignedJudgeCount) {
-            // Mark the round as completed
-            Round::where('id', $roundId)->update(['completed' => true]);
-            
-            // Calculate top contestants and set up next round
-            $topContestants = $this->scoreService->determineTopContestants($roundId);
-            
-            $nextRound = Round::where('event_id', $round->event_id)
-                ->where('round_number', '>', $round->round_number)
-                ->first();
+            // Get count of all judges assigned to this event
+            $assignedJudges = EventJudge::where('event_id', $round->event_id)->pluck('judge_id');
+            $assignedJudgeCount = $assignedJudges->count();
 
-            if ($nextRound) {
-                $nextRound->contestants()->sync($topContestants);
+            // Get count of judges who have completed this round
+            $completedJudgeCount = RoundJudgeStatus::where('round_id', $roundId)
+                ->whereIn('user_id', $assignedJudges)
+                ->where('completed', true)
+                ->count();
+
+            // If all assigned judges have submitted their scores
+            if ($completedJudgeCount >= $assignedJudgeCount) {
+                // Mark the round as completed
+                Round::where('id', $roundId)->update(['completed' => true]);
+
+                // Calculate top contestants and set up next round
+                $topContestants = $this->scoreService->determineTopContestants($roundId);
+
+                $nextRound = Round::where('event_id', $round->event_id)
+                    ->where('round_number', '>', $round->round_number)
+                    ->first();
+
+                if ($nextRound) {
+                    $nextRound->contestants()->sync($topContestants);
+                }
             }
+
+            // Check if current judge has any remaining rounds
+            $hasUnvotedRounds = Round::where('event_id', $round->event_id)
+                ->whereDoesntHave('judgeStatuses', function ($query) use ($userId) {
+                    $query->where('user_id', $userId)
+                        ->where('completed', true);
+                })
+                ->exists();
+
+            if (!$hasUnvotedRounds) {
+                return redirect()->route('done_vote', ['eventId' => $round->event_id])
+                    ->with('success', 'You have completed all rounds!');
+            }
+
+            return redirect()->route('voting_success', [
+                'eventId' => $round->event_id
+            ])->with('success', 'Scores submitted successfully!');
         }
-
-        // Check if current judge has any remaining rounds
-        $hasUnvotedRounds = Round::where('event_id', $round->event_id)
-            ->whereDoesntHave('judgeStatuses', function ($query) use ($userId) {
-                $query->where('user_id', $userId)
-                    ->where('completed', true);
-            })
-            ->exists();
-
-        if (!$hasUnvotedRounds) {
-            return redirect()->route('done_vote', ['eventId' => $round->event_id])
-                ->with('success', 'You have completed all rounds!');
-        }
-
-        return redirect()->route('voting_success', [
-            'eventId' => $round->event_id
-        ])->with('success', 'Scores submitted successfully!');
-    }
     }
 
 
@@ -217,9 +218,17 @@ class ScoreController extends Controller
             }
         }
         $contestants = $contestants->sortBy('number');
-        // Load criteria for the current round
+        // Load criteria for the current round, filtering out globally hidden
+        // and criteria hidden for the authenticated judge
         if ($currentRound) {
-            $currentRound->load('criteria');
+            $currentRound->load(['criteria' => function ($query) {
+                $query->where(function ($q) {
+                    $q->whereNull('is_hidden')->orWhere('is_hidden', false);
+                })
+                    ->whereDoesntHave('hiddenJudges', function ($q) {
+                        $q->where('users.id', auth()->id());
+                    });
+            }]);
         }
 
         // Fetch judge approvals for the current event
@@ -235,7 +244,7 @@ class ScoreController extends Controller
             'contestants' => $contestants,
             'currentRound' => $currentRound,
             'nextMinorAward' => $nextMinorAward,
-            'judgeApprovals' => $judgeApprovals, 
+            'judgeApprovals' => $judgeApprovals,
         ]);
     }
 
@@ -267,11 +276,11 @@ class ScoreController extends Controller
     public function votingSuccess($eventId)
     {
         $event = Event::find($eventId);
-    
+
         if (!$event) {
             return redirect()->route('error')->with('message', 'Event not found.');
         }
-    
+
         // Check if current judge has any unvoted rounds
         $hasUnvotedRounds = Round::where('event_id', $eventId)
             ->whereDoesntHave('judgeStatuses', function ($query) {
@@ -279,34 +288,25 @@ class ScoreController extends Controller
                     ->where('completed', true);
             })
             ->exists();
-    
+
         if (!$hasUnvotedRounds) {
             return redirect()->route('done_vote', ['eventId' => $event->id]);
         }
-    
+
         $nextRound = Round::where('event_id', $eventId)
             ->whereDoesntHave('judgeStatuses', function ($query) {
                 $query->where('user_id', auth()->id())
                     ->where('completed', true);
             })
             ->first();
-    
+
         return view('judge_dashboard.success', [
             'event' => $event,
             'nextRound' => $nextRound,
         ]);
     }
 
-    public function isCompletelyJudged()
-{
-    $assignedJudges = EventJudge::where('event_id', $this->event_id)->pluck('judge_id');
-    $completedJudges = RoundJudgeStatus::where('round_id', $this->id)
-        ->whereIn('user_id', $assignedJudges)
-        ->where('completed', true)
-        ->count();
-        
-    return $completedJudges >= $assignedJudges->count();
-}
+    // Removed invalid helper previously referencing $this->event_id/$this->id in controller context
 
     public function doneVote($eventId)
     {

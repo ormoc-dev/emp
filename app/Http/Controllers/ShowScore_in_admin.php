@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\EventJudge;
 use Illuminate\Http\Request;
 use App\Models\Users_vote;
@@ -17,13 +18,14 @@ use App\Models\MinorAwardSetting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+
 class ShowScore_in_admin extends Controller
 {
     // Results event select
     public function showResults(Request $request)
     {
         $query = Event::where('user_id', Auth::id())->where('event_status', 'started');
-      
+
         $events = $query->paginate(10);
         return view('admin_dashboard.ScoreResults', ['events' => $events]);
     }
@@ -55,35 +57,45 @@ class ShowScore_in_admin extends Controller
 
         $minorAwards = MinorAward::where('event_id', $eventId)->get();
 
-        return view('admin_dashboard.Results.judge_score', compact('event', 'rounds', 'scores', 'allJudges', 'minorAwardScores', 'minorAwards'));
+        // Map of hidden criteria per judge: [judge_id => [criteria_id, ...]]
+        $hiddenCriteriaByJudge = DB::table('criteria_hidden_judges')
+            ->select('judge_id', 'criteria_id')
+            ->get()
+            ->groupBy('judge_id')
+            ->map(function ($rows) {
+                return $rows->pluck('criteria_id')->toArray();
+            })
+            ->toArray();
+
+        return view('admin_dashboard.Results.judge_score', compact('event', 'rounds', 'scores', 'allJudges', 'minorAwardScores', 'minorAwards', 'hiddenCriteriaByJudge'));
     }
 
-    
+
     public function showUserVotes($eventId)
     {
         $event = Event::with('minorAwards')->findOrFail($eventId);
-        
+
         $contestants = Contestant::where('event_id', $eventId)
             ->withCount(['votes' => function ($query) {
                 $query->select(DB::raw('SUM(vote_count)'));
             }])
             ->orderByDesc('votes_count')
             ->get();
-    
+
         $totalVotes = $contestants->sum('votes_count');
-    
+
         $userVotes = $contestants->mapWithKeys(function ($contestant) {
             return [$contestant->id => $contestant->votes_count];
         });
-    
+
         return view('admin_dashboard.Results.user_vote', compact('event', 'contestants', 'userVotes', 'totalVotes'));
     }
-   
+
 
     public function printScores(Request $request, $eventId)
     {
         $event = Event::findOrFail($eventId);
-        
+
         // Get contestants with their scores
         $contestants = Contestant::where('event_id', $eventId)
             ->withCount(['votes' => function ($query) {
@@ -93,24 +105,24 @@ class ShowScore_in_admin extends Controller
                 $query->with('minorAward');
             }])
             ->get();
-    
+
         // Calculate scores based on weights
         $scores = $contestants->map(function ($contestant) use ($request) {
             $totalScore = $this->calculateContestantScore(
-                $contestant, 
-                $request->userVoteWeight, 
+                $contestant,
+                $request->userVoteWeight,
                 $request->minorAwardsWeight,
                 $request->scoringType,
                 $request->minorAwards ?? null
             );
-    
+
             return [
                 'name' => $contestant->name,
                 'number' => $contestant->number,
                 'total_score' => number_format($totalScore, 2)
             ];
         })->sortByDesc('total_score')->values();
-    
+
         return view('admin_dashboard.Results.print_users_vote', [
             'eventTitle' => $event->event_name,
             'scores' => $scores,
@@ -120,73 +132,70 @@ class ShowScore_in_admin extends Controller
         ]);
     }
 
-private function calculateContestantScore($contestant, $userVoteWeight, $minorAwardsWeight, $scoringType, $minorAwards = null)
-{
-    // Calculate vote percentage
-    $totalVotes = Contestant::where('event_id', $contestant->event_id)
-        ->withCount(['votes' => function ($query) {
-            $query->select(DB::raw('SUM(vote_count)'));
-        }])
-        ->get()
-        ->sum('votes_count');
+    private function calculateContestantScore($contestant, $userVoteWeight, $minorAwardsWeight, $scoringType, $minorAwards = null)
+    {
+        // Calculate vote percentage
+        $totalVotes = Contestant::where('event_id', $contestant->event_id)
+            ->withCount(['votes' => function ($query) {
+                $query->select(DB::raw('SUM(vote_count)'));
+            }])
+            ->get()
+            ->sum('votes_count');
 
-    $votePercentage = $totalVotes > 0 ? 
-        ($contestant->votes_count / $totalVotes) * 100 : 0;
+        $votePercentage = $totalVotes > 0 ?
+            ($contestant->votes_count / $totalVotes) * 100 : 0;
 
-    // Calculate minor awards score based on scoring type
-    $minorAwardsScore = 0;
-    
-    if ($scoringType === 'userVote') {
-        return $votePercentage; // Return only vote percentage
-    } 
-    elseif (str_starts_with($scoringType, 'minorAward_')) {
-        $awardId = substr($scoringType, 11);
-        $awardScores = $contestant->minorAwardScores
-            ->where('minor_award_id', $awardId);
-        
-        if ($awardScores->isNotEmpty()) {
-            return $awardScores->avg('rate');
-        }
-        return 0;
-    }
-    elseif ($scoringType === 'combined_all' && $minorAwards) {
-        $totalAwards = count($minorAwards);
-        $awardWeight = 100 / $totalAwards;
-        
-        foreach ($minorAwards as $award) {
+        // Calculate minor awards score based on scoring type
+        $minorAwardsScore = 0;
+
+        if ($scoringType === 'userVote') {
+            return $votePercentage; // Return only vote percentage
+        } elseif (str_starts_with($scoringType, 'minorAward_')) {
+            $awardId = substr($scoringType, 11);
             $awardScores = $contestant->minorAwardScores
-                ->where('minor_award_id', $award['id']);
-            
+                ->where('minor_award_id', $awardId);
+
             if ($awardScores->isNotEmpty()) {
-                $averageScore = $awardScores->avg('rate');
-                $weightedScore = ($averageScore * $awardWeight) / 100;
-                $minorAwardsScore += $weightedScore;
+                return $awardScores->avg('rate');
+            }
+            return 0;
+        } elseif ($scoringType === 'combined_all' && $minorAwards) {
+            $totalAwards = count($minorAwards);
+            $awardWeight = 100 / $totalAwards;
+
+            foreach ($minorAwards as $award) {
+                $awardScores = $contestant->minorAwardScores
+                    ->where('minor_award_id', $award['id']);
+
+                if ($awardScores->isNotEmpty()) {
+                    $averageScore = $awardScores->avg('rate');
+                    $weightedScore = ($averageScore * $awardWeight) / 100;
+                    $minorAwardsScore += $weightedScore;
+                }
+            }
+        } elseif (str_starts_with($scoringType, 'combined_')) {
+            $awardId = substr($scoringType, 9);
+            $awardScores = $contestant->minorAwardScores
+                ->where('minor_award_id', $awardId);
+
+            if ($awardScores->isNotEmpty()) {
+                $minorAwardsScore = $awardScores->avg('rate');
             }
         }
-    }
-    elseif (str_starts_with($scoringType, 'combined_')) {
-        $awardId = substr($scoringType, 9);
-        $awardScores = $contestant->minorAwardScores
-            ->where('minor_award_id', $awardId);
-        
-        if ($awardScores->isNotEmpty()) {
-            $minorAwardsScore = $awardScores->avg('rate');
-        }
-    }
 
-    // Calculate weighted scores
-    $weightedVoteScore = ($votePercentage * $userVoteWeight) / 100;
-    $weightedMinorScore = ($minorAwardsScore * $minorAwardsWeight) / 100;
+        // Calculate weighted scores
+        $weightedVoteScore = ($votePercentage * $userVoteWeight) / 100;
+        $weightedMinorScore = ($minorAwardsScore * $minorAwardsWeight) / 100;
 
-    return $weightedVoteScore + $weightedMinorScore;
-}
+        return $weightedVoteScore + $weightedMinorScore;
+    }
 
 
     public function calculateCombinedScores(Request $request, $eventId)
     {
         try {
             $event = Event::findOrFail($eventId);
-            
+
             // Get contestants with votes and minor award scores
             $contestants = Contestant::where('event_id', $eventId)
                 ->withCount(['votes' => function ($query) {
@@ -196,43 +205,41 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
                     $query->with('minorAward');
                 }])
                 ->get();
-    
+
             $totalVotes = $contestants->sum('votes_count');
             $scores = [];
-    
+
             foreach ($contestants as $contestant) {
                 // Calculate vote percentage
                 $votePercentage = $totalVotes > 0 ? ($contestant->votes_count / $totalVotes) * 100 : 0;
-                
+
                 // Calculate minor awards score based on selected scoring type
                 $minorAwardsScore = 0;
                 $minorAwardsData = [];
-                
+
                 if ($request->scoringType === 'userVote') {
                     // Use only user votes
                     $minorAwardsScore = 0;
-                } 
-                elseif (str_starts_with($request->scoringType, 'minorAward_')) {
+                } elseif (str_starts_with($request->scoringType, 'minorAward_')) {
                     // Calculate single minor award score
                     $awardId = substr($request->scoringType, 11);
                     $awardScores = $contestant->minorAwardScores
                         ->where('minor_award_id', $awardId);
-                    
+
                     if ($awardScores->isNotEmpty()) {
                         $averageScore = $awardScores->avg('rate');
                         $minorAwardsScore = $averageScore;
                         $minorAwardsData[$awardId] = $averageScore;
                     }
-                }
-                elseif ($request->scoringType === 'combined_all') {
+                } elseif ($request->scoringType === 'combined_all') {
                     // Calculate all minor awards with equal weights
                     $totalAwards = count($request->minorAwards);
                     $awardWeight = 100 / $totalAwards;
-                    
+
                     foreach ($request->minorAwards as $award) {
                         $awardScores = $contestant->minorAwardScores
                             ->where('minor_award_id', $award['id']);
-                        
+
                         if ($awardScores->isNotEmpty()) {
                             $averageScore = $awardScores->avg('rate');
                             $weightedScore = ($averageScore * $awardWeight) / 100;
@@ -240,25 +247,24 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
                             $minorAwardsData[$award['id']] = $averageScore;
                         }
                     }
-                }
-                elseif (str_starts_with($request->scoringType, 'combined_')) {
+                } elseif (str_starts_with($request->scoringType, 'combined_')) {
                     // Combine user votes with specific minor award
                     $awardId = substr($request->scoringType, 9);
                     $awardScores = $contestant->minorAwardScores
                         ->where('minor_award_id', $awardId);
-                    
+
                     if ($awardScores->isNotEmpty()) {
                         $averageScore = $awardScores->avg('rate');
                         $minorAwardsScore = $averageScore;
                         $minorAwardsData[$awardId] = $averageScore;
                     }
                 }
-    
+
                 // Calculate total score based on weights
                 $weightedVoteScore = ($votePercentage * $request->userVoteWeight) / 100;
                 $weightedMinorScore = ($minorAwardsScore * $request->minorAwardsWeight) / 100;
                 $totalScore = $weightedVoteScore + $weightedMinorScore;
-    
+
                 $scores[] = [
                     'contestant' => [
                         'id' => $contestant->id,
@@ -275,12 +281,12 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
                     'total_score' => $totalScore
                 ];
             }
-    
+
             // Sort by total score descending
-            usort($scores, function($a, $b) {
+            usort($scores, function ($a, $b) {
                 return $b['total_score'] <=> $a['total_score'];
             });
-    
+
             return response()->json([
                 'success' => true,
                 'scores' => $scores,
@@ -289,7 +295,6 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
                     'minorAwards' => $request->minorAwardsWeight
                 ]
             ]);
-    
         } catch (\Exception $e) {
             Log::error('Error in calculateCombinedScores: ' . $e->getMessage());
             return response()->json([
@@ -340,7 +345,7 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
         $event = Event::findOrFail($eventId);
         $rounds = Round::where('event_id', $eventId)->with('criteria')->get();
         $combinedJudgesScores = $this->getCombinedJudgesScores($eventId);
-    
+
         // Fetch all scores for the event
         $scores = Score::whereHas('contestant', function ($query) use ($eventId) {
             $query->where('event_id', $eventId);
@@ -348,29 +353,29 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
             ->with(['contestant', 'round', 'criteria', 'user'])
             ->get()
             ->groupBy(['round_id', 'criteria_id', 'contestant_id']);
-    
+
         // Fetch all contestants for the event
         $contestants = Contestant::where('event_id', $eventId)->get();
-    
+
         // Fetch judges associated with the event
         $judges = User::whereHas('events', function ($query) use ($eventId) {
             $query->where('event_id', $eventId);
         })->get();
-    
+
         // Minor award scores grouped by minor award and contestant
         $minorAwardScores = MinorAwardScore::where('event_id', $eventId)
             ->with(['contestant', 'user', 'minorAward'])
             ->get()
             ->groupBy(['minor_award_id', 'contestant_id']);
-    
+
         // Separate minor award scores by gender
         $maleMinorAwardScores = [];
         $femaleMinorAwardScores = [];
-    
+
         foreach ($minorAwardScores as $minorAwardId => $scores) {
             $maleMinorAwardScores[$minorAwardId] = [];
             $femaleMinorAwardScores[$minorAwardId] = [];
-    
+
             foreach ($scores as $contestantId => $contestantScores) {
                 $contestant = $contestants->find($contestantId);
                 if ($contestant->category === 'male') {
@@ -380,7 +385,7 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
                 }
             }
         }
-    
+
         // Fetch overall minor award scores including the ID and sort them
         $overallMinorAwardScores = overall_Minoraward_scores::where('event_id', $eventId)
             ->with('event')
@@ -396,36 +401,36 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
             ->sortByDesc(function ($data) {
                 return $data['totalScore'];
             });
-    
+
         // Get the top contestant limit from the minor_awards_settings table
         $topContestantLimit = MinorAwardSetting::where('event_id', $eventId)->value('top_contestant_limit') ?? 5;
-    
+
         // Limit the number of top contestants
         $topContestants = $overallMinorAwardScores->take($topContestantLimit);
-    
+
         // Get minor awards assigned to the event
         $minorAwards = MinorAward::where('event_id', $eventId)->get();
-    
+
         // Check if there are any minor awards assigned
         $hasMinorAwards = $minorAwards->isNotEmpty();
-    
+
         // Calculate overall scores and criteria winners for each round
         $criteriaWinners = [];
         $totalScores = [];
-    
+
         foreach ($rounds as $round) {
             $roundTotalScores = [];
             $roundCriteriaWinners = [];
-    
+
             foreach ($round->criteria as $criteria) {
                 $criteriaScores = $scores[$round->id][$criteria->id] ?? collect();
                 $contestantData = [];
-    
+
                 foreach ($criteriaScores as $contestantId => $contestantScores) {
                     $totalScore = $contestantScores->sum('rate');
                     $contestantData[$contestantId] = $totalScore;
                 }
-    
+
                 if (!empty($contestantData)) {
                     arsort($contestantData);
                     $winnerId = array_key_first($contestantData);
@@ -433,30 +438,30 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
                         'contestant_id' => $winnerId,
                         'score' => $contestantData[$winnerId]
                     ];
-    
+
                     foreach ($contestantData as $contestantId => $totalScore) {
                         $roundTotalScores[$contestantId] = ($roundTotalScores[$contestantId] ?? 0) + $totalScore;
                     }
                 }
             }
-    
+
             $criteriaWinners[$round->id] = $roundCriteriaWinners;
             $totalScores[$round->id] = $roundTotalScores;
         }
-    
+
         // Calculate winners for each minor award by combining judges' scores
         $minorAwardCriteriaWinners = [];
         $sortedMinorAwardScores = [];
-    
+
         if ($hasMinorAwards) {
             foreach ($minorAwardScores as $minorAwardId => $contestantScores) {
                 $contestantData = [];
-    
+
                 foreach ($contestantScores as $contestantId => $scores) {
                     $totalScore = $scores->sum('rate');
                     $contestantData[$contestantId] = $totalScore;
                 }
-    
+
                 if (!empty($contestantData)) {
                     arsort($contestantData);
                     $winnerId = array_key_first($contestantData);
@@ -468,18 +473,18 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
                 }
             }
         }
-    
+
         // Contestants and User Votes
         $userVotes = Users_vote::where('event_id', $eventId)->get()->groupBy('contestant_id');
         $totalVotes = $userVotes->flatten()->count();
         $votePercentages = [];
-    
+
         foreach ($contestants as $contestant) {
             $contestantVotes = $userVotes[$contestant->id] ?? collect();
             $votePercentage = ($totalVotes > 0) ? ($contestantVotes->count() / $totalVotes) * 100 : 0;
             $votePercentages[$contestant->id] = $votePercentage;
         }
-    
+
         return view('admin_dashboard.Results.overall_score', compact(
             'event',
             'rounds',
@@ -503,7 +508,7 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
 
 
 
-    
+
     public function getCriteriaWinners($roundId)
     {
         $round = Round::with('criteria')->findOrFail($roundId);
@@ -575,133 +580,128 @@ private function calculateContestantScore($contestant, $userVoteWeight, $minorAw
         return $pdf->download('print_pdf.pdf');
     }
 
-    
+
     public function printTable(Request $request)
     {
         $tableContent = $request->input('tableContent');
         $title = $request->input('title'); // Changed from minorAwardsCriteria
-       
+
         if (!$tableContent) {
             return response('No table content received.', 400);
         }
-    
+
         return view('admin_dashboard.Results.print-table', compact('tableContent', 'title'));
     }
-  
+
     public function approval($eventId)
-{
-    // Fetch the event
-    $event = Event::findOrFail($eventId);
-    
-    // Fetch judges associated with the event through the EventJudge model
-    $judgeIds = EventJudge::where('event_id', $eventId)->pluck('judge_id');
-    $judges = User::whereIn('id', $judgeIds)->get();
-    
-    // Fetch contestants and index them by ID for easy lookup
-    $contestants = Contestant::where('event_id', $eventId)->get()->keyBy('id');
-    
-    // Fetch overall minor award scores
-    $overallMinorAwardScores = overall_Minoraward_scores::where('event_id', $eventId)
-        ->with('contestant') // Eager load the contestant relationship
-        ->get()
-        ->groupBy('contestant_id')
-        ->map(function ($scores) use ($contestants) {
-            $contestantId = $scores->first()->contestant_id;
-            $contestant = $contestants->get($contestantId);
-            return [
-                'totalScore' => $scores->sum('overall_score'),
-                'scores' => $scores,
-                'id' => $scores->first()->id,
-                'contestant' => $contestant ? $contestant->name : 'Unknown Contestant',
-            ];
-        })
-        ->sortByDesc(function ($data) {
-            return $data['totalScore'];
-        });
-    
-    // Fetch minor awards
-    $minorAwards = MinorAward::where('event_id', $eventId)->get();
-    
-    // Fetch minor award scores
-    $minorAwardScores = MinorAwardScore::where('event_id', $eventId)
-        ->with(['contestant', 'user', 'minorAward'])
-        ->get()
-        ->groupBy(['minor_award_id', 'contestant_id']);
-    
-    // Separate minor award scores by gender
-    $maleMinorAwardScores = [];
-    $femaleMinorAwardScores = [];
-    foreach ($minorAwardScores as $minorAwardId => $scores) {
-        $maleMinorAwardScores[$minorAwardId] = [];
-        $femaleMinorAwardScores[$minorAwardId] = [];
-        foreach ($scores as $contestantId => $contestantScores) {
-            $contestant = $contestants->get($contestantId);
-            if ($contestant) {
-                $scoreData = [
-                    'contestant' => $contestant,
-                    'scores' => $contestantScores,
-                    'total' => $contestantScores->sum('rate')
+    {
+        // Fetch the event
+        $event = Event::findOrFail($eventId);
+
+        // Fetch judges associated with the event through the EventJudge model
+        $judgeIds = EventJudge::where('event_id', $eventId)->pluck('judge_id');
+        $judges = User::whereIn('id', $judgeIds)->get();
+
+        // Fetch contestants and index them by ID for easy lookup
+        $contestants = Contestant::where('event_id', $eventId)->get()->keyBy('id');
+
+        // Fetch overall minor award scores
+        $overallMinorAwardScores = overall_Minoraward_scores::where('event_id', $eventId)
+            ->with('contestant') // Eager load the contestant relationship
+            ->get()
+            ->groupBy('contestant_id')
+            ->map(function ($scores) use ($contestants) {
+                $contestantId = $scores->first()->contestant_id;
+                $contestant = $contestants->get($contestantId);
+                return [
+                    'totalScore' => $scores->sum('overall_score'),
+                    'scores' => $scores,
+                    'id' => $scores->first()->id,
+                    'contestant' => $contestant ? $contestant->name : 'Unknown Contestant',
                 ];
-                if ($contestant->category === 'male') {
-                    $maleMinorAwardScores[$minorAwardId][$contestantId] = $scoreData;
+            })
+            ->sortByDesc(function ($data) {
+                return $data['totalScore'];
+            });
+
+        // Fetch minor awards
+        $minorAwards = MinorAward::where('event_id', $eventId)->get();
+
+        // Fetch minor award scores
+        $minorAwardScores = MinorAwardScore::where('event_id', $eventId)
+            ->with(['contestant', 'user', 'minorAward'])
+            ->get()
+            ->groupBy(['minor_award_id', 'contestant_id']);
+
+        // Separate minor award scores by gender
+        $maleMinorAwardScores = [];
+        $femaleMinorAwardScores = [];
+        foreach ($minorAwardScores as $minorAwardId => $scores) {
+            $maleMinorAwardScores[$minorAwardId] = [];
+            $femaleMinorAwardScores[$minorAwardId] = [];
+            foreach ($scores as $contestantId => $contestantScores) {
+                $contestant = $contestants->get($contestantId);
+                if ($contestant) {
+                    $scoreData = [
+                        'contestant' => $contestant,
+                        'scores' => $contestantScores,
+                        'total' => $contestantScores->sum('rate')
+                    ];
+                    if ($contestant->category === 'male') {
+                        $maleMinorAwardScores[$minorAwardId][$contestantId] = $scoreData;
+                    } else {
+                        $femaleMinorAwardScores[$minorAwardId][$contestantId] = $scoreData;
+                    }
                 } else {
-                    $femaleMinorAwardScores[$minorAwardId][$contestantId] = $scoreData;
+                    Log::warning("Contestant not found for ID: {$contestantId} in minor award {$minorAwardId}");
                 }
-            } else {
-                Log::warning("Contestant not found for ID: {$contestantId} in minor award {$minorAwardId}");
+            }
+            // Sort scores for each minor award
+            arsort($maleMinorAwardScores[$minorAwardId]);
+            arsort($femaleMinorAwardScores[$minorAwardId]);
+        }
+
+        // Fetch rounds
+        $rounds = Round::where('event_id', $eventId)->with('criteria')->get();
+
+        // Fetch combined judges scores
+        $combinedJudgesScores = $this->getCombinedJudgesScores($eventId);
+
+        // Ensure contestant names are included in combined judges scores
+        foreach ($combinedJudgesScores as $roundId => $roundScores) {
+            foreach ($roundScores as $contestantId => $scoreData) {
+                $contestant = $contestants->get($contestantId);
+                $combinedJudgesScores[$roundId][$contestantId]['contestant_name'] = $contestant ? $contestant->name : 'Unknown Contestant';
             }
         }
-        // Sort scores for each minor award
-        arsort($maleMinorAwardScores[$minorAwardId]);
-        arsort($femaleMinorAwardScores[$minorAwardId]);
-    }
-    
-    // Fetch rounds
-    $rounds = Round::where('event_id', $eventId)->with('criteria')->get();
-    
-    // Fetch combined judges scores
-    $combinedJudgesScores = $this->getCombinedJudgesScores($eventId);
-    
-    // Ensure contestant names are included in combined judges scores
-    foreach ($combinedJudgesScores as $roundId => $roundScores) {
-        foreach ($roundScores as $contestantId => $scoreData) {
-            $contestant = $contestants->get($contestantId);
-            $combinedJudgesScores[$roundId][$contestantId]['contestant_name'] = $contestant ? $contestant->name : 'Unknown Contestant';
-        }
-    }
 
-    return view('admin_dashboard.Results.tie_approval', compact(
-        'event',
-        'judges',
-        'contestants',
-        'overallMinorAwardScores',
-        'minorAwards',
-        'maleMinorAwardScores',
-        'femaleMinorAwardScores',
-        'rounds',
-        'combinedJudgesScores'
-    ));
-}
+        return view('admin_dashboard.Results.tie_approval', compact(
+            'event',
+            'judges',
+            'contestants',
+            'overallMinorAwardScores',
+            'minorAwards',
+            'maleMinorAwardScores',
+            'femaleMinorAwardScores',
+            'rounds',
+            'combinedJudgesScores'
+        ));
+    }
 
 
     public function updateEventStatus(Request $request, $eventId)
     {
         $event = Event::findOrFail($eventId);
         $status = $request->input('status');
-    
+
         $event->update(['status' => $status]);
-    
+
         return response()->json(['message' => 'Event status updated successfully']);
     }
-    
+
     public function checkEventStatus($eventId)
     {
         $event = Event::findOrFail($eventId);
         return response()->json(['status' => $event->status]);
     }
-
-
-
- 
-  
 }

@@ -78,4 +78,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(PaypalTransaction::class);
     }
+
+    // Criteria hidden for this judge
+    public function hiddenCriteria()
+    {
+        return $this->belongsToMany(Criteria::class, 'criteria_hidden_judges', 'judge_id', 'criteria_id');
+    }
 }

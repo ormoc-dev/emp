@@ -50,12 +50,12 @@
     <x-admin-nav-menu-manage />
 
     @if (session('success'))
-    <x-alert type="success" :message="session('success')" />
-@endif
+        <x-alert type="success" :message="session('success')" />
+    @endif
 
-@if (session('error'))
-    <x-alert type="error" :message="session('error')" />
-@endif
+    @if (session('error'))
+        <x-alert type="error" :message="session('error')" />
+    @endif
 
     <!-- Selected Event Section -->
     <div class="mb-6 mt-2">
@@ -1027,7 +1027,7 @@
                                                 <div class="flex items-center">
                                                     <span
                                                         class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
-                                                        {{ $criterion->highest_rate }}  -   {{ $criterion->lowest_rate }} 
+                                                        {{ $criterion->highest_rate }} - {{ $criterion->lowest_rate }}
                                                     </span>
                                                 </div>
                                             </td>
@@ -1048,7 +1048,13 @@
                                                     </button>
                                                     <button class="text-gray-600 hover:text-gray-900"
                                                         data-criteria-id="{{ $criterion->id }}"
-                                                        title="{{ $criterion->is_hidden ? 'Show' : 'Hide' }}"
+                                                        title="Hide from selected judges"
+                                                        onclick="openHideForJudgesModal({{ $criterion->id }})">
+                                                        <i class="fas fa-user-slash"></i>
+                                                    </button>
+                                                    <button class="text-gray-600 hover:text-gray-900"
+                                                        data-criteria-id="{{ $criterion->id }}"
+                                                        title="{{ $criterion->is_hidden ? 'Show to everyone' : 'Hide to everyone' }}"
                                                         onclick="toggleCriteriaVisibility({{ $criterion->id }})">
                                                         <i
                                                             class="fas {{ $criterion->is_hidden ? 'fa-eye' : 'fa-eye-slash' }}"></i>
@@ -1075,6 +1081,25 @@
     </div>
     </div>
 
+    <!-- Hide for Judges Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" id="hideForJudgesModal">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 class="text-lg font-semibold mb-4">Select judges to hide this criteria</h3>
+            <div class="max-h-60 overflow-y-auto space-y-2">
+                @foreach ($judges as $judge)
+                    <label class="flex items-center space-x-2">
+                        <input class="form-checkbox h-4 w-4 text-indigo-600" type="checkbox"
+                            value="{{ $judge->id }}">
+                        <span>{{ $judge->name }}</span>
+                    </label>
+                @endforeach
+            </div>
+            <div class="mt-6 flex justify-end space-x-2">
+                <button class="px-4 py-2 bg-gray-200 rounded" onclick="closeHideForJudgesModal()">Cancel</button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded" onclick="submitHideForJudges()">Save</button>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Script for calculating round totals -->
@@ -1121,7 +1146,7 @@
             // Display the totals
             const roundTotalsDiv = document.getElementById('roundTotals');
             roundTotalsDiv.innerHTML = ''; // Clear previous totals
-            
+
             for (const [round, total] of Object.entries(roundTotals)) {
                 const roundTotalP = document.createElement('p');
                 roundTotalP.innerHTML = `
@@ -1319,6 +1344,60 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        function openHideForJudgesModal(criteriaId) {
+            const modal = document.getElementById('hideForJudgesModal');
+            modal.dataset.criteriaId = criteriaId;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.querySelectorAll('#hideForJudgesModal input[type="checkbox"]').forEach(cb => cb.checked = false);
+        }
+
+        function closeHideForJudgesModal() {
+            const modal = document.getElementById('hideForJudgesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function submitHideForJudges() {
+            const modal = document.getElementById('hideForJudgesModal');
+            const criteriaId = modal.dataset.criteriaId;
+            const selected = Array.from(document.querySelectorAll('#hideForJudgesModal input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+
+            try {
+                const response = await fetch(`{{ url('/criteria') }}/${criteriaId}/hidden-judges`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        judge_ids: selected
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Request failed');
+                }
+
+                const data = await response.json();
+                if (data && data.success) {
+                    closeHideForJudgesModal();
+                    Swal.fire('Updated', 'Hidden judges updated for this criteria', 'success');
+                } else {
+                    throw new Error((data && data.message) || 'Failed to update');
+                }
+            } catch (e) {
+                console.error('Hidden judges update error:', e);
+                Swal.fire('Error', 'Unable to update hidden judges', 'error');
+            }
+        }
     </script>
 
     <script>

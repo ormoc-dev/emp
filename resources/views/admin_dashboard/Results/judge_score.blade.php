@@ -65,8 +65,7 @@
                                             type="button" aria-expanded="false"
                                             aria-controls="accordion-nested-collapse-body-{{ $loop->parent->index }}-{{ $loop->index }}">
                                             <span class="flex items-center">
-                                                <img class="w-8 h-8 rounded-full mr-2" src="{{ asset($judge->profile) }}"
-                                                    alt="{{ $judge->name }}">
+
                                                 <span class="truncate">{{ $judge->name }}</span>
                                             </span>
                                             <svg class="w-3 h-3 rotate-180 shrink-0" data-accordion-icon aria-hidden="true"
@@ -81,60 +80,90 @@
                                         aria-labelledby="accordion-nested-collapse-heading-{{ $loop->parent->index }}-{{ $loop->index }}">
                                         <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
                                             <p class="text-gray-500 dark:text-gray-400">Table for results</p>
-                                            <table class="table table-xs min-w-full bg-white border border-gray-200 mb-4">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="px-4 py-2 border-b">Category</th>
-                                                        <th class="px-4 py-2 border-b">Contestant</th>
-                                                        @foreach ($round->criteria as $criteria)
-                                                            <th class="px-6 py-3 border-b">
-                                                                {{ $criteria->criteria_description }}</th>
-                                                        @endforeach
-                                                        <th class="px-4 py-2 border-b">Total Score</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($scores[$round->id] ?? [] as $contestantId => $contestantScores)
-                                                        @php
-                                                            $contestant = $contestantScores->first()->contestant;
-                                                            $judgeScores = $contestantScores->where(
-                                                                'user_id',
-                                                                $judge->id,
-                                                            );
-                                                            $totalScore = 0;
-                                                        @endphp
-                                                        <tr>
-                                                            <td class="px-4 py-2 border-b">{{ $contestant->category }}</td>
-                                                            <td class="px-4 py-2 border-b">{{ $contestant->number }} {{ $contestant->name }}</td>
-                                                            @foreach ($round->criteria as $criteria)
+                                            <div id="table-round-{{ $round->id }}-judge-{{ $judge->id }}">
+                                                <div class="w-full overflow-x-auto">
+                                                    <table
+                                                        class="table table-xs min-w-full bg-white border border-gray-200 mb-4">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="px-4 py-2 border-b">Category</th>
+                                                                <th class="px-4 py-2 border-b">Contestant</th>
                                                                 @php
-                                                                    $criteriaScore = $judgeScores->firstWhere(
-                                                                        'criteria_id',
-                                                                        $criteria->id,
-                                                                    );
-                                                                    $rate = $criteriaScore
-                                                                        ? $criteriaScore->rate
-                                                                        : 'N/A';
-                                                                    if ($rate !== 'N/A') {
-                                                                        $totalScore += $rate;
-                                                                    }
+                                                                    $hiddenForJudge =
+                                                                        $hiddenCriteriaByJudge[$judge->id] ?? [];
                                                                 @endphp
-                                                                <td class="px-4 py-2 border-b">
-                                                                    @if ($rate === 'N/A')
-                                                                        <span
-                                                                            class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">{{ $rate }}</span>
-                                                                    @else
-                                                                        {{ $rate }}
+                                                                @foreach ($round->criteria as $criteria)
+                                                                    @if (!in_array($criteria->id, $hiddenForJudge))
+                                                                        <th class="px-6 py-3 border-b">
+                                                                            {{ $criteria->criteria_description }}</th>
                                                                     @endif
-                                                                </td>
+                                                                @endforeach
+                                                                <th class="px-4 py-2 border-b">Total Score</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($scores[$round->id] ?? [] as $contestantId => $contestantScores)
+                                                                @php
+                                                                    $contestant = $contestantScores->first()
+                                                                        ->contestant;
+                                                                    $judgeScores = $contestantScores->where(
+                                                                        'user_id',
+                                                                        $judge->id,
+                                                                    );
+                                                                    $totalScore = 0;
+                                                                @endphp
+                                                                <tr>
+                                                                    <td class="px-4 py-2 border-b">
+                                                                        {{ $contestant->category ?? 'N/A' }}
+                                                                    </td>
+                                                                    <td class="px-4 py-2 border-b">
+                                                                        {{ $contestant->number }}
+                                                                        {{ $contestant->name }}</td>
+                                                                    @foreach ($round->criteria as $criteria)
+                                                                        @if (!in_array($criteria->id, $hiddenForJudge))
+                                                                            @php
+                                                                                $criteriaScore = $judgeScores->firstWhere(
+                                                                                    'criteria_id',
+                                                                                    $criteria->id,
+                                                                                );
+                                                                                $rate = $criteriaScore
+                                                                                    ? $criteriaScore->rate
+                                                                                    : 'N/A';
+                                                                                if ($rate !== 'N/A') {
+                                                                                    $totalScore += $rate;
+                                                                                }
+                                                                            @endphp
+                                                                            <td class="px-4 py-2 border-b">
+                                                                                @if ($rate === 'N/A')
+                                                                                    <span
+                                                                                        class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">{{ $rate }}</span>
+                                                                                @else
+                                                                                    {{ $rate }}
+                                                                                @endif
+                                                                            </td>
+                                                                        @endif
+                                                                    @endforeach
+                                                                    <td
+                                                                        class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
+                                                                        {{ $totalScore }}</td>
+                                                                </tr>
                                                             @endforeach
-                                                            <td
-                                                                class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
-                                                                {{ $totalScore }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <form class="mt-2" method="POST" action="{{ route('print.table') }}"
+                                                target="_blank">
+                                                @csrf
+                                                <input name="tableContent" type="hidden" value="">
+                                                <input name="title" type="hidden" value="">
+                                                <button
+                                                    class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
+                                                    type="button"
+                                                    onclick="submitPrint('table-round-{{ $round->id }}-judge-{{ $judge->id }}', 'Round: {{ $round->round_description }} - Judge: {{ $judge->name }}')">
+                                                    Print this table
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 @endforeach
@@ -183,44 +212,62 @@
                             <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                                 @foreach ($allJudges as $judge)
                                     <div class="flex items-center">
-                                        <img class="w-8 h-8 rounded-full mr-2" src="{{ asset($judge->profile) }}"
-                                            alt="{{ $judge->name }}">
+
                                         <span class="truncate">{{ $judge->name }}</span>
                                     </div>
-                                    <table class="table table-xs min-w-full bg-white border border-gray-200 mb-4">
-                                        <thead>
-                                            <tr>
-
-                                                <th class="px-4 py-2 border-b">Category</th>
-                                                <th class="px-4 py-2 border-b">Contestant</th>
-                                                <th class="px-4 py-2 border-b">Score</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($minorAwardScores[$minorAward->id][$judge->id] ?? [] as $contestantScores)
-                                                @foreach ($contestantScores as $minorAwardScore)
-                                                    @php
-                                                        $contestant = $minorAwardScore->contestant; // Ensure contestant is correctly set
-                                                    @endphp
+                                    <div id="table-minor-{{ $minorAward->id }}-judge-{{ $judge->id }}">
+                                        <div class="w-full overflow-x-auto">
+                                            <table class="table table-xs min-w-full bg-white border border-gray-200 mb-4">
+                                                <thead>
                                                     <tr>
-                                                        <td class="px-4 py-2 border-b">{{ $contestant->category }}</td>
-                                                        <td class="px-4 py-2 border-b">
-                                                            {{ $minorAwardScore->contestant->number }}  {{ $minorAwardScore->contestant->name }}</td>
-                                                        <td
-                                                            class="px-4 py-2 border-b  bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
-                                                            @if ($minorAwardScore)
-                                                                {{ $minorAwardScore->rate }}
-                                                            @else
-                                                                <span
-                                                                    class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">N/A</span>
-                                                            @endif
-                                                        </td>
 
+                                                        <th class="px-4 py-2 border-b">Category</th>
+                                                        <th class="px-4 py-2 border-b">Contestant</th>
+                                                        <th class="px-4 py-2 border-b">Score</th>
                                                     </tr>
-                                                @endforeach
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($minorAwardScores[$minorAward->id][$judge->id] ?? [] as $contestantScores)
+                                                        @foreach ($contestantScores as $minorAwardScore)
+                                                            @php
+                                                                $contestant = $minorAwardScore->contestant; // Ensure contestant is correctly set
+                                                            @endphp
+                                                            <tr>
+                                                                <td class="px-4 py-2 border-b">
+                                                                    {{ $contestant->category ?? 'N/A' }}
+                                                                </td>
+                                                                <td class="px-4 py-2 border-b">
+                                                                    {{ $minorAwardScore->contestant->number }}
+                                                                    {{ $minorAwardScore->contestant->name }}</td>
+                                                                <td
+                                                                    class="px-4 py-2 border-b  bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
+                                                                    @if ($minorAwardScore)
+                                                                        {{ $minorAwardScore->rate }}
+                                                                    @else
+                                                                        <span
+                                                                            class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">N/A</span>
+                                                                    @endif
+                                                                </td>
+
+                                                            </tr>
+                                                        @endforeach
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <form class="mt-2 mb-6" method="POST" action="{{ route('print.table') }}"
+                                        target="_blank">
+                                        @csrf
+                                        <input name="tableContent" type="hidden" value="">
+                                        <input name="title" type="hidden" value="">
+                                        <button
+                                            class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
+                                            type="button"
+                                            onclick="submitPrint('table-minor-{{ $minorAward->id }}-judge-{{ $judge->id }}', 'Minor Award: {{ $minorAward->minor_awards_description }} - Judge: {{ $judge->name }}')">
+                                            Print this table
+                                        </button>
+                                    </form>
                                     @if (empty($minorAwardScores[$minorAward->id][$judge->id]))
                                         <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
                                             role="alert">
@@ -247,5 +294,18 @@
         </div>
 
 
-
+        <script>
+            function submitPrint(containerId, title) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                const tableHtml = container.innerHTML;
+                const form = event.target.closest('form');
+                form.querySelector('input[name="tableContent"]').value = tableHtml;
+                form.querySelector('input[name="title"]').value = title;
+                form.submit();
+            }
+        </script>
     @endsection
+
+    @push('scripts')
+    @endpush

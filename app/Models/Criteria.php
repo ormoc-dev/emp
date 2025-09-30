@@ -14,7 +14,7 @@ class Criteria extends Model
         'highest_rate',
         'lowest_rate',
         'criteria_description',
-        
+
     ];
 
     public function round()
@@ -25,5 +25,10 @@ class Criteria extends Model
     {
         return $this->hasMany(Score::class);
     }
-   
+
+    // Judges hidden for this criteria
+    public function hiddenJudges()
+    {
+        return $this->belongsToMany(User::class, 'criteria_hidden_judges', 'criteria_id', 'judge_id');
+    }
 }

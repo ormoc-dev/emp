@@ -23,6 +23,28 @@ Note: first install 'XAMPP' for database
 - php artisan serve
 
 
+## How to run in XAMMP Whithout PHP ARTISAN SERVE
+FIND THIS LOCATION IN XAMMP
+- C:\xampp\apache\conf\extra\httpd-vhosts.conf
+AND PUT THIS: 
+<VirtualHost *:80>
+    DocumentRoot "C:/xampp/htdocs/emp/public"
+    ServerName emp.com
+    <Directory "C:/xampp/htdocs/emp/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+IF YOU INCOUNTERD ERROR LIKE : Vite manifest not found at: C:\xampp\htdocs\emp\public\build/manifest.json
+🔧 Solution 1: Build Your Assets Once (Production Mode)
+- RUN THIS COMMAND: npm run build
+
+## if you want smooth run this comands
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan event:cache
 
 
 ## About Laravel

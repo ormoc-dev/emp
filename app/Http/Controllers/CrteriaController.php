@@ -172,4 +172,21 @@ class CrteriaController extends Controller
             'is_hidden' => $criteria->is_hidden
         ]);
     }
+
+    public function setHiddenJudges(Request $request, Criteria $criteria)
+    {
+        $validated = $request->validate([
+            'judge_ids' => 'array',
+            'judge_ids.*' => 'exists:users,id'
+        ]);
+
+        $judgeIds = $validated['judge_ids'] ?? [];
+        $criteria->hiddenJudges()->sync($judgeIds);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hidden judges updated',
+            'judge_ids' => $judgeIds
+        ]);
+    }
 }

@@ -129,35 +129,7 @@
         <nav class="fixed top-0 left-0 z-50 w-full bg-white border-b-4 border-red-600">
             <div class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto ">
                 <a class="flex items-center space-x-3 rtl:space-x-reverse" href="{{ url('/judge/home')}}">
-                    @php
-                        $user = auth()->user();
-                    @endphp
-                    @if ($user)
-                        @if ($user->profile)
-                            <div class="relative me-4">
-                                <img class="w-8 h-8 mr-3 rounded-full" src="{{ asset($user->profile) }}"
-                                    alt="User Profile Image">
-                                <span
-                                    class="top-0 start-7 absolute w-3.5 h-3.5 {{ $user->is_online ? 'bg-green-500' : 'bg-red-500' }} border-2 border-white dark:border-gray-800 rounded-full"></span>
-                            </div>
-                        @else
-                            <!-- Randomly select a default avatar from multiple options -->
-                            @php
-                                $defaultAvatars = [
-                                    'avatar/bear.png',
-                                    'avatar/cat.png',
-                                    'avatar/dog.png',
-                                    'avatar/giraffe.png',
-                                    'avatar/gorilla.png',
-                                    'avatar/meerkat.png',
-                                    'avatar/panda.png',
-                                ];
-                                $randomAvatar = $defaultAvatars[array_rand($defaultAvatars)];
-                            @endphp
-                            <img class="w-8 h-8 rounded-full" src="{{ asset($randomAvatar) }}"
-                                alt="Random Default Profile Image" />
-                        @endif
-                    @endif
+                  
                      <span
                     class="self-center text-2xl font-semibold text-red-800 whitespace-nowrap">{{ Auth::user()->name }} 👨‍⚖️</span>
                 </a>

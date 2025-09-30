@@ -77,6 +77,7 @@ Route::middleware(['user'])->group(function () {
     //profilef
     Route::get('/profile', [User_dashboard::class, 'profile'])->name('profile');
     Route::get('/user/{id}/edit', [UsersVoteController::class, 'edit'])->name('user.edit');
+    Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('user.edits');
     Route::put('/user/{id}', [UsersVoteController::class, 'update'])->name('user.update');
 
     //pricing_vote
@@ -159,6 +160,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/events/{eventId}/proceed-next-round', [ScoreController::class, 'proceedToNextRound'])->name('proceed_next_round');
 
     Route::post('/criteria/{criteria}/toggle-visibility', [CrteriaController::class, 'toggleVisibility'])->name('criteria.toggle-visibility');
+    Route::post('/criteria/{criteria}/hidden-judges', [CrteriaController::class, 'setHiddenJudges'])->name('criteria.hidden-judges');
     // ADD TIME FOR CRITERIA 
     Route::post('/events/{event}/schedule', [TimeScheduleController::class, 'store'])->name('schedule.store');
     Route::put('/events/{event}/schedule', [TimeScheduleController::class, 'update'])->name('schedule.update');
@@ -208,7 +210,7 @@ Route::middleware(['admin'])->group(function () {
     //USERS SEE to admin
     Route::get('/users', [UsersController::class, 'showUsersTable'])->name('showUsersTable');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
-    Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('user.edit');
+   
     Route::put('/users/{id}', [UsersController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UsersController::class, 'delete'])->name('user.destroy');
     //Settings in admin

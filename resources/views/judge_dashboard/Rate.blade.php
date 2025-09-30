@@ -172,7 +172,9 @@
                                             value="{{ $contestant->id }}">
                                         <div class="space-y-3">
                                             @foreach ($currentRound->criteria as $criteria)
-                                                @if (!$criteria->is_hidden)
+                                                @if (
+                                                    !$criteria->is_hidden &&
+                                                        (!$criteria->relationLoaded('hiddenJudges') || !$criteria->hiddenJudges->contains(auth()->id())))
                                                     <div>
                                                         <label class="block mb-1 text-sm font-medium text-gray-700">
                                                             {{ $criteria->criteria_description }}
@@ -267,7 +269,9 @@
                                             value="{{ $contestant->id }}">
                                         <div class="space-y-3">
                                             @foreach ($currentRound->criteria as $criteria)
-                                                @if (!$criteria->is_hidden)
+                                                @if (
+                                                    !$criteria->is_hidden &&
+                                                        (!$criteria->relationLoaded('hiddenJudges') || !$criteria->hiddenJudges->contains(auth()->id())))
                                                     <div>
                                                         <label class="block mb-1 text-sm font-medium text-gray-700">
                                                             {{ $criteria->criteria_description }}
@@ -330,7 +334,9 @@
                                             </div>
                                         @elseif ($currentRound)
                                             @foreach ($currentRound->criteria as $criteria)
-                                                @if (!$criteria->is_hidden)
+                                                @if (
+                                                    !$criteria->is_hidden &&
+                                                        (!$criteria->relationLoaded('hiddenJudges') || !$criteria->hiddenJudges->contains(auth()->id())))
                                                     <div>
                                                         <label class="block mb-1 text-sm font-medium text-gray-700">
                                                             {{ $criteria->criteria_description }}
