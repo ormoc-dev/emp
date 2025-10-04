@@ -593,6 +593,156 @@ class ShowScore_in_admin extends Controller
         return view('admin_dashboard.Results.print-table', compact('tableContent', 'title'));
     }
 
+    public function downloadPdf(Request $request)
+    {
+        // Increase execution time limit for PDF generation
+        set_time_limit(120);
+
+        $tableContent = $request->input('tableContent');
+        $title = $request->input('title');
+
+        // Log the received data for debugging
+        Log::info('PDF Download Request', [
+            'title' => $title,
+            'table_content_length' => strlen($tableContent),
+            'table_content_preview' => substr($tableContent, 0, 500)
+        ]);
+
+        if (!$tableContent) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No table content received. Please try again.'
+            ], 400);
+        }
+
+        try {
+            // Clean the table content to remove any problematic elements
+            $cleanTableContent = $this->cleanTableContent($tableContent);
+
+            // Log the cleaned content for debugging
+            Log::info('Cleaned Table Content', [
+                'original_length' => strlen($tableContent),
+                'cleaned_length' => strlen($cleanTableContent),
+                'cleaned_preview' => substr($cleanTableContent, 0, 500),
+                'has_table_tag' => strpos($cleanTableContent, '<table') !== false,
+                'has_tbody_tag' => strpos($cleanTableContent, '<tbody') !== false,
+                'has_tr_tags' => substr_count($cleanTableContent, '<tr'),
+                'has_td_tags' => substr_count($cleanTableContent, '<td')
+            ]);
+
+            // Validate that we have actual table content after cleaning
+            if (empty(trim(strip_tags($cleanTableContent)))) {
+                Log::error('No valid table content after cleaning');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No valid table content found after processing.'
+                ], 400);
+            }
+
+            // Additional validation - check if we have table rows
+            if (substr_count($cleanTableContent, '<tr') < 2) {
+                Log::error('Insufficient table rows found', [
+                    'tr_count' => substr_count($cleanTableContent, '<tr'),
+                    'content_preview' => substr($cleanTableContent, 0, 1000)
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Table appears to be empty or malformed. Please ensure the table contains data.'
+                ], 400);
+            }
+
+            // Generate PDF from the table content using PDF-specific view
+            $pdf = Pdf::loadView('admin_dashboard.Results.print-pdf', [
+                'tableContent' => $cleanTableContent,
+                'title' => $title ?: 'Score Report'
+            ]);
+
+            // Set paper size and orientation
+            $pdf->setPaper('A4', 'landscape');
+
+            // Set PDF options for better performance
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => false,
+                'isPhpEnabled' => false,
+                'isJavascriptEnabled' => false,
+                'defaultFont' => 'Arial',
+                'dpi' => 150,
+                'isFontSubsettingEnabled' => true,
+            ]);
+
+            // Generate filename based on title
+            $filename = $title ?
+                preg_replace('/[^a-zA-Z0-9_-]/', '_', $title) . '.pdf' :
+                'score_report_' . date('Y-m-d_H-i-s') . '.pdf';
+
+            Log::info('PDF generated successfully', [
+                'filename' => $filename,
+                'title' => $title,
+                'table_rows' => substr_count($cleanTableContent, '<tr')
+            ]);
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            Log::error('PDF Generation Error: ' . $e->getMessage(), [
+                'title' => $title,
+                'table_content_length' => strlen($tableContent),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error generating PDF. Please try again or contact support if the problem persists.'
+            ], 500);
+        }
+    }
+
+    private function cleanTableContent($content)
+    {
+        // Log the original content
+        Log::info('Cleaning table content', [
+            'original_length' => strlen($content),
+            'original_preview' => substr($content, 0, 200)
+        ]);
+
+        // Remove any JavaScript that might cause issues
+        $content = preg_replace('/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/mi', '', $content);
+
+        // Remove any onclick attributes
+        $content = preg_replace('/\s*onclick\s*=\s*["\'][^"\']*["\']/', '', $content);
+
+        // Remove any other event handlers
+        $content = preg_replace('/\s*on\w+\s*=\s*["\'][^"\']*["\']/', '', $content);
+
+        // Clean up any remaining problematic attributes
+        $content = preg_replace('/\s*data-[^=]*\s*=\s*["\'][^"\']*["\']/', '', $content);
+
+        // Remove class attributes that might cause issues
+        $content = preg_replace('/\s*class\s*=\s*["\'][^"\']*["\']/', '', $content);
+
+        // Remove style attributes
+        $content = preg_replace('/\s*style\s*=\s*["\'][^"\']*["\']/', '', $content);
+
+        // Clean up extra whitespace
+        $content = preg_replace('/\s+/', ' ', $content);
+
+        // Ensure proper table structure
+        if (strpos($content, '<table') !== false) {
+            // Add basic table styling if missing
+            if (strpos($content, 'class=') === false) {
+                $content = str_replace('<table', '<table class="table"', $content);
+            }
+        }
+
+        // Log the cleaned content
+        Log::info('Cleaned table content', [
+            'cleaned_length' => strlen($content),
+            'cleaned_preview' => substr($content, 0, 200)
+        ]);
+
+        return $content;
+    }
+
     public function approval($eventId)
     {
         // Fetch the event

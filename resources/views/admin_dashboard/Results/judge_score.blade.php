@@ -152,8 +152,8 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <form class="mt-2" method="POST" action="{{ route('print.table') }}"
-                                                target="_blank">
+                                            <div class="mt-2 flex gap-2">
+                                                <form method="POST" action="{{ route('print.table') }}" target="_blank">
                                                 @csrf
                                                 <input name="tableContent" type="hidden" value="">
                                                 <input name="title" type="hidden" value="">
@@ -161,9 +161,21 @@
                                                     class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
                                                     type="button"
                                                     onclick="submitPrint('table-round-{{ $round->id }}-judge-{{ $judge->id }}', 'Round: {{ $round->round_description }} - Judge: {{ $judge->name }}')">
-                                                    Print this table
+                                                        <i class='bx bxs-printer'></i> Print
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('download_pdf') }}">
+                                                    @csrf
+                                                    <input name="tableContent" type="hidden" value="">
+                                                    <input name="title" type="hidden" value="">
+                                                    <button
+                                                        class="px-3 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
+                                                        type="button"
+                                                        onclick="submitDownload('table-round-{{ $round->id }}-judge-{{ $judge->id }}', 'Round: {{ $round->round_description }} - Judge: {{ $judge->name }}')">
+                                                        <i class='bx bxs-cloud-download'></i> Download PDF
                                                 </button>
                                             </form>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
@@ -256,8 +268,8 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <form class="mt-2 mb-6" method="POST" action="{{ route('print.table') }}"
-                                        target="_blank">
+                                    <div class="mt-2 mb-6 flex gap-2">
+                                        <form method="POST" action="{{ route('print.table') }}" target="_blank">
                                         @csrf
                                         <input name="tableContent" type="hidden" value="">
                                         <input name="title" type="hidden" value="">
@@ -265,9 +277,21 @@
                                             class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
                                             type="button"
                                             onclick="submitPrint('table-minor-{{ $minorAward->id }}-judge-{{ $judge->id }}', 'Minor Award: {{ $minorAward->minor_awards_description }} - Judge: {{ $judge->name }}')">
-                                            Print this table
+                                                <i class='bx bxs-printer'></i> Print
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="{{ route('download_pdf') }}">
+                                            @csrf
+                                            <input name="tableContent" type="hidden" value="">
+                                            <input name="title" type="hidden" value="">
+                                            <button
+                                                class="px-3 py-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
+                                                type="button"
+                                                onclick="submitDownload('table-minor-{{ $minorAward->id }}-judge-{{ $judge->id }}', 'Minor Award: {{ $minorAward->minor_awards_description }} - Judge: {{ $judge->name }}')">
+                                                <i class='bx bxs-cloud-download'></i> Download PDF
                                         </button>
                                     </form>
+                                    </div>
                                     @if (empty($minorAwardScores[$minorAward->id][$judge->id]))
                                         <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
                                             role="alert">
@@ -296,6 +320,16 @@
 
         <script>
             function submitPrint(containerId, title) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                const tableHtml = container.innerHTML;
+                const form = event.target.closest('form');
+                form.querySelector('input[name="tableContent"]').value = tableHtml;
+                form.querySelector('input[name="title"]').value = title;
+                form.submit();
+            }
+
+            function submitDownload(containerId, title) {
                 const container = document.getElementById(containerId);
                 if (!container) return;
                 const tableHtml = container.innerHTML;

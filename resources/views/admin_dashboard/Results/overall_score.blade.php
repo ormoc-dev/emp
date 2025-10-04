@@ -56,7 +56,7 @@
                         aria-labelledby="accordion-open-heading-{{ $index }}">
                         <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                             <!-- Male Winner Table -->
-                           
+
 
                             @if (isset($maleMinorAwardScores[$minorAward->id]))
                                 @php
@@ -75,20 +75,24 @@
                                         : 0; // Calculate average score
                                 @endphp
                                 @if ($topContestant)
-                                <button
-                                class=
+                                    <button
+                                        class=
+                                "float-right focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 "
+                                        type="button" onclick="downloadPdf(this)"><i class='bx bxs-cloud-download'></i> PDF
+                                    </button>
+                                    <button
+                                        class=
                                 "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                                type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                            </button>
-                            <caption
-                                    class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Male  Winner
-                                </caption>
-                            <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                                <caption
-                                    class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Male  Winner
-                                </caption>
+                                        type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                                    </button>
+                                    <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                        Male Winner
+                                    </caption>
+                                    <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                                        <caption
+                                            class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                            Male Winner
+                                        </caption>
                                         <thead>
                                             <tr>
                                                 <th class="px-4 py-2 border-b">Con#</th>
@@ -115,22 +119,26 @@
                             @endif
 
                             <!-- Male Contestants Table -->
-                          
+
                             @if (isset($maleMinorAwardScores[$minorAward->id]))
-                            <button
-                            class=
+                                <button
+                                    class=
+                            "float-right focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 "
+                                    type="button" onclick="downloadPdf(this)"><i class='bx bxs-cloud-download'></i> PDF
+                                </button>
+                                <button
+                                    class=
                             "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                            type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                        </button>
-                        <caption
-                                class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                Male Contestants
-                            </caption>
-                        <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                            <caption
-                                    class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                    type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                                </button>
+                                <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
                                     Male Contestants
                                 </caption>
+                                <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                                    <caption
+                                        class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                        Male Contestants
+                                    </caption>
                                     <thead>
                                         <tr>
                                             <th class="px-4 py-2 border-b">Con#</th>
@@ -194,20 +202,24 @@
                                         : 0; // Calculate average score
                                 @endphp
                                 @if ($topContestant)
-                                <button
-                                class=
+                                    <button
+                                        class=
+                                "float-right focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 "
+                                        type="button" onclick="downloadPdf(this)"><i class='bx bxs-cloud-download'></i> PDF
+                                    </button>
+                                    <button
+                                        class=
                                 "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                                type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                            </button>
-                            <caption
-                                    class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Female Winner
-                                </caption>
-                            <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                                <caption
-                                        class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                        type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                                    </button>
+                                    <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
                                         Female Winner
                                     </caption>
+                                    <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                                        <caption
+                                            class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                            Female Winner
+                                        </caption>
                                         <thead>
                                             <tr>
                                                 <th class="px-4 py-2 border-b">Con#</th>
@@ -234,18 +246,21 @@
                             @endif
 
                             <!-- Female Contestants Table -->
- 
+
                             @if (isset($femaleMinorAwardScores[$minorAward->id]))
-                          
+                                <button
+                                    class=
+                                    "float-right focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 "
+                                    type="button" onclick="downloadPdf(this)"><i class='bx bxs-cloud-download'></i> PDF
+                                </button>
                                 <button
                                     class=
                                     "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
                                     type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
                                 </button>
-                                <caption
-                                        class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                        Female Contestants
-                                    </caption>
+                                <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                    Female Contestants
+                                </caption>
                                 <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
                                     <caption
                                         class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
@@ -308,13 +323,13 @@
                         <span>OVER ALL SCORES</span>
                     </button>
                 </h2>
-                <div id="accordion-arrow-icon-body-1" class="hidden" aria-labelledby="accordion-arrow-icon-heading-1">
+                <div class="hidden" id="accordion-arrow-icon-body-1" aria-labelledby="accordion-arrow-icon-heading-1">
                     <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-                        <a class="focus:outline-none text-white  bg-[#FF9119] hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-                            href="">
-                            <i class='text-white bx bxs-cloud-download'></i>
-                            <span class="text-white">Download PDF</span>
-                        </a>
+                        <button
+                            class="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 mb-2"
+                            type="button" onclick="downloadPdf(this)">
+                            <i class='bx bxs-cloud-download'></i> Download PDF
+                        </button>
                         <button
                             class="focus:outline-none text-white  bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 "
                             type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
@@ -364,11 +379,11 @@
                 </h2>
                 <div class="hidden" id="accordion-arrow-icon-body-2" aria-labelledby="accordion-arrow-icon-heading-2">
                     <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
-                        <a class="focus:outline-none text-white  bg-[#FF9119] hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-                            href="">
-                            <i class='text-white bx bxs-cloud-download'></i>
-                            <span class="text-white">Download PDF</span>
-                        </a>
+                        <button
+                            class="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 mb-2"
+                            type="button" onclick="downloadPdf(this)">
+                            <i class='bx bxs-cloud-download'></i> Download PDF
+                        </button>
                         <button
                             class="focus:outline-none text-white  bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 "
                             type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
@@ -435,19 +450,22 @@
                     <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                         <!-- Male Contestants Table -->
                         <button
-                        class=
+                            class=
+                        "float-right focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 "
+                            type="button" onclick="downloadPdf(this)"><i class='bx bxs-cloud-download'></i> PDF
+                        </button>
+                        <button
+                            class=
                         "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                        type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                    </button>
-                    <caption
-                            class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                            Male  Winner
+                            type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                        </button>
+                        <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
+                            Male Winner
                         </caption>
-                    <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                        <caption
-                            class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
-                            Male  Winner
-                        </caption>
+                        <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                            <caption class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                Male Winner
+                            </caption>
                             <thead>
                                 <tr>
                                     <th class="px-4 py-2 border-b">Rank</th>
@@ -489,19 +507,17 @@
 
                         <!-- Male Contestants Table -->
                         <button
-                                class=
+                            class=
                                 "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                                type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                            </button>
-                            <caption
-                                    class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Male  Contestants
-                                </caption>
-                            <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                                <caption
-                                    class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Male  Contestants
-                                </caption>
+                            type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                        </button>
+                        <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
+                            Male Contestants
+                        </caption>
+                        <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                            <caption class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                Male Contestants
+                            </caption>
                             <thead>
                                 <tr>
                                     <th class="px-4 py-2 border-b">Rank</th>
@@ -533,19 +549,17 @@
 
                         <!-- Female Contestants Table -->
                         <button
-                                class=
+                            class=
                                 "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                                type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                            </button>
-                            <caption
-                                    class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Female  Winner
-                                </caption>
-                            <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                                <caption
-                                    class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Female  Winner
-                                </caption>
+                            type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                        </button>
+                        <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
+                            Female Winner
+                        </caption>
+                        <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                            <caption class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                Female Winner
+                            </caption>
                             <thead>
                                 <tr>
                                     <th class="px-4 py-2 border-b">Rank</th>
@@ -585,19 +599,17 @@
                         </table>
                         <!-- Female Contestants Table -->
                         <button
-                                class=
+                            class=
                                 "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                                type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                            </button>
-                            <caption
-                                    class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Female Contestants
-                                </caption>
-                            <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                                <caption
-                                    class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    Female Contestants
-                                </caption>
+                            type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                        </button>
+                        <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
+                            Female Contestants
+                        </caption>
+                        <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                            <caption class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                Female Contestants
+                            </caption>
                             <thead>
                                 <tr>
                                     <th class="px-4 py-2 border-b">Rank</th>
@@ -633,19 +645,17 @@
 
                         <!-- No Category/Null Contestants Table -->
                         <button
-                                class=
+                            class=
                                 "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
-                                type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
-                            </button>
-                            <caption
-                                    class="text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    SINGING/ DANCING CATEGORY
-                                </caption>
-                            <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
-                                <caption
-                                    class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
-                                    SINGING/ DANCING CATEGORY
-                                </caption>
+                            type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                        </button>
+                        <caption class="text-lg font-bold text-center border-b border-gray-200 caption-top">
+                            SINGING/ DANCING CATEGORY
+                        </caption>
+                        <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
+                            <caption class="hidden text-lg font-bold text-center border-b border-gray-200 caption-top">
+                                SINGING/ DANCING CATEGORY
+                            </caption>
                             <thead>
                                 <tr>
                                     <th class="px-4 py-2 border-b">Rank</th>
@@ -686,7 +696,18 @@
                         </table>
 
                         <!-- All Other Contestants Table -->
+
                         <h4 class="mt-4 mb-2 text-lg font-semibold">All Other Contestants</h4>
+                        <button
+                            class=
+                        "float-right focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium text-sm px-5 py-2.5 me-2 "
+                            type="button" onclick="downloadPdf(this)"><i class='bx bxs-cloud-download'></i> PDF
+                        </button>
+                        <button
+                            class=
+                        "float-right focus:outline-none text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 "
+                            type="button" onclick="printTable(this)"><i class='bx bxs-printer'></i> Print
+                        </button>
                         <table class="table min-w-full mb-4 bg-white border border-gray-200 table-xs">
                             <thead>
                                 <tr>
@@ -738,19 +759,19 @@
         data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
         data-inactive-classes="text-gray-500 dark:text-gray-400">
         <h2 id="accordion-flush-heading-1">
-            <button type="button"
+            <button
                 class="flex items-center justify-between w-full gap-3 py-5 font-medium text-gray-500 border-b border-gray-200 rtl:text-right dark:border-gray-700 dark:text-gray-400"
-                data-accordion-target="#accordion-flush-body-1" aria-expanded="true"
+                data-accordion-target="#accordion-flush-body-1" type="button" aria-expanded="true"
                 aria-controls="accordion-flush-body-1">
                 <span>Male over all scores in rounds</span>
-                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                <svg class="w-3 h-3 rotate-180 shrink-0" data-accordion-icon aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 5 5 1 1 5" />
                 </svg>
             </button>
         </h2>
-        <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
+        <div class="hidden" id="accordion-flush-body-1" aria-labelledby="accordion-flush-heading-1">
             <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                 <!-- Male Overall Scores -->
                 <div class="p-5 mb-4 border border-gray-200 dark:border-gray-700 dark:bg-gray-900">
@@ -856,19 +877,19 @@
             </div>
         </div>
         <h2 id="accordion-flush-heading-2">
-            <button type="button"
+            <button
                 class="flex items-center justify-between w-full gap-3 py-5 font-medium text-gray-500 border-b border-gray-200 rtl:text-right dark:border-gray-700 dark:text-gray-400"
-                data-accordion-target="#accordion-flush-body-2" aria-expanded="false"
+                data-accordion-target="#accordion-flush-body-2" type="button" aria-expanded="false"
                 aria-controls="accordion-flush-body-2">
                 <span>female over all scores in rounds</span>
-                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                <svg class="w-3 h-3 rotate-180 shrink-0" data-accordion-icon aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 5 5 1 1 5" />
                 </svg>
             </button>
         </h2>
-        <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
+        <div class="hidden" id="accordion-flush-body-2" aria-labelledby="accordion-flush-heading-2">
             <div class="py-5 border-b border-gray-200 dark:border-gray-700">
 
 
@@ -975,19 +996,19 @@
             </div>
         </div>
         <h2 id="accordion-flush-heading-3">
-            <button type="button"
+            <button
                 class="flex items-center justify-between w-full gap-3 py-5 font-medium text-gray-500 border-b border-gray-200 rtl:text-right dark:border-gray-700 dark:text-gray-400"
-                data-accordion-target="#accordion-flush-body-3" aria-expanded="false"
+                data-accordion-target="#accordion-flush-body-3" type="button" aria-expanded="false"
                 aria-controls="accordion-flush-body-3">
                 <span>Other Category singing or dancing Overall Winner</span>
-                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                <svg class="w-3 h-3 rotate-180 shrink-0" data-accordion-icon aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 5 5 1 1 5" />
                 </svg>
             </button>
         </h2>
-        <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
+        <div class="hidden" id="accordion-flush-body-3" aria-labelledby="accordion-flush-heading-3">
             <div class="py-5 border-b border-gray-200 dark:border-gray-700">
 
                 <!-- Other Category Overall Scores -->
@@ -1161,6 +1182,265 @@
                     printWindow.print();
                 })
                 .catch(error => console.error('Error loading print content:', error));
+        }
+
+        function downloadPdf(button) {
+            console.log('PDF download button clicked');
+
+            // Find the table - improved approach
+            let table = null;
+            let tableContainer = null;
+
+            // Method 1: Look for table in the same container as the button
+            const container = button.closest('.p-5, .py-5');
+            if (container) {
+                const tables = container.querySelectorAll('table');
+                if (tables.length > 0) {
+                    // Find the table that's closest to the button
+                    let closestTable = null;
+                    let minDistance = Infinity;
+
+                    tables.forEach(t => {
+                        const buttonRect = button.getBoundingClientRect();
+                        const tableRect = t.getBoundingClientRect();
+                        const distance = Math.abs(buttonRect.top - tableRect.top);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestTable = t;
+                        }
+                    });
+
+                    if (closestTable) {
+                        table = closestTable;
+                        tableContainer = container;
+                        console.log('Method 1 - Found closest table:', table);
+                    }
+                }
+            }
+
+            // Method 2: Look for table after the button (next sibling)
+            if (!table) {
+                let nextElement = button.nextElementSibling;
+                while (nextElement) {
+                    if (nextElement.tagName === 'TABLE') {
+                        table = nextElement;
+                        tableContainer = nextElement.parentElement;
+                        console.log('Method 2 - Found table after button:', table);
+                        break;
+                    }
+                    nextElement = nextElement.nextElementSibling;
+                }
+            }
+
+            // Method 3: Look for table in the accordion body
+            if (!table) {
+                const accordionBody = button.closest('[id*="accordion"][id*="body"]');
+                if (accordionBody) {
+                    const tables = accordionBody.querySelectorAll('table');
+                    if (tables.length > 0) {
+                        // Find the table that's closest to the button
+                        let closestTable = null;
+                        let minDistance = Infinity;
+
+                        tables.forEach(t => {
+                            const buttonRect = button.getBoundingClientRect();
+                            const tableRect = t.getBoundingClientRect();
+                            const distance = Math.abs(buttonRect.top - tableRect.top);
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestTable = t;
+                            }
+                        });
+
+                        if (closestTable) {
+                            table = closestTable;
+                            tableContainer = accordionBody;
+                            console.log('Method 3 - Found table in accordion:', table);
+                        }
+                    }
+                }
+            }
+
+            console.log('Final table found:', table);
+            console.log('Table container:', tableContainer);
+
+            if (!table) {
+                alert('Table not found! Please make sure you are clicking the PDF button next to a table.');
+                return;
+            }
+
+            // Verify the table has content
+            const tbodyRows = table.querySelectorAll('tbody tr');
+            console.log('Table rows count:', tbodyRows.length);
+
+            if (tbodyRows.length === 0) {
+                alert('No data found in the table. Please make sure the table contains contestants.');
+                return;
+            }
+
+            let title = '';
+
+            // Get title from various possible sources
+            title = getTitleFromContext(button);
+
+            // If no title found, try to get it from table caption
+            if (!title) {
+                const caption = table.querySelector('caption');
+                if (caption) {
+                    title = caption.textContent.trim();
+                }
+            }
+
+            // If still no title, use a default
+            if (!title) {
+                title = 'Score Report';
+            }
+
+            // Show loading indicator
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Generating PDF...';
+            button.disabled = true;
+
+            // Clean the table HTML to ensure it's properly formatted
+            const cleanTableHTML = cleanTableForPDF(table.outerHTML);
+
+            // Submit form via fetch to handle JSON responses
+            console.log('Sending request to:', '{{ route('download_pdf') }}');
+            console.log('Title:', title);
+            console.log('Table HTML length:', cleanTableHTML.length);
+            console.log('Table rows count:', tbodyRows.length);
+
+            fetch('{{ route('download_pdf') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: new URLSearchParams({
+                        'tableContent': cleanTableHTML,
+                        'title': title
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        return response.json().then(data => {
+                            throw new Error(data.message || 'Failed to generate PDF');
+                        });
+                    }
+                })
+                .then(blob => {
+                    // Create download link
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = title ? title.replace(/[^a-zA-Z0-9_-]/g, '_') + '.pdf' : 'score_report.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('PDF Download Error:', error);
+                    alert('Error: ' + error.message);
+                })
+                .finally(() => {
+                    // Restore button state
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                });
+        }
+
+        function cleanTableForPDF(tableHTML) {
+            // Create a temporary div to parse the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = tableHTML;
+
+            const table = tempDiv.querySelector('table');
+            if (!table) return tableHTML;
+
+            // Remove any problematic attributes
+            const allElements = table.querySelectorAll('*');
+            allElements.forEach(el => {
+                // Remove onclick and other event handlers
+                el.removeAttribute('onclick');
+                el.removeAttribute('onload');
+                el.removeAttribute('onerror');
+
+                // Remove data attributes that might cause issues
+                Array.from(el.attributes).forEach(attr => {
+                    if (attr.name.startsWith('data-')) {
+                        el.removeAttribute(attr.name);
+                    }
+                });
+            });
+
+            // Ensure the table has proper structure
+            if (!table.querySelector('thead')) {
+                const tbody = table.querySelector('tbody');
+                if (tbody && tbody.children.length > 0) {
+                    const firstRow = tbody.children[0];
+                    const thead = document.createElement('thead');
+                    thead.appendChild(firstRow.cloneNode(true));
+                    table.insertBefore(thead, tbody);
+                    tbody.removeChild(firstRow);
+                }
+            }
+
+            return table.outerHTML;
+        }
+
+        function getTitleFromContext(button) {
+            let title = '';
+
+            // Check for minor awards section
+            const minorAwardsSection = button.closest('[id^="accordion-open-body-"]');
+            if (minorAwardsSection) {
+                const headingId = minorAwardsSection.getAttribute('aria-labelledby');
+                const headingSpan = document.getElementById(headingId)?.querySelector('span');
+                if (headingSpan) {
+                    title = headingSpan.textContent.trim();
+                }
+            }
+
+            // Check for rounds section
+            const roundsSection = button.closest('[id^="accordion-collapse-body-"]');
+            if (roundsSection) {
+                const headingId = roundsSection.getAttribute('aria-labelledby');
+                const headingSpan = document.getElementById(headingId)?.querySelector('span');
+                if (headingSpan) {
+                    title = headingSpan.textContent.trim();
+                }
+            }
+
+            // Check for overall scores section
+            const overallSection = button.closest('[id^="accordion-arrow-icon-body-"]');
+            if (overallSection) {
+                const headingId = overallSection.getAttribute('aria-labelledby');
+                const headingSpan = document.getElementById(headingId)?.querySelector('span');
+                if (headingSpan) {
+                    title = headingSpan.textContent.trim();
+                }
+            }
+
+            // Check for flush accordion sections
+            const flushSection = button.closest('[id^="accordion-flush-body-"]');
+            if (flushSection) {
+                const headingId = flushSection.getAttribute('aria-labelledby');
+                const headingSpan = document.getElementById(headingId)?.querySelector('span');
+                if (headingSpan) {
+                    title = headingSpan.textContent.trim();
+                }
+            }
+
+            // Check for section headers
+            const sectionHeader = button.closest('.p-5, .py-5')?.querySelector('h3, h4');
+            if (sectionHeader && !title) {
+                title = sectionHeader.textContent.trim();
+            }
+
+            return title;
         }
     </script>
 @endsection

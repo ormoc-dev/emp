@@ -189,6 +189,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/showResults', [ShowScore_in_admin::class, 'showResults'])->name('events.showResultsAdmin');
     Route::get('print_pdf/{round}/{tableType}/{criterionId?}', [ShowScore_in_admin::class, 'print_pdf'])->name('print_pdf');
     Route::post('/print-table', [ShowScore_in_admin::class, 'printTable'])->name('print.table');
+    Route::post('/download-pdf', [ShowScore_in_admin::class, 'downloadPdf'])->name('download_pdf');
 
     //
     Route::post('/events/{event}/calculate-combined-scores', [ShowScore_in_admin::class, 'calculateCombinedScores'])
@@ -210,7 +211,7 @@ Route::middleware(['admin'])->group(function () {
     //USERS SEE to admin
     Route::get('/users', [UsersController::class, 'showUsersTable'])->name('showUsersTable');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
-   
+
     Route::put('/users/{id}', [UsersController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UsersController::class, 'delete'])->name('user.destroy');
     //Settings in admin
