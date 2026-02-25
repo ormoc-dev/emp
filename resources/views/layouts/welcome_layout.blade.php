@@ -7,6 +7,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ config('app.name', 'E.M.P') }}</title>
         <link type="image/png" href="{{ asset('img/emp-logo.png') }}" rel="icon">
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+        <meta name="theme-color" content="#3367D6">
         <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
         <link href="{{ asset('css/boxicon/boxicons.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/welcome.css') }}" rel="stylesheet">
@@ -550,6 +552,21 @@
 
 
         @livewireScripts
+
+        <!-- PWA Service Worker Registration -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then(registration => {
+                            console.log('EMP PWA Service Worker registered:', registration);
+                        })
+                        .catch(err => {
+                            console.error('EMP PWA Service Worker registration failed:', err);
+                        });
+                });
+            }
+        </script>
     </body>
 
 </html>
