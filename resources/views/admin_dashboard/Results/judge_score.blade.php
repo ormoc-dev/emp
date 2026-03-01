@@ -239,30 +239,24 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($minorAwardScores[$minorAward->id][$judge->id] ?? [] as $contestantScores)
-                                                        @foreach ($contestantScores as $minorAwardScore)
-                                                            @php
-                                                                $contestant = $minorAwardScore->contestant; // Ensure contestant is correctly set
-                                                            @endphp
+                                                    @foreach ($minorAwardScores[$minorAward->id][$judge->id] ?? [] as $minorAwardScore)
+                                                        @php
+                                                            $contestant = $minorAwardScore->contestant;
+                                                        @endphp
+                                                        @if ($contestant)
                                                             <tr>
                                                                 <td class="px-4 py-2 border-b">
                                                                     {{ $contestant->category ?? 'N/A' }}
                                                                 </td>
                                                                 <td class="px-4 py-2 border-b">
-                                                                    {{ $minorAwardScore->contestant->number }}
-                                                                    {{ $minorAwardScore->contestant->name }}</td>
-                                                                <td
-                                                                    class="px-4 py-2 border-b  bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
-                                                                    @if ($minorAwardScore)
-                                                                        {{ $minorAwardScore->rate }}
-                                                                    @else
-                                                                        <span
-                                                                            class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">N/A</span>
-                                                                    @endif
+                                                                    {{ $contestant->number }}
+                                                                    {{ $contestant->name }}
                                                                 </td>
-
+                                                                <td class="px-4 py-2 border-b bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
+                                                                    {{ $minorAwardScore->rate ?? 'N/A' }}
+                                                                </td>
                                                             </tr>
-                                                        @endforeach
+                                                        @endif
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -292,7 +286,7 @@
                                         </button>
                                     </form>
                                     </div>
-                                    @if (empty($minorAwardScores[$minorAward->id][$judge->id]))
+                                    @if (!isset($minorAwardScores[$minorAward->id][$judge->id]) || $minorAwardScores[$minorAward->id][$judge->id]->isEmpty())
                                         <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
                                             role="alert">
                                             <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
@@ -306,7 +300,6 @@
                                                 <span class="font-medium">Danger alert!</span>No scores available for this
                                                 judge.
                                             </div>
-
                                         </div>
                                     @endif
                                 @endforeach

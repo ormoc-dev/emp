@@ -156,6 +156,11 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/events/{id}/add-Criteria', [CrteriaController::class, 'create'])->name('rounds.create');
     Route::post('/rounds/update-description',  [CrteriaController::class, 'updateDescription'])->name('rounds.updateDescription');
     Route::post('/rounds/add-criteria',  [CrteriaController::class, 'addcriteria'])->name('rounds.add-criteria');
+    Route::get('/criteria/{criterion}/edit', [CrteriaController::class, 'edit'])->name('criteria.edit');
+    Route::put('/criteria/{criterion}', [CrteriaController::class, 'update'])->name('criteria.update');
+    Route::get('/criteria/{criterion}/production-scores', [CrteriaController::class, 'getProductionScores'])->name('criteria.production-scores');
+    Route::put('/criteria/{criterion}/production-scores/{contestant}', [CrteriaController::class, 'updateProductionScore'])->name('criteria.update-production-score');
+    Route::get('/events/{eventId}/minor-award-scores', [CrteriaController::class, 'getMinorAwardScores'])->name('events.minor-award-scores');
     Route::delete('/criteria/{criterion}', [CrteriaController::class, 'destroy'])->name('criteria.destroy');
     Route::get('/events/{eventId}/proceed-next-round', [ScoreController::class, 'proceedToNextRound'])->name('proceed_next_round');
 

@@ -1012,6 +1012,7 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach ($criteria as $criterion)
                                         <tr
+                                            data-criteria-id="{{ $criterion->id }}"
                                             class="hover:bg-gray-50 transition-colors duration-200 {{ $criterion->is_hidden ? 'opacity-50' : '' }}">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 #{{ $criterion->id }}</td>
@@ -1039,7 +1040,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex items-center space-x-3">
-                                                    <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                                                    <button class="text-blue-600 hover:text-blue-900" title="Edit" onclick="openEditCriteriaModal({{ $criterion->id }})">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
                                                     <button class="text-red-600 hover:text-red-900" title="Delete"
@@ -1098,6 +1099,128 @@
                 <button class="px-4 py-2 bg-gray-200 rounded" onclick="closeHideForJudgesModal()">Cancel</button>
                 <button class="px-4 py-2 bg-blue-600 text-white rounded" onclick="submitHideForJudges()">Save</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Edit Criteria Modal -->
+    <div class="fixed inset-0  hidden items-center justify-center z-100 p-4" id="editCriteriaModal">
+        <div class="bg-white overflow-y-auto flex-1 rounded-xl shadow-2xl w-full max-w-5xl max-h-[600px] flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Edit Criteria</h3>
+                <button class="text-gray-400 hover:text-gray-700" onclick="closeEditCriteriaModal()">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Body -->
+            <div class="overflow-y-auto flex-1 p-6 h-[500px]">
+                <form id="editCriteriaForm">
+                @csrf
+                @method('PUT')
+                <input type="hidden" id="edit_criteria_id" name="id">
+                <input type="hidden" id="edit_event_id">
+
+                <!-- TOP ROW: Criteria Fields | Production Scores -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <!-- LEFT: Criteria Fields -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Criteria Settings</h4>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="edit_round_id">Round</label>
+                            <select
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                id="edit_round_id" name="round_id" required>
+                                @foreach ($rounds as $round)
+                                    <option value="{{ $round->id }}">{{ $round->round_number }} - {{ $round->round_description }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="edit_criteria_description">Criteria Description</label>
+                            <input
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                id="edit_criteria_description" name="criteria_description" type="text" required />
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="edit_highest_rate">Highest Rate (%)</label>
+                                <input
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    id="edit_highest_rate" name="highest_rate" type="number" min="0" max="100" required />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="edit_lowest_rate">Lowest Rate (%)</label>
+                                <input
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    id="edit_lowest_rate" name="lowest_rate" type="number" min="0" max="100" required />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="scoring_judge_id">Judge Selection (for scoring)</label>
+                            <select
+                                id="scoring_judge_id"
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">Select Judge</option>
+                                @foreach($judges as $judge)
+                                    <option value="{{ $judge->id }}">{{ $judge->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Production Number Scores -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Production Number Scores</h4>
+                            <span id="productionRateHint" class="text-xs text-blue-600 font-medium"></span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-3">Enter the production score for each contestant within the allowed rate range.</p>
+                        <div class="overflow-x-auto max-h-56 overflow-y-auto rounded border border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Contestant</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productionScoresBody" class="bg-white divide-y divide-gray-200">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-3 flex items-center gap-2">
+                            <button type="button" id="saveProductionScoresBtn"
+                                class="px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <i class="fas fa-save mr-1"></i> Save Production Scores
+                            </button>
+                            <span id="productionSaveStatus" class="text-xs text-gray-500"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM: Minor Award Scores Reference -->
+                <div class="mt-6" id="minorAwardScoresSection">
+                    <div class="flex items-center gap-2 mb-2">
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Minor Award Scores <span class="normal-case font-normal text-gray-400">(reference)</span></h4>
+                        <span id="minorAwardLoadStatus" class="text-xs text-gray-400 ml-1"></span>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-3">Average scores per contestant across all judges for each minor award. Use these as reference when combining with round scores.</p>
+                    <div id="minorAwardTablesWrapper" class="space-y-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Footer Buttons -->
+                <div class="mt-6 flex justify-end space-x-2 border-t border-gray-100 pt-4">
+                    <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" onclick="closeEditCriteriaModal()">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Update Criteria</button>
+                </div>
+
+            </form>
+            </div><!-- end scrollable body -->
         </div>
     </div>
 
@@ -1282,7 +1405,7 @@
                     [5, 10, 25, 50, "All"]
                 ],
             });
-        });
+        }
     </script>
     <script>
         function confirmDelete(id) {
@@ -1290,6 +1413,397 @@
                 document.getElementById('deleteForm-' + id).submit();
             }
         }
+    </script>
+    <script>
+        // Base URL for API calls — uses Laravel url() helper to handle subdirectory installs
+        const appBaseUrl = '{{ rtrim(url('/'), '/') }}';
+
+        // Edit criteria functionality
+        function openEditCriteriaModal(criteriaId) {
+            // Validate the criteriaId before making the request
+            if (!criteriaId || isNaN(criteriaId)) {
+                alert('Invalid criteria ID');
+                return;
+            }
+                    
+            fetch(`${appBaseUrl}/criteria/${criteriaId}/edit`, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            window.location.href = '/login'; // Redirect to login if unauthorized
+                            return;
+                        }
+                        if (response.status === 404) {
+                            alert('Criteria not found. It may have been deleted.');
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('edit_criteria_id').value = data.criterion.id;
+                        document.getElementById('edit_round_id').value = data.criterion.round_id;
+                        document.getElementById('edit_criteria_description').value = data.criterion.criteria_description;
+                        document.getElementById('edit_highest_rate').value = data.criterion.highest_rate;
+                        document.getElementById('edit_lowest_rate').value = data.criterion.lowest_rate;
+                        document.getElementById('edit_event_id').value = data.criterion.event_id ?? '';
+
+                        // Reset judge selector
+                        const judgeSelect = document.getElementById('scoring_judge_id');
+                        if (judgeSelect) judgeSelect.value = '';
+
+                        // Always show production scores section and load scores
+                        loadProductionScores(criteriaId, data.criterion.highest_rate, data.criterion.lowest_rate);
+
+                        // Load minor award scores as reference
+                        loadMinorAwardScores(data.criterion.event_id);
+                                
+                        document.getElementById('editCriteriaModal').classList.remove('hidden');
+                        document.getElementById('editCriteriaModal').classList.add('flex');
+                    } else {
+                        alert(data.message || 'Error loading criteria data');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching criteria data:', error);
+                    if (error.message.includes('401')) {
+                        alert('Session expired. Please log in again.');
+                        window.location.href = '/login';
+                    } else if (error.message.includes('404')) {
+                        alert('Criteria not found. It may have been deleted.');
+                    } else {
+                        alert('Error loading criteria data');
+                    }
+                });
+        }
+        
+        // Stores current criteriaId for the save button handler
+        let _currentProductionCriteriaId = null;
+
+        function loadProductionScores(criteriaId, highestRate, lowestRate, judgeId = '') {
+            _currentProductionCriteriaId = criteriaId;
+
+            // Update the rate range hint
+            const hint = document.getElementById('productionRateHint');
+            if (hint) {
+                hint.textContent = `Score range: ${lowestRate}% – ${highestRate}%`;
+            }
+
+            // Fetch production scores for this criteria and populate the table
+            let url = `${appBaseUrl}/criteria/${criteriaId}/production-scores`;
+            if (judgeId) {
+                url += `?judge_id=${judgeId}`;
+            }
+
+            fetch(url, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            window.location.href = '/login';
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const tbody = document.getElementById('productionScoresBody');
+                        tbody.innerHTML = ''; // Clear existing rows
+
+                        const lo = data.lowest_rate;
+                        const hi = data.highest_rate;
+
+                        data.scores.forEach(score => {
+                            const tr = document.createElement('tr');
+                            tr.dataset.contestantId = score.contestant_id;
+                            tr.innerHTML =
+                                `<td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${score.contestant_number ?? ''}</td>` +
+                                `<td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">${score.contestant_name}</td>` +
+                                `<td class="px-4 py-2 whitespace-nowrap">
+                                    <input type="number"
+                                        class="production-score-input w-24 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                                        data-contestant-id="${score.contestant_id}"
+                                        value="${score.score !== null ? score.score : ''}"
+                                        min="${lo}" max="${hi}"
+                                        placeholder="${lo}–${hi}">
+                                </td>`;
+                            tbody.appendChild(tr);
+                        });
+
+                        // Reset save status
+                        const status = document.getElementById('productionSaveStatus');
+                        if (status) status.textContent = '';
+                    } else {
+                        console.error('Error loading production scores:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading production scores:', error);
+                    if (error.message.includes('401')) {
+                        alert('Session expired. Please log in again.');
+                        window.location.href = '/login';
+                    }
+                });
+        }
+
+        // Load minor award scores for reference panel
+        function loadMinorAwardScores(eventId) {
+            if (!eventId) return;
+            const wrapper = document.getElementById('minorAwardTablesWrapper');
+            const status = document.getElementById('minorAwardLoadStatus');
+            wrapper.innerHTML = '<p class="text-xs text-gray-400">Loading...</p>';
+
+            fetch(`${appBaseUrl}/events/${eventId}/minor-award-scores`, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                wrapper.innerHTML = '';
+                if (!data.success || !data.minor_awards || data.minor_awards.length === 0) {
+                    wrapper.innerHTML = '<p class="text-xs text-gray-400 italic">No minor award scores yet.</p>';
+                    return;
+                }
+
+                data.minor_awards.forEach(award => {
+                    const hasScores = award.contestants.some(c => c.avg_score !== null);
+                    const card = document.createElement('div');
+                    card.className = 'border border-gray-200 rounded-lg overflow-hidden';
+
+                    // Header
+                    const header = document.createElement('div');
+                    header.className = 'flex items-center justify-between px-4 py-2 bg-gray-50 cursor-pointer select-none';
+                    header.innerHTML =
+                        `<span class="text-sm font-semibold text-gray-700">${award.name}</span>` +
+                        `<span class="text-xs text-gray-500">Range: ${award.low_rate}% – ${award.high_rate}%` +
+                        (hasScores ? '' : ' <em class="text-gray-400">(no scores yet)</em>') + '</span>';
+
+                    // Table body
+                    const tableWrap = document.createElement('div');
+                    tableWrap.className = 'overflow-x-auto max-h-48 overflow-y-auto';
+
+                    const table = document.createElement('table');
+                    table.className = 'min-w-full divide-y divide-gray-200 text-sm';
+                    table.innerHTML =
+                        '<thead class="bg-gray-50 sticky top-0"><tr>' +
+                        '<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>' +
+                        '<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Contestant</th>' +
+                        '<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Avg Score</th>' +
+                        '</tr></thead>';
+
+                    const tbody = document.createElement('tbody');
+                    tbody.className = 'bg-white divide-y divide-gray-200';
+                    award.contestants.forEach(c => {
+                        const tr = document.createElement('tr');
+                        const scoreDisplay = c.avg_score !== null
+                            ? `<span class="font-semibold text-blue-700">${c.avg_score}</span>`
+                            : '<span class="text-gray-300">—</span>';
+                        tr.innerHTML =
+                            `<td class="px-4 py-2 text-gray-500">${c.contestant_number ?? ''}</td>` +
+                            `<td class="px-4 py-2 font-medium text-gray-800">${c.contestant_name}</td>` +
+                            `<td class="px-4 py-2">${scoreDisplay}</td>`;
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
+                    tableWrap.appendChild(table);
+
+                    // Toggle collapse
+                    let collapsed = false;
+                    header.addEventListener('click', () => {
+                        collapsed = !collapsed;
+                        tableWrap.style.display = collapsed ? 'none' : '';
+                    });
+
+                    card.appendChild(header);
+                    card.appendChild(tableWrap);
+                    wrapper.appendChild(card);
+                });
+
+                if (status) status.textContent = '';
+            })
+            .catch(err => {
+                console.error('Error loading minor award scores:', err);
+                wrapper.innerHTML = '<p class="text-xs text-red-400">Failed to load minor award scores.</p>';
+            });
+        }
+
+        // Judge selector change handler
+        document.getElementById('scoring_judge_id').addEventListener('change', function() {
+            const criteriaId = _currentProductionCriteriaId;
+            if (!criteriaId) return;
+            
+            const highestRate = parseFloat(document.getElementById('edit_highest_rate').value);
+            const lowestRate = parseFloat(document.getElementById('edit_lowest_rate').value);
+            const judgeId = this.value;
+            
+            loadProductionScores(criteriaId, highestRate, lowestRate, judgeId);
+        });
+
+        document.getElementById('saveProductionScoresBtn').addEventListener('click', function() {
+            const criteriaId = _currentProductionCriteriaId;
+            if (!criteriaId) return;
+
+            const inputs = document.querySelectorAll('.production-score-input');
+            const saveStatus = document.getElementById('productionSaveStatus');
+            saveStatus.textContent = 'Saving...';
+
+            const judgeId = document.getElementById('scoring_judge_id').value;
+
+            // Read highest/lowest from the current edit modal inputs
+            const highestRate = parseFloat(document.getElementById('edit_highest_rate').value);
+            const lowestRate = parseFloat(document.getElementById('edit_lowest_rate').value);
+
+            // Validate all inputs first
+            let hasError = false;
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                if (val === '') return; // allow empty (skip contestant)
+                const num = parseFloat(val);
+                if (isNaN(num) || num < lowestRate || num > highestRate) {
+                    input.classList.add('border-red-500');
+                    hasError = true;
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+
+            if (hasError) {
+                saveStatus.textContent = `⚠ Some scores are out of range (${lowestRate}–${highestRate}).`;
+                saveStatus.className = 'text-xs text-red-600';
+                return;
+            }
+
+            // Build promise array for each non-empty score
+            const promises = [];
+            inputs.forEach(input => {
+                const val = input.value.trim();
+                if (val === '') return;
+                const contestantId = input.dataset.contestantId;
+                promises.push(
+                    fetch(`${appBaseUrl}/criteria/${criteriaId}/production-scores/${contestantId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ 
+                            score: parseFloat(val),
+                            user_id: judgeId || null
+                        })
+                    }).then(r => r.json())
+                );
+            });
+
+            if (promises.length === 0) {
+                saveStatus.textContent = 'No scores to save.';
+                saveStatus.className = 'text-xs text-gray-500';
+                return;
+            }
+
+            Promise.all(promises)
+                .then(results => {
+                    const allOk = results.every(r => r.success);
+                    if (allOk) {
+                        saveStatus.textContent = '✓ Scores saved successfully!';
+                        saveStatus.className = 'text-xs text-green-600';
+                    } else {
+                        saveStatus.textContent = '⚠ Some scores could not be saved.';
+                        saveStatus.className = 'text-xs text-red-600';
+                    }
+                })
+                .catch(err => {
+                    console.error('Error saving production scores:', err);
+                    saveStatus.textContent = '✗ Error saving scores.';
+                    saveStatus.className = 'text-xs text-red-600';
+                });
+        });
+        
+        function closeEditCriteriaModal() {
+            document.getElementById('editCriteriaModal').classList.add('hidden');
+            document.getElementById('editCriteriaModal').classList.remove('flex');
+        }
+    
+        document.getElementById('editCriteriaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+                    
+            const formData = new FormData(this);
+            const criteriaId = document.getElementById('edit_criteria_id').value;
+                    
+            fetch(`${appBaseUrl}/criteria/${criteriaId}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        window.location.href = '/login'; // Redirect to login if unauthorized
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Update the row in the table
+                    const row = document.querySelector(`tr[data-criteria-id="${criteriaId}"]`);
+                    if (row) {
+                        // Update round description
+                        const roundCell = row.querySelector('td:nth-child(2) div.text-sm.font-medium');
+                        if (roundCell) {
+                            roundCell.textContent = document.getElementById('edit_round_id').selectedOptions[0].text;
+                        }
+                        // Update criteria description
+                        const criteriaCell = row.querySelector('td:nth-child(3) div.text-sm.text-gray-900');
+                        if (criteriaCell) {
+                            criteriaCell.textContent = document.getElementById('edit_criteria_description').value;
+                        }
+                        // Update rating range
+                        const ratingCell = row.querySelector('td:nth-child(4) span');
+                        if (ratingCell) {
+                            ratingCell.innerHTML = `${document.getElementById('edit_highest_rate').value} - ${document.getElementById('edit_lowest_rate').value}`;
+                            ratingCell.className = "px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full";
+                        }
+                    }
+                            
+                    closeEditCriteriaModal();
+                    alert('Criteria updated successfully!');
+                    location.reload(); // Refresh the page to show updated data
+                } else {
+                    alert(data.message || 'Error updating criteria');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating criteria:', error);
+                if (error.message.includes('401')) {
+                    alert('Session expired. Please log in again.');
+                    window.location.href = '/login';
+                } else {
+                    alert('Error updating criteria');
+                }
+            });
+        });
     </script>
     <script>
         // JavaScript code to handle tab switching
@@ -1423,21 +1937,38 @@
                 const eventId = '{{ $event->id }}';
                 const roundId = roundSelect.value;
                 const criteriaId = criteriaSelect.value;
-
-                fetch(`/committee/scores?event_id=${eventId}&round_id=${roundId}&criteria_id=${criteriaId}`)
-                    .then(response => response.json())
+            
+                fetch(`/committee/scores?event_id=${eventId}&round_id=${roundId}&criteria_id=${criteriaId}`, {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(scores => {
                         scores.forEach(score => {
-                            const input = document.querySelector(
-                                `input[name="scores[${score.contestant_id}]"]`);
-                            const previousScoreSpan = input.closest('tr').querySelector(
-                                '.previous-score');
-
-                            if (input) {
-                                input.value = score.rate;
-                                previousScoreSpan.textContent = score.rate;
-                            }
+                            // Look for input with score data - using a more flexible selector
+                            const inputs = document.querySelectorAll(`input[name*="[${score.contestant_id}]"]`);
+                            
+                            inputs.forEach(input => {
+                                if(input.name.includes(`[${score.contestant_id}]`)) {
+                                    input.value = score.rate;
+                                    const previousScoreSpan = input.closest('tr')?.querySelector('.previous-score');
+                                    if(previousScoreSpan) {
+                                        previousScoreSpan.textContent = score.rate;
+                                    }
+                                }
+                            });
                         });
+                    })
+                    .catch(error => {
+                        console.error('Error loading scores:', error);
                     });
             }
 

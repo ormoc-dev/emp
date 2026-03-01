@@ -50,6 +50,12 @@ class CommitteeController extends Controller
 
     public function getScores(Request $request)
     {
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'round_id' => 'required|exists:rounds,id',
+            'criteria_id' => 'required|exists:criteria,id',
+        ]);
+
         $scores = Score::where('event_id', $request->event_id)
             ->where('round_id', $request->round_id)
             ->where('criteria_id', $request->criteria_id)

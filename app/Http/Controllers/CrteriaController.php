@@ -148,6 +148,197 @@ class CrteriaController extends Controller
         return redirect()->back()->with('success', 'Criteria added successfully!');
     }
 
+    public function edit(Criteria $criterion)
+    {
+        // Check if user is authenticated and authorized
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access. Please log in.'
+            ], 401);
+        }
+        
+        // Check if the criterion exists and is loaded properly
+        if (!$criterion || !$criterion->exists) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Criteria not found.'
+            ], 404);
+        }
+        
+        // Return the criteria data as JSON for the edit modal
+        return response()->json([
+            'success' => true,
+            'criterion' => [
+                'id' => $criterion->id,
+                'round_id' => $criterion->round_id,
+                'event_id' => $criterion->round->event_id,
+                'criteria_description' => $criterion->criteria_description,
+                'highest_rate' => $criterion->highest_rate,
+                'lowest_rate' => $criterion->lowest_rate,
+            ]
+        ]);
+    }
+
+    public function update(Request $request, Criteria $criterion)
+    {
+        // Check if user is authenticated and authorized
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access. Please log in.'
+            ], 401);
+        }
+        
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'round_id' => 'required|exists:rounds,id',
+            'criteria_description' => 'required',
+            'highest_rate' => 'required|numeric',
+            'lowest_rate' => 'required|numeric',
+        ]);
+
+        // Update the criteria
+        $criterion->update([
+            'round_id' => $request->input('round_id'),
+            'criteria_description' => $request->input('criteria_description'),
+            'highest_rate' => $request->input('highest_rate'),
+            'lowest_rate' => $request->input('lowest_rate'),
+        ]);
+
+        // Return a success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Criteria updated successfully!',
+            'criterion' => $criterion
+        ]);
+    }
+
+    public function getProductionScores(Request $request, Criteria $criterion)
+    {
+        // Check if user is authenticated and authorized
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access. Please log in.'
+            ], 401);
+        }
+        
+        $judgeId = $request->query('judge_id');
+        
+        // Get all contestants for the event associated with this criteria's round
+        $round = $criterion->round;
+        $event = $round->event;
+        $contestants = $event->contestants()->orderBy('number')->get();
+        
+        $scores = [];
+        foreach ($contestants as $contestant) {
+            $query = Score::where('contestant_id', $contestant->id)
+                ->where('criteria_id', $criterion->id)
+                ->where('round_id', $round->id)
+                ->where('event_id', $event->id);
+
+            if ($judgeId) {
+                $query->where('user_id', $judgeId);
+            } else {
+                $query->where('user_id', auth()->id());
+            }
+
+            $score = $query->first();
+            
+            $scores[] = [
+                'contestant_id' => $contestant->id,
+                'contestant_number' => $contestant->number,
+                'contestant_name' => $contestant->name,
+                'score' => $score ? $score->rate : null
+            ];
+        }
+        
+        return response()->json([
+            'success' => true,
+            'scores' => $scores,
+            'lowest_rate' => $criterion->lowest_rate,
+            'highest_rate' => $criterion->highest_rate
+        ]);
+    }
+
+    public function updateProductionScore(Request $request, Criteria $criterion, $contestantId)
+    {
+        // Check if user is authenticated and authorized
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access. Please log in.'
+            ], 401);
+        }
+        
+        $request->validate([
+            'score' => 'required|numeric|min:' . $criterion->lowest_rate . '|max:' . $criterion->highest_rate
+        ]);
+        
+        // Find or create the score record
+        $score = Score::updateOrCreate(
+            [
+                'contestant_id' => $contestantId,
+                'criteria_id' => $criterion->id,
+                'round_id' => $criterion->round_id,
+                'event_id' => $criterion->round->event_id,
+                'user_id' => $request->input('user_id') ?? auth()->id(),
+            ],
+            [
+                'rate' => $request->score
+            ]
+        );
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Production score updated successfully',
+            'score' => $score
+        ]);
+    }
+
+    public function getMinorAwardScores($eventId)
+    {
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized.'], 401);
+        }
+
+        $event = \App\Models\Event::findOrFail($eventId);
+        $contestants = $event->contestants()->orderBy('number')->get();
+        $minorAwards = \App\Models\MinorAward::where('event_id', $eventId)->get();
+
+        // Key existing scores by [minor_award_id][contestant_id] => avg rate across judges
+        $rawScores = \App\Models\MinorAwardScore::where('event_id', $eventId)
+            ->get()
+            ->groupBy('minor_award_id');
+
+        $result = [];
+        foreach ($minorAwards as $award) {
+            $awardScores = $rawScores->get($award->id, collect());
+            // Average per contestant across judges
+            $perContestant = $awardScores->groupBy('contestant_id')
+                ->map(fn($rows) => round($rows->avg('rate'), 4));
+
+            $rows = [];
+            foreach ($contestants as $c) {
+                $rows[] = [
+                    'contestant_id'     => $c->id,
+                    'contestant_number' => $c->number,
+                    'contestant_name'   => $c->name,
+                    'avg_score'         => $perContestant->get($c->id),
+                ];
+            }
+            $result[] = [
+                'id'          => $award->id,
+                'name'        => $award->minor_awards_description,
+                'high_rate'   => $award->high_rate,
+                'low_rate'    => $award->low_rate,
+                'contestants' => $rows,
+            ];
+        }
+
+        return response()->json(['success' => true, 'minor_awards' => $result]);
+    }
 
     public function destroy(Criteria $criterion)
     {

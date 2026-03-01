@@ -47,7 +47,7 @@ class ShowScore_in_admin extends Controller
         $minorAwardScores = MinorAwardScore::where('event_id', $eventId)
             ->with(['contestant', 'user', 'minorAward'])
             ->get()
-            ->groupBy(['minor_award_id', 'user_id', 'contestant_id']);
+            ->groupBy(['minor_award_id', 'user_id']);
 
 
         // Get all judges
@@ -392,10 +392,14 @@ class ShowScore_in_admin extends Controller
             ->get()
             ->groupBy('contestant_id')
             ->map(function ($scores) {
+                // Ensure $scores is a collection before calling sum()
+                $totalScore = ($scores instanceof \Illuminate\Support\Collection) ? $scores->sum('overall_score') : 0;
+                $firstScore = ($scores instanceof \Illuminate\Support\Collection && $scores->isNotEmpty()) ? $scores->first()->id : null;
+                
                 return [
-                    'totalScore' => $scores->sum('overall_score'),
+                    'totalScore' => $totalScore,
                     'scores' => $scores,
-                    'id' => $scores->first()->id,
+                    'id' => $firstScore,
                 ];
             })
             ->sortByDesc(function ($data) {
@@ -427,7 +431,12 @@ class ShowScore_in_admin extends Controller
                 $contestantData = [];
 
                 foreach ($criteriaScores as $contestantId => $contestantScores) {
-                    $totalScore = $contestantScores->sum('rate');
+                    // Ensure $contestantScores is a collection before calling sum()
+                    if ($contestantScores instanceof \Illuminate\Support\Collection) {
+                        $totalScore = $contestantScores->sum('rate');
+                    } else {
+                        $totalScore = 0;
+                    }
                     $contestantData[$contestantId] = $totalScore;
                 }
 
@@ -458,7 +467,12 @@ class ShowScore_in_admin extends Controller
                 $contestantData = [];
 
                 foreach ($contestantScores as $contestantId => $scores) {
-                    $totalScore = $scores->sum('rate');
+                    // Ensure $scores is a collection before calling sum()
+                    if ($scores instanceof \Illuminate\Support\Collection) {
+                        $totalScore = $scores->sum('rate');
+                    } else {
+                        $totalScore = 0;
+                    }
                     $contestantData[$contestantId] = $totalScore;
                 }
 
@@ -524,7 +538,12 @@ class ShowScore_in_admin extends Controller
             $contestantData = [];
 
             foreach ($criteriaScores as $contestantId => $contestantScores) {
-                $totalScore = $contestantScores->sum('rate');
+                // Ensure $contestantScores is a collection before calling sum()
+                if ($contestantScores instanceof \Illuminate\Support\Collection) {
+                    $totalScore = $contestantScores->sum('rate');
+                } else {
+                    $totalScore = 0;
+                }
                 $contestantData[$contestantId] = $totalScore;
             }
 
@@ -563,7 +582,10 @@ class ShowScore_in_admin extends Controller
         foreach ($scores as $criteriaId => $criteriaScores) {
             foreach ($criteriaScores as $contestantId => $contestantScores) {
                 $totalScores[$contestantId] = $totalScores[$contestantId] ?? 0;
-                $totalScores[$contestantId] += $contestantScores->sum('rate');
+                // Ensure $contestantScores is a collection before calling sum()
+                if ($contestantScores instanceof \Illuminate\Support\Collection) {
+                    $totalScores[$contestantId] += $contestantScores->sum('rate');
+                }
             }
         }
 
@@ -761,12 +783,23 @@ class ShowScore_in_admin extends Controller
             ->get()
             ->groupBy('contestant_id')
             ->map(function ($scores) use ($contestants) {
-                $contestantId = $scores->first()->contestant_id;
-                $contestant = $contestants->get($contestantId);
+                // Ensure $scores is a collection before calling methods
+                if ($scores instanceof \Illuminate\Support\Collection && $scores->isNotEmpty()) {
+                    $contestantId = $scores->first()->contestant_id;
+                    $contestant = $contestants->get($contestantId);
+                    $totalScore = $scores->sum('overall_score');
+                    $firstScoreId = $scores->first()->id;
+                } else {
+                    $contestantId = null;
+                    $contestant = null;
+                    $totalScore = 0;
+                    $firstScoreId = null;
+                }
+                
                 return [
-                    'totalScore' => $scores->sum('overall_score'),
+                    'totalScore' => $totalScore,
                     'scores' => $scores,
-                    'id' => $scores->first()->id,
+                    'id' => $firstScoreId,
                     'contestant' => $contestant ? $contestant->name : 'Unknown Contestant',
                 ];
             })
@@ -795,7 +828,8 @@ class ShowScore_in_admin extends Controller
                     $scoreData = [
                         'contestant' => $contestant,
                         'scores' => $contestantScores,
-                        'total' => $contestantScores->sum('rate')
+                        // Ensure $contestantScores is a collection before calling sum()
+                        'total' => ($contestantScores instanceof \Illuminate\Support\Collection) ? $contestantScores->sum('rate') : 0
                     ];
                     if ($contestant->category === 'male') {
                         $maleMinorAwardScores[$minorAwardId][$contestantId] = $scoreData;
