@@ -176,6 +176,7 @@ class CrteriaController extends Controller
                 'criteria_description' => $criterion->criteria_description,
                 'highest_rate' => $criterion->highest_rate,
                 'lowest_rate' => $criterion->lowest_rate,
+                'hidden_judge_ids' => $criterion->hiddenJudges()->pluck('users.id')->toArray(),
             ]
         ]);
     }

@@ -1864,9 +1864,36 @@
         function openHideForJudgesModal(criteriaId) {
             const modal = document.getElementById('hideForJudgesModal');
             modal.dataset.criteriaId = criteriaId;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            
+            // Clear all checkboxes first
             document.querySelectorAll('#hideForJudgesModal input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+            // Fetch criteria data to get currently hidden judges
+            fetch(`${appBaseUrl}/criteria/${criteriaId}/edit`, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.criterion.hidden_judge_ids) {
+                    const hiddenIds = data.criterion.hidden_judge_ids;
+                    // Pre-check the checkboxes for hidden judges
+                    document.querySelectorAll('#hideForJudgesModal input[type="checkbox"]').forEach(cb => {
+                        if (hiddenIds.includes(parseInt(cb.value))) {
+                            cb.checked = true;
+                        }
+                    });
+                }
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            })
+            .catch(error => {
+                console.error('Error fetching criteria data:', error);
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            });
         }
 
         function closeHideForJudgesModal() {
