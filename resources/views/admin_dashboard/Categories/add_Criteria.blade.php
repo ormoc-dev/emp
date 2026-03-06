@@ -681,32 +681,6 @@
                                 <p class="text-sm text-gray-600 mt-1">Input scores for contestants</p>
                             </div>
                         </div>
-
-                        <!-- Round and Criteria Selection -->
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Round</label>
-                                <select
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    id="round_id" name="round_id">
-                                    @foreach ($rounds as $round)
-                                        <option value="{{ $round->id }}">{{ $round->round_description }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Criteria</label>
-                                <select
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    id="criteria_id" name="criteria_id">
-                                    @foreach ($criteria as $criterion)
-                                        <option value="{{ $criterion->id }}">{{ $criterion->criteria_description }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
                         <!-- Scoring Form -->
                         <form class="space-y-6" id="scoringForm" action="{{ route('committee.scores.store') }}"
                             method="POST">
@@ -715,64 +689,140 @@
                             <input id="form_round_id" name="round_id" type="hidden">
                             <input id="form_criteria_id" name="criteria_id" type="hidden">
 
+                        <!-- Committee Configuration -->
+                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-6">
+                            <h4 class="text-sm font-semibold text-blue-800 uppercase tracking-wider mb-4">
+                                <i class="fas fa-cog mr-2"></i> Committee Configuration
+                            </h4>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <!-- Weight Setting -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Committee Weight (Total %)</label>
+                                    <input type="number" id="committee_weight" name="committee_weight"
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        placeholder="e.g. 20" value="0">
+                                    <p class="text-xs text-gray-500 mt-1">This defines the maximum possible score for this committee.</p>
+                                </div>
+                                <!-- Judge Selection -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Committee Members</label>
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach($judges as $judge)
+                                            <label class="inline-flex items-center p-2 bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                                <input type="checkbox" name="selected_judges[]" value="{{ $judge->id }}" class="committee-judge-checkbox rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" checked>
+                                                <span class="ml-2 text-sm text-gray-700">{{ $judge->name }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Round and Criteria Selection -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Round</label>
+                                <select
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    id="round_id_comm">
+    @foreach ($rounds as $round)
+                                        <option value="{{ $round->id }}">{{ $round->round_description }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Criteria</label>
+                                <select
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    id="criteria_id_comm">
+                                    @foreach ($criteria as $criterion)
+                                        <option value="{{ $criterion->id }}">{{ $criterion->criteria_description }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+
                             <!-- Contestants Table -->
-                            <div class="overflow-x-auto">
+                            <div class="overflow-hidden bg-white shadow-xl rounded-2xl border border-gray-100">
                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Contestant
+                                    <thead>
+                                        <tr class="bg-gradient-to-r from-blue-600 to-indigo-700">
+                                            <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-widest border-r border-blue-500/30">
+                                                Contestant Details
                                             </th>
                                             @foreach ($judges as $judge)
-                                                <th
-                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    Judge {{ $judge->name }}
+                                                <th class="px-4 py-4 text-center text-xs font-bold text-white uppercase tracking-widest border-r border-blue-500/30">
+                                                    <div class="flex flex-col items-center">
+                                                        <span class="opacity-75 text-[10px]">Judge</span>
+                                                        <span>{{ $judge->name }}</span>
+                                                    </div>
                                                 </th>
                                             @endforeach
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Average Score
+                                            <th class="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-widest border-r border-blue-500/30 bg-blue-600/50">
+                                                <div class="flex flex-col items-center">
+                                                    <span class="opacity-75 text-[10px]">Average</span>
+                                                    <span>Score</span>
+                                                </div>
+                                            </th>
+                                            <th class="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-widest bg-indigo-800">
+                                                <div class="flex flex-col items-center">
+                                                    <span class="opacity-75 text-[10px]">Weighted</span>
+                                                    <span>Result (%)</span>
+                                                </div>
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
+                                    <tbody class="bg-white divide-y divide-gray-100">
                                         @foreach ($contestants as $contestant)
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap">
+                                            <tr class="hover:bg-blue-50/30 transition-colors duration-200">
+                                                <td class="px-6 py-4 whitespace-nowrap border-r border-gray-50">
                                                     <div class="flex items-center">
-                                                        <div class="flex-shrink-0 h-10 w-10">
+                                                        <div class="relative">
                                                             @if ($contestant->image)
-                                                                <img class="h-10 w-10 rounded-full"
+                                                                <img class="h-12 w-12 rounded-xl object-cover ring-2 ring-blue-100 shadow-sm"
                                                                     src="{{ asset('storage/' . $contestant->image) }}"
-                                                                    alt="">
+                                                                    alt="{{ $contestant->name }}">
                                                             @else
-                                                                <div
-                                                                    class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                                <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center ring-2 ring-gray-50 shadow-sm">
                                                                     <i class="fas fa-user text-gray-400"></i>
                                                                 </div>
                                                             @endif
+                                                            <span class="absolute -top-2 -left-2 bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-sm">
+                                                                #{{ $contestant->contestant_number }}
+                                                            </span>
                                                         </div>
                                                         <div class="ml-4">
-                                                            <div class="text-sm font-medium text-gray-900">
+                                                            <div class="text-sm font-bold text-gray-900 tracking-tight">
                                                                 {{ $contestant->name }}
                                                             </div>
-                                                            <div class="text-sm text-gray-500">
-                                                                #{{ $contestant->contestant_number }}
+                                                            <div class="text-[11px] text-gray-500 uppercase font-semibold mt-0.5">
+                                                                Contestant
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 @foreach ($judges as $judge)
-                                                    <td class="px-6 py-4 whitespace-nowrap">
-                                                        <input
-                                                            class="score-input rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                                            name="scores[{{ $contestant->id }}][{{ $judge->id }}]"
-                                                            type="number" min="1" max="10" required>
+                                                    <td class="px-4 py-4 whitespace-nowrap text-center border-r border-gray-50">
+                                                        <div class="flex justify-center">
+                                                            <input
+                                                                class="score-input w-20 h-10 text-center text-lg font-bold rounded-xl border-gray-200 bg-gray-50/50 shadow-inner focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
+                                                                name="scores[{{ $contestant->id }}][{{ $judge->id }}]"
+                                                                type="number" min="0" max="10" step="0.01" required
+                                                                placeholder="0">
+                                                        </div>
                                                     </td>
                                                 @endforeach
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <span class="average-score text-sm font-medium text-gray-900">-</span>
+                                                <td class="px-6 py-4 whitespace-nowrap text-center border-r border-gray-50 bg-blue-50/20">
+                                                    <div class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-white border border-blue-100 shadow-sm">
+                                                        <span class="average-score text-base font-bold text-blue-700">0.00</span>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-center bg-indigo-50/30">
+                                                    <div class="inline-flex items-center justify-center px-4 py-1.5 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-700 shadow-md">
+                                                        <span class="weighted-score text-lg font-black text-white">0.00</span>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -1191,7 +1241,11 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-3 flex items-center gap-2">
+                        <div class="mt-3 flex items-center gap-2 flex-wrap">
+                            <button type="button" id="combineScoresBtn"
+                                class="px-4 py-2 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <i class="fas fa-link mr-1"></i> Combine
+                            </button>
                             <button type="button" id="saveProductionScoresBtn"
                                 class="px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                                 <i class="fas fa-save mr-1"></i> Save Production Scores
@@ -1587,11 +1641,31 @@
 
                     // Header
                     const header = document.createElement('div');
-                    header.className = 'flex items-center justify-between px-4 py-2 bg-gray-50 cursor-pointer select-none';
-                    header.innerHTML =
+                    header.className = 'flex items-center justify-between px-4 py-2 bg-gray-50 select-none';
+                    
+                    const headerNames = document.createElement('div');
+                    headerNames.className = 'flex flex-col cursor-pointer flex-1';
+                    headerNames.innerHTML = 
                         `<span class="text-sm font-semibold text-gray-700">${award.name}</span>` +
                         `<span class="text-xs text-gray-500">Range: ${award.low_rate}% – ${award.high_rate}%` +
                         (hasScores ? '' : ' <em class="text-gray-400">(no scores yet)</em>') + '</span>';
+
+                    const applyBtn = document.createElement('button');
+                    applyBtn.type = 'button';
+                    applyBtn.className = 'apply-award-btn ml-2 px-3 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs font-bold rounded transition-colors';
+                    applyBtn.textContent = 'Apply';
+                    applyBtn.disabled = !hasScores;
+                    if (!hasScores) applyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                    // Store scores and the 'Perfect Score' (high_rate) for this award on the button
+                    const awardScoreMap = {};
+                    award.contestants.forEach(c => { if (c.avg_score !== null) awardScoreMap[c.contestant_id] = c.avg_score; });
+                    applyBtn.dataset.scores = JSON.stringify(awardScoreMap);
+                    applyBtn.dataset.awardName = award.name;
+                    applyBtn.dataset.highRate = award.high_rate;
+
+                    header.appendChild(headerNames);
+                    header.appendChild(applyBtn);
 
                     // Table body
                     const tableWrap = document.createElement('div');
@@ -1622,9 +1696,9 @@
                     table.appendChild(tbody);
                     tableWrap.appendChild(table);
 
-                    // Toggle collapse
+                    // Toggle collapse only when clicking the text, not the button
                     let collapsed = false;
-                    header.addEventListener('click', () => {
+                    headerNames.addEventListener('click', () => {
                         collapsed = !collapsed;
                         tableWrap.style.display = collapsed ? 'none' : '';
                     });
@@ -1653,54 +1727,153 @@
             
             loadProductionScores(criteriaId, highestRate, lowestRate, judgeId);
         });
+        // Use jQuery for event delegation to be safer
+        $(document).on('click', '#combineScoresBtn', function() {
+            const eventId = $('#edit_event_id').val();
+            const saveStatus = $('#productionSaveStatus');
 
-        document.getElementById('saveProductionScoresBtn').addEventListener('click', function() {
+            console.log('Combine button clicked via jQuery. Event ID:', eventId);
+
+            if (!eventId) {
+                console.error('Event ID is missing from #edit_event_id');
+                saveStatus.text('⚠ Event ID not found.').addClass('text-red-500');
+                return;
+            }
+
+            saveStatus.text('Loading combined scores…').removeClass('text-red-500 text-green-600').addClass('text-gray-500');
+
+            const highestRate = parseFloat($('#edit_highest_rate').val()) || Infinity;
+            const lowestRate  = parseFloat($('#edit_lowest_rate').val())  || 0;
+
+            console.log('Fetching combined scores from:', `${appBaseUrl}/events/${eventId}/combined-scores`);
+
+            $.ajax({
+                url: `${appBaseUrl}/events/${eventId}/combined-scores`,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    console.log('Combined scores received:', data);
+                    if (!data.success) {
+                        saveStatus.text('⚠ ' + (data.message || 'No combined scores available.')).addClass('text-red-500');
+                        return;
+                    }
+
+                    const scoreMap = {};
+                    data.scores.forEach(s => { scoreMap[s.contestant_id] = s.combined_percentage; });
+
+                    let filled = 0;
+                    $('.production-score-input').each(function() {
+                        const input = $(this);
+                        const cid = input.data('contestant-id');
+                        if (scoreMap[cid] !== undefined) {
+                            // Formula: percentage * highestRate (Weight)
+                            const rawWeighted = scoreMap[cid] * highestRate;
+                            const val = Math.min(Math.max(parseFloat(rawWeighted.toFixed(2)), lowestRate), highestRate);
+                            input.val(val).removeClass('border-red-500');
+                            filled++;
+                        }
+                    });
+
+                    if (filled > 0) {
+                        saveStatus.text(`✓ Combined scores loaded (÷ ${data.judge_count} judges).`).addClass('text-green-600');
+                    } else {
+                        saveStatus.text('⚠ Scores loaded but no matching contestants.').addClass('text-yellow-600');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error fetching combined scores:', error);
+                    saveStatus.text('✗ Error loading scores. Check connection.').addClass('text-red-600');
+                }
+            });
+        });
+
+        // Selective Apply button for minor awards
+        $(document).on('click', '.apply-award-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const scores = $(this).data('scores');
+            const awardName = $(this).data('awardName');
+            const awardHighRate = parseFloat($(this).data('highRate')) || 1; // Perfect Score
+            const saveStatus = $('#productionSaveStatus');
+
+            console.log('Apply award button clicked:', awardName, 'HighRate:', awardHighRate, scores);
+
+            if (!scores || Object.keys(scores).length === 0) {
+                saveStatus.text(`⚠ No scores available for ${awardName}.`).addClass('text-red-500');
+                return;
+            }
+
+            const highestRate = parseFloat($('#edit_highest_rate').val()) || Infinity; // Weight
+            const lowestRate  = parseFloat($('#edit_lowest_rate').val())  || 0;
+
+            let filled = 0;
+            $('.production-score-input').each(function() {
+                const input = $(this);
+                const cid = input.data('contestant-id');
+                if (scores[cid] !== undefined) {
+                    // Formula: (Score / PerfectScore) * Multiplier (Weight)
+                    const rawWeighted = (parseFloat(scores[cid]) / awardHighRate) * highestRate;
+                    const val = Math.min(Math.max(parseFloat(rawWeighted.toFixed(2)), lowestRate), highestRate);
+                    input.val(val).removeClass('border-red-500');
+                    filled++;
+                }
+            });
+
+            if (filled > 0) {
+                saveStatus.text(`✓ Applied scores from "${awardName}". Review, then save.`).removeClass('text-red-500').addClass('text-green-600');
+            } else {
+                saveStatus.text(`⚠ Applied "${awardName}" but no matching contestants found.`).addClass('text-yellow-600');
+            }
+        });
+
+        $(document).on('click', '#saveProductionScoresBtn', function() {
             const criteriaId = _currentProductionCriteriaId;
             if (!criteriaId) return;
 
-            const inputs = document.querySelectorAll('.production-score-input');
-            const saveStatus = document.getElementById('productionSaveStatus');
-            saveStatus.textContent = 'Saving...';
+            const inputs = $('.production-score-input');
+            const saveStatus = $('#productionSaveStatus');
+            saveStatus.text('Saving...').removeClass('text-red-600 text-green-600').addClass('text-gray-500');
 
-            const judgeId = document.getElementById('scoring_judge_id').value;
+            const judgeId = $('#scoring_judge_id').val();
+            const highestRate = parseFloat($('#edit_highest_rate').val());
+            const lowestRate = parseFloat($('#edit_lowest_rate').val());
 
-            // Read highest/lowest from the current edit modal inputs
-            const highestRate = parseFloat(document.getElementById('edit_highest_rate').value);
-            const lowestRate = parseFloat(document.getElementById('edit_lowest_rate').value);
-
-            // Validate all inputs first
             let hasError = false;
-            inputs.forEach(input => {
-                const val = input.value.trim();
-                if (val === '') return; // allow empty (skip contestant)
+            inputs.each(function() {
+                const input = $(this);
+                const val = input.val().trim();
+                if (val === '') return;
                 const num = parseFloat(val);
                 if (isNaN(num) || num < lowestRate || num > highestRate) {
-                    input.classList.add('border-red-500');
+                    input.addClass('border-red-500');
                     hasError = true;
                 } else {
-                    input.classList.remove('border-red-500');
+                    input.removeClass('border-red-500');
                 }
             });
 
             if (hasError) {
-                saveStatus.textContent = `⚠ Some scores are out of range (${lowestRate}–${highestRate}).`;
-                saveStatus.className = 'text-xs text-red-600';
+                saveStatus.text(`⚠ Some scores are out of range (${lowestRate}–${highestRate}).`).addClass('text-red-600');
                 return;
             }
 
-            // Build promise array for each non-empty score
             const promises = [];
-            inputs.forEach(input => {
-                const val = input.value.trim();
+            inputs.each(function() {
+                const input = $(this);
+                const val = input.val().trim();
                 if (val === '') return;
-                const contestantId = input.dataset.contestantId;
+                const contestantId = input.data('contestant-id');
                 promises.push(
                     fetch(`${appBaseUrl}/criteria/${criteriaId}/production-scores/${contestantId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         body: JSON.stringify({ 
                             score: parseFloat(val),
@@ -1711,8 +1884,7 @@
             });
 
             if (promises.length === 0) {
-                saveStatus.textContent = 'No scores to save.';
-                saveStatus.className = 'text-xs text-gray-500';
+                saveStatus.text('No scores to save.').addClass('text-gray-500');
                 return;
             }
 
@@ -1720,17 +1892,14 @@
                 .then(results => {
                     const allOk = results.every(r => r.success);
                     if (allOk) {
-                        saveStatus.textContent = '✓ Scores saved successfully!';
-                        saveStatus.className = 'text-xs text-green-600';
+                        saveStatus.text('✓ Scores saved successfully!').addClass('text-green-600');
                     } else {
-                        saveStatus.textContent = '⚠ Some scores could not be saved.';
-                        saveStatus.className = 'text-xs text-red-600';
+                        saveStatus.text('⚠ Some scores could not be saved.').addClass('text-red-600');
                     }
                 })
                 .catch(err => {
                     console.error('Error saving production scores:', err);
-                    saveStatus.textContent = '✗ Error saving scores.';
-                    saveStatus.className = 'text-xs text-red-600';
+                    saveStatus.text('✗ Error saving scores.').addClass('text-red-600');
                 });
         });
         
@@ -1941,72 +2110,6 @@
         }
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const roundSelect = document.getElementById('round_id');
-            const criteriaSelect = document.getElementById('criteria_id');
-            const formRoundId = document.getElementById('form_round_id');
-            const formCriteriaId = document.getElementById('form_criteria_id');
-
-            // Update hidden form fields when selections change
-            roundSelect.addEventListener('change', function() {
-                formRoundId.value = this.value;
-                loadExistingScores();
-            });
-
-            criteriaSelect.addEventListener('change', function() {
-                formCriteriaId.value = this.value;
-                loadExistingScores();
-            });
-
-            // Function to load existing scores
-            function loadExistingScores() {
-                const eventId = '{{ $event->id }}';
-                const roundId = roundSelect.value;
-                const criteriaId = criteriaSelect.value;
-            
-                fetch(`/committee/scores?event_id=${eventId}&round_id=${roundId}&criteria_id=${criteriaId}`, {
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(scores => {
-                        scores.forEach(score => {
-                            // Look for input with score data - using a more flexible selector
-                            const inputs = document.querySelectorAll(`input[name*="[${score.contestant_id}]"]`);
-                            
-                            inputs.forEach(input => {
-                                if(input.name.includes(`[${score.contestant_id}]`)) {
-                                    input.value = score.rate;
-                                    const previousScoreSpan = input.closest('tr')?.querySelector('.previous-score');
-                                    if(previousScoreSpan) {
-                                        previousScoreSpan.textContent = score.rate;
-                                    }
-                                }
-                            });
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error loading scores:', error);
-                    });
-            }
-
-            // Set initial values
-            formRoundId.value = roundSelect.value;
-            formCriteriaId.value = criteriaSelect.value;
-
-            // Load scores on page load
-            loadExistingScores();
-        });
-    </script>
 
     <script>
         function toggleCriteriaVisibility(criteriaId) {
@@ -2065,40 +2168,109 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('scoringForm');
-            const roundSelect = document.getElementById('round_id');
-            const criteriaSelect = document.getElementById('criteria_id');
+            const roundSelect = document.getElementById('round_id_comm');
+            const criteriaSelect = document.getElementById('criteria_id_comm');
+            const committeeWeightInput = document.getElementById('committee_weight');
             const formRoundId = document.getElementById('form_round_id');
             const formCriteriaId = document.getElementById('form_criteria_id');
 
-            // Update hidden form fields when selections change
+            // Load existing scores
+            function loadCommitteeScores() {
+                const eventId = form.querySelector('input[name="event_id"]').value;
+                const roundId = roundSelect.value;
+                const criteriaId = criteriaSelect.value;
+
+                if (!roundId || !criteriaId) return;
+
+                // Clear current inputs
+                document.querySelectorAll('.score-input').forEach(input => input.value = '');
+
+                fetch(`{{ route('committee.scores.get') }}?event_id=${eventId}&round_id=${roundId}&criteria_id=${criteriaId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(score => {
+                            const input = document.querySelector(`input[name="scores[${score.contestant_id}][${score.user_id}]"]`);
+                            if (input) {
+                                input.value = score.rate;
+                            }
+                        });
+                        updateAllRows();
+                    })
+                    .catch(error => console.error('Error loading scores:', error));
+            }
+
+            // Update hidden form fields and load scores when selections change
             roundSelect.addEventListener('change', function() {
                 formRoundId.value = this.value;
+                loadCommitteeScores();
             });
 
             criteriaSelect.addEventListener('change', function() {
                 formCriteriaId.value = this.value;
+                loadCommitteeScores();
             });
 
             // Set initial values
-            formRoundId.value = roundSelect.value;
-            formCriteriaId.value = criteriaSelect.value;
+            formRoundId.value = roundSelect.value || '';
+            formCriteriaId.value = criteriaSelect.value || '';
+            loadCommitteeScores();
 
-            // Calculate average scores
-            function calculateAverage(row) {
-                const inputs = row.querySelectorAll('.score-input');
-                const values = Array.from(inputs).map(input => parseFloat(input.value) || 0);
-                const average = values.reduce((a, b) => a + b, 0) / values.length;
-                return average.toFixed(2);
+            // Recalculate everything when weight or judge selection changes
+            committeeWeightInput.addEventListener('input', updateAllRows);
+            document.querySelectorAll('.committee-judge-checkbox').forEach(cb => {
+                cb.addEventListener('change', updateAllRows);
+            });
+
+            function updateAllRows() {
+                document.querySelectorAll('#scoringForm tbody tr').forEach(row => {
+                    updateRowCalculations(row);
+                });
+            }
+
+            function updateRowCalculations(row) {
+                const weight = parseFloat(committeeWeightInput.value) || 0;
+                const checkedCheckboxes = document.querySelectorAll('.committee-judge-checkbox:checked');
+                const selectedJudgeIds = Array.from(checkedCheckboxes).map(cb => cb.value);
+                
+                let sum = 0;
+                let count = 0;
+
+                row.querySelectorAll('.score-input').forEach(input => {
+                    // Extract judge ID from name like scores[contestant_id][judge_id]
+                    const nameMatch = input.name.match(/\[(\d+)\]$/);
+                    const judgeId = nameMatch ? nameMatch[1] : null;
+                    const isSelected = selectedJudgeIds.includes(judgeId);
+                    
+                    if (isSelected) {
+                        input.disabled = false;
+                        input.classList.remove('bg-gray-100', 'opacity-50');
+                        sum += parseFloat(input.value) || 0;
+                        count++;
+                    } else {
+                        input.disabled = true;
+                        input.classList.add('bg-gray-100', 'opacity-50');
+                    }
+                });
+
+                const average = count > 0 ? (sum / count) : 0;
+                const weighted = (average / 10) * weight;
+
+                const avgSpan = row.querySelector('.average-score');
+                const weightSpan = row.querySelector('.weighted-score');
+                
+                if (avgSpan) avgSpan.textContent = average.toFixed(2);
+                if (weightSpan) weightSpan.textContent = weighted.toFixed(2);
             }
 
             // Update average when scores change
             document.querySelectorAll('.score-input').forEach(input => {
                 input.addEventListener('input', function() {
-                    const row = this.closest('tr');
-                    const averageScore = row.querySelector('.average-score');
-                    averageScore.textContent = calculateAverage(row);
+                    updateRowCalculations(this.closest('tr'));
                 });
             });
+
+            // Run initial calculation
+            updateAllRows();
         });
     </script>
 @endsection

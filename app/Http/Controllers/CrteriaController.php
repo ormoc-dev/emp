@@ -14,6 +14,10 @@ use App\Models\TimeStatus;
 use App\Models\VotingCategory;
 use App\Models\Users_vote;
 use App\Models\User;
+use App\Models\EventJudge;
+use App\Models\overall_Minoraward_scores;
+use App\Models\MinorAwardScore;
+use Illuminate\Support\Facades\DB;
 
 class CrteriaController extends Controller
 {
@@ -318,7 +322,7 @@ class CrteriaController extends Controller
             $awardScores = $rawScores->get($award->id, collect());
             // Average per contestant across judges
             $perContestant = $awardScores->groupBy('contestant_id')
-                ->map(fn($rows) => round($rows->avg('rate'), 4));
+                ->map(fn($rows) => round($rows->avg('rate'), 2));
 
             $rows = [];
             foreach ($contestants as $c) {
@@ -339,6 +343,65 @@ class CrteriaController extends Controller
         }
 
         return response()->json(['success' => true, 'minor_awards' => $result]);
+    }
+
+    public function getCombinedScores($eventId)
+    {
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized.'], 401);
+        }
+
+        $judgeCount = EventJudge::where('event_id', $eventId)->count();
+        $minorAwardCount = \App\Models\MinorAward::where('event_id', $eventId)->count();
+
+        if ($judgeCount === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No judges assigned to this event.'
+            ]);
+        }
+
+        if ($minorAwardCount === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No minor awards defined for this event.'
+            ]);
+        }
+
+        // Fetch scores joined with minor awards to get the perfect score (high_rate)
+        $rawScores = MinorAwardScore::where('minor_award_scores.event_id', $eventId)
+            ->join('minor_awards', 'minor_award_scores.minor_award_id', '=', 'minor_awards.id')
+            ->select(
+                'minor_award_scores.contestant_id',
+                DB::raw('SUM(minor_award_scores.rate / minor_awards.high_rate) as total_percentage'),
+                DB::raw('COUNT(*) as score_count')
+            )
+            ->groupBy('minor_award_scores.contestant_id')
+            ->get();
+
+        if ($rawScores->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No minor award scores found for this event.'
+            ]);
+        }
+
+        $scores = $rawScores->map(function ($s) use ($judgeCount, $minorAwardCount) {
+            // Formula: Average of normalized percentages (Score/HighRate)
+            // Divide by (Total expected records: judgeCount * minorAwardCount)
+            return [
+                'contestant_id'       => $s->contestant_id,
+                'combined_percentage' => round($s->total_percentage / ($judgeCount * $minorAwardCount), 4),
+                'score_count'         => $s->score_count
+            ];
+        });
+
+        return response()->json([
+            'success'           => true,
+            'scores'            => $scores,
+            'judge_count'       => $judgeCount,
+            'minor_award_count' => $minorAwardCount,
+        ]);
     }
 
     public function destroy(Criteria $criterion)

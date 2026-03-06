@@ -161,6 +161,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/criteria/{criterion}/production-scores', [CrteriaController::class, 'getProductionScores'])->name('criteria.production-scores');
     Route::put('/criteria/{criterion}/production-scores/{contestant}', [CrteriaController::class, 'updateProductionScore'])->name('criteria.update-production-score');
     Route::get('/events/{eventId}/minor-award-scores', [CrteriaController::class, 'getMinorAwardScores'])->name('events.minor-award-scores');
+    Route::get('/events/{eventId}/combined-scores', [CrteriaController::class, 'getCombinedScores'])->name('events.combined-scores');
     Route::delete('/criteria/{criterion}', [CrteriaController::class, 'destroy'])->name('criteria.destroy');
     Route::get('/events/{eventId}/proceed-next-round', [ScoreController::class, 'proceedToNextRound'])->name('proceed_next_round');
 

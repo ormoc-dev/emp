@@ -16,31 +16,48 @@ class CommitteeController extends Controller
     public function storeScores(Request $request)
     {
         try {
-            $request->validate([
-                'event_id' => 'required|exists:events,id',
-                'round_id' => 'required|exists:rounds,id',
-                'criteria_id' => 'required|exists:criteria,id',
-                'scores' => 'required|array',
-                'scores.*.*' => 'required|numeric|min:1|max:10'
-            ]);
+            $weight = (float) $request->input('committee_weight', 0);
+            $selectedJudges = $request->input('selected_judges', []);
 
-            $scores = [];
+            if (empty($selectedJudges)) {
+                return redirect()->back()->with('error', 'No judges selected for committee.');
+            }
+
+            $scoresToInsert = [];
             foreach ($request->scores as $contestant_id => $judgeScores) {
-                foreach ($judgeScores as $judge_id => $score) {
-                    $scores[] = [
+                // Filter judgeScores to only include selected judges
+                $filteredScores = array_filter($judgeScores, function($judge_id) use ($selectedJudges) {
+                    return in_array($judge_id, $selectedJudges);
+                }, ARRAY_FILTER_USE_KEY);
+
+                if (empty($filteredScores)) continue;
+
+                // Calculate average of selected judges
+                $sum = array_sum($filteredScores);
+                $count = count($filteredScores);
+                $average = $sum / $count;
+
+                // Calculate weighted score: (Average / 10) * Weight
+                $weightedScore = ($average / 10) * $weight;
+
+                // Store the WEIGHTED score for each selected judge
+                foreach ($filteredScores as $judge_id => $rawScore) {
+                    $scoresToInsert[] = [
                         'contestant_id' => $contestant_id,
                         'user_id' => $judge_id,
                         'round_id' => $request->round_id,
                         'criteria_id' => $request->criteria_id,
                         'event_id' => $request->event_id,
-                        'rate' => $score,
+                        'rate' => round($weightedScore, 2),
                         'created_at' => now(),
                         'updated_at' => now()
                     ];
                 }
             }
 
-            Score::insert($scores);
+            if (!empty($scoresToInsert)) {
+                Score::insert($scoresToInsert);
+            }
 
             return redirect()->back()->with('success', 'Scores saved successfully');
         } catch (\Exception $e) {
@@ -59,7 +76,6 @@ class CommitteeController extends Controller
         $scores = Score::where('event_id', $request->event_id)
             ->where('round_id', $request->round_id)
             ->where('criteria_id', $request->criteria_id)
-            ->where('user_id', auth()->id())
             ->get();
 
         return response()->json($scores);
@@ -67,25 +83,42 @@ class CommitteeController extends Controller
 
     public function updateScores(Request $request)
     {
-        $request->validate([
-            'event_id' => 'required|exists:events,id',
-            'round_id' => 'required|exists:rounds,id',
-            'criteria_id' => 'required|exists:criteria,id',
-            'scores' => 'required|array',
-            'scores.*' => 'required|numeric|min:1|max:10'
-        ]);
+        $weight = (float) $request->input('committee_weight', 0);
+        $selectedJudges = $request->input('selected_judges', []);
 
-        foreach ($request->scores as $contestant_id => $rate) {
-            Score::updateOrCreate(
-                [
-                    'contestant_id' => $contestant_id,
-                    'user_id' => auth()->id(),
-                    'round_id' => $request->round_id,
-                    'criteria_id' => $request->criteria_id,
-                    'event_id' => $request->event_id,
-                ],
-                ['rate' => $rate]
-            );
+        if (empty($selectedJudges)) {
+            return redirect()->back()->with('error', 'No judges selected for committee.');
+        }
+
+        foreach ($request->scores as $contestant_id => $judgeScores) {
+            // Filter judgeScores to only include selected judges
+            $filteredScores = array_filter($judgeScores, function($judge_id) use ($selectedJudges) {
+                return in_array($judge_id, $selectedJudges);
+            }, ARRAY_FILTER_USE_KEY);
+
+            if (empty($filteredScores)) continue;
+
+            // Calculate average of selected judges
+            $sum = array_sum($filteredScores);
+            $count = count($filteredScores);
+            $average = $sum / $count;
+
+            // Calculate weighted score: (Average / 10) * Weight
+            $weightedScore = ($average / 10) * $weight;
+
+            // Update the WEIGHTED score for each selected judge
+            foreach ($filteredScores as $judge_id => $rawScore) {
+                Score::updateOrCreate(
+                    [
+                        'contestant_id' => $contestant_id,
+                        'user_id' => $judge_id,
+                        'round_id' => $request->round_id,
+                        'criteria_id' => $request->criteria_id,
+                        'event_id' => $request->event_id,
+                    ],
+                    ['rate' => round($weightedScore, 2)]
+                );
+            }
         }
 
         return redirect()->back()->with('success', 'Scores updated successfully');
