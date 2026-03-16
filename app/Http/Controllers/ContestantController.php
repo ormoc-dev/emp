@@ -53,38 +53,39 @@ class ContestantController extends Controller
             'name.*' => 'required|string|max:255',
             'number' => 'required|array',
             'number.*' => 'required|integer',
-            'profile' => 'required|array',
-            'profile.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category' => 'nullable|array', 
-            'category.*' => 'nullable|in:male,female', 
+            'profile' => 'nullable|array',
+            'profile.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'category' => 'nullable|array',
+            'category.*' => 'nullable|in:male,female',
         ]);
-    
+
         $event_id = $request->input('event_id');
         $names = $request->input('name');
         $numbers = $request->input('number');
-        $categories = $request->input('category', []); 
-    
-        $files = $request->file('profile');
-    
+        $categories = $request->input('category', []);
+        $files = $request->file('profile', []);
+
         foreach ($names as $index => $name) {
+            $profilePath = null;
+
             if (isset($files[$index])) {
                 $file = $files[$index];
                 $extension = $file->getClientOriginalExtension();
-                $filename = time() . '_' . $index . '.' . $extension;
+                $filename = time() . '_' . $index . '_' . uniqid() . '.' . $extension;
                 $path = 'upload/contestants/';
-                $file->move($path, $filename);
+                $file->move(public_path($path), $filename);
                 $profilePath = $path . $filename;
-    
-                Contestant::create([
-                    'event_id' => $event_id,
-                    'name' => $name,
-                    'number' => $numbers[$index],
-                    'profile' => $profilePath,
-                    'category' => $categories[$index] ?? null, 
-                ]);
             }
+
+            Contestant::create([
+                'event_id' => $event_id,
+                'name' => $name,
+                'number' => $numbers[$index],
+                'profile' => $profilePath,
+                'category' => $categories[$index] ?? null,
+            ]);
         }
-    
+
         return redirect()->route('add.contestant', $event_id)->with('success', 'Contestants added successfully');
     }
     

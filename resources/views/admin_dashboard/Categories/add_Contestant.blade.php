@@ -170,11 +170,18 @@
             </div>
             <div class="fixed bottom-0 right-0 bg-gray-50 border border-gray-200 p-4 sm:p-6 rounded-lg shadow-lg m-4 w-full sm:w-[610px] max-w-full transition-all duration-500 ease-in-out transform translate-y-full opacity-0"
                 id="textareaContainer">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">Input Contestants Information(Optional)</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Input Contestants Information(Optional)</h3>
+                    <button id="parseTextareaButton" class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-1 rounded text-sm font-medium">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Parse into Forms
+                    </button>
+                </div>
                 <textarea class="w-full h-[250px] p-3 border border-gray-300 rounded-lg bg-gray-800 text-white"
-                    id="persistentTextarea" placeholder="Type your text here
-                               {........Names, Number, Category, etc........}">
-                </textarea>
+                    id="persistentTextarea" placeholder="Format: Number - Name - Category (one per line)
+Example: 
+1 - John Doe - male
+2 - Jane Smith - female"></textarea>
+                <p class="text-xs text-gray-500 mt-2 italic">Note: This will add new forms to the list above.</p>
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -347,6 +354,7 @@ id="static-modal" data-modal-backdrop="static" aria-hidden="true" tabindex="-1">
 
             // Reset modal when it's closed
             $('[data-modal-hide="static-modal"]').on('click', function() {
+                $('#static-modal').addClass('hidden');
                 $('#successMessage').addClass('hidden');
             });
         });
@@ -375,91 +383,147 @@ id="static-modal" data-modal-backdrop="static" aria-hidden="true" tabindex="-1">
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const formContainer = document.getElementById('contestantFormsContainer');
+            const addFormButton = document.getElementById('addFormButton');
+            const formCountLabel = document.getElementById('formCount');
+            const persistentTextarea = document.getElementById('persistentTextarea');
+            const parseTextareaButton = document.getElementById('parseTextareaButton');
+
             // Function to handle image preview
             function previewImage(input, previewElement) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         previewElement.src = e.target.result;
-                        previewElement.classList.remove('hidden'); // Show the image preview
+                        previewElement.classList.remove('hidden');
                     };
-                    reader.readAsDataURL(input.files[0]); // Convert image to base64 string
+                    reader.readAsDataURL(input.files[0]);
                 }
             }
 
-            // Attach event listeners to all current and future file inputs
-            document.getElementById('contestantFormsContainer').addEventListener('change', function(event) {
+            // Delegation for file changes and removal
+            formContainer.addEventListener('change', function(event) {
                 if (event.target && event.target.matches('input[type="file"]')) {
-                    var formGroup = event.target.closest('.contestant-form');
-                    var previewElement = formGroup.querySelector('img[id="imagePreview"]');
+                    const formGroup = event.target.closest('.contestant-form');
+                    const previewElement = formGroup.querySelector('img.imagePreview');
                     previewImage(event.target, previewElement);
                 }
             });
 
-            // Existing logic to handle adding new forms and remove buttons
-            function updateRemoveButtons() {
-                var forms = document.querySelectorAll('.contestant-form');
-                var removeButtons = document.querySelectorAll('.removeFormButton');
-
-                // Update the form count
-                document.getElementById('formCount').textContent = `Total Forms: ${forms.length}`;
-
-                // Hide all remove buttons if there is only one form
-                if (forms.length === 1) {
-                    removeButtons.forEach(function(button) {
-                        button.style.display = 'none';
-                    });
-                } else {
-                    removeButtons.forEach(function(button) {
-                        button.style.display = 'block';
-                    });
+            formContainer.addEventListener('click', function(event) {
+                if (event.target.closest('.removeFormButton')) {
+                    const form = event.target.closest('.contestant-form');
+                    const allForms = document.querySelectorAll('.contestant-form');
+                    if (allForms.length > 1) {
+                        form.remove();
+                        updateFormMeta();
+                    }
                 }
+            });
+
+            function updateFormMeta() {
+                const forms = document.querySelectorAll('.contestant-form');
+                formCountLabel.textContent = `Total Forms: ${forms.length}`;
+                
+                const removeButtons = document.querySelectorAll('.removeFormButton');
+                removeButtons.forEach(btn => {
+                    btn.style.display = forms.length > 1 ? 'block' : 'none';
+                });
             }
 
-            document.getElementById('addFormButton').addEventListener('click', function() {
-                var formContainer = document.getElementById('contestantFormsContainer');
-                var initialForm = document.querySelector('.contestant-form').cloneNode(true);
-
-                // Clear input values and hide the image preview in the cloned form
-                initialForm.querySelectorAll('input').forEach(function(input) {
-                    input.value = '';
+            function createNewForm(data = null) {
+                const firstForm = document.querySelector('.contestant-form');
+                const newForm = firstForm.cloneNode(true);
+                
+                // Clear inputs and hide previews
+                newForm.querySelectorAll('input').forEach(input => {
+                    if (input.type === 'file') {
+                        input.value = '';
+                    } else {
+                        input.value = '';
+                    }
                 });
-                var previewImageElement = initialForm.querySelector('img[id="imagePreview"]');
-                previewImageElement.src = '#';
-                previewImageElement.classList.add('hidden');
+                newForm.querySelectorAll('select').forEach(select => select.value = '');
+                
+                const preview = newForm.querySelector('img');
+                if (preview) {
+                    preview.src = '#';
+                    preview.classList.add('hidden');
+                    // Ensure it has a class not an ID to avoid duplicates
+                    preview.id = '';
+                    preview.classList.add('imagePreview');
+                }
 
-                formContainer.appendChild(initialForm);
+                // If data is provided, populate the form
+                if (data) {
+                    const numInput = newForm.querySelector('input[type="number"]');
+                    const nameInput = newForm.querySelector('input[type="text"]');
+                    const catSelect = newForm.querySelector('select');
+                    
+                    if (numInput && data.number) numInput.value = data.number;
+                    if (nameInput && data.name) nameInput.value = data.name;
+                    if (catSelect && data.category) catSelect.value = data.category.toLowerCase();
+                }
 
-                // Attach event listener to the new Remove button
-                initialForm.querySelector('.removeFormButton').addEventListener('click', function() {
-                    initialForm.remove();
-                    updateRemoveButtons();
+                formContainer.appendChild(newForm);
+                updateFormMeta();
+            }
+
+            addFormButton.addEventListener('click', () => createNewForm());
+
+            // Bulk Parsing Logic
+            parseTextareaButton.addEventListener('click', function() {
+                const text = persistentTextarea.value.trim();
+                if (!text) return;
+
+                const lines = text.split('\n');
+                let formsAdded = 0;
+
+                lines.forEach(line => {
+                    // Try to parse format: Number - Name - Category
+                    // or just Name
+                    const parts = line.split('-').map(p => p.trim());
+                    
+                    let data = {
+                        number: '',
+                        name: '',
+                        category: ''
+                    };
+
+                    if (parts.length >= 2) {
+                        data.number = parts[0];
+                        data.name = parts[1];
+                        if (parts[2]) data.category = parts[2];
+                    } else {
+                        data.name = line;
+                    }
+
+                    if (data.name) {
+                        createNewForm(data);
+                        formsAdded++;
+                    }
                 });
 
-                updateRemoveButtons();
+                if (formsAdded > 0) {
+                    // Remove initial empty form if it was the only one and is still empty
+                    const allForms = document.querySelectorAll('.contestant-form');
+                    const firstForm = allForms[0];
+                    const firstFormName = firstForm.querySelector('input[type="text"]').value;
+                    if (allForms.length > formsAdded && !firstFormName) {
+                        firstForm.remove();
+                        updateFormMeta();
+                    }
+                }
             });
 
-            // Attach event listener to the initial Remove button
-            document.querySelector('.removeFormButton').addEventListener('click', function() {
-                this.closest('.contestant-form').remove();
-                updateRemoveButtons();
-            });
+            // Ensure the initial form preview element uses class instead of ID
+            const initialPreview = document.getElementById('imagePreview');
+            if (initialPreview) {
+                initialPreview.id = '';
+                initialPreview.classList.add('imagePreview');
+            }
 
-            // Initial call to update remove button visibility and form count
-            updateRemoveButtons();
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const textarea = document.getElementById('persistentTextarea');
-
-            // Load saved text from localStorage
-            textarea.value = localStorage.getItem('textareaContent') || '';
-
-            // Save text to localStorage on input
-            textarea.addEventListener('input', function() {
-                localStorage.setItem('textareaContent', textarea.value);
-            });
+            updateFormMeta();
         });
     </script>
 @endsection
