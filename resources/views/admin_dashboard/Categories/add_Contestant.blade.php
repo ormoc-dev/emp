@@ -12,6 +12,17 @@
         <x-alert type="error" :message="session('error')" />
     @endif
 
+    @if ($errors->any())
+        <div class="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <p class="font-medium mb-2">Could not add contestant(s):</p>
+            <ul class="list-disc list-inside space-y-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Main Content Section -->
     <div class="flex">
         <!-- Form Section -->

@@ -54,10 +54,10 @@ class ContestantController extends Controller
             'number' => 'required|array',
             'number.*' => 'required|integer',
             'profile' => 'nullable|array',
-            'profile.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile.*' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:10240',
             'category' => 'nullable|array',
             'category.*' => 'nullable|in:male,female',
-        ]);
+        ],);
 
         $event_id = $request->input('event_id');
         $names = $request->input('name');
@@ -118,7 +118,11 @@ class ContestantController extends Controller
             'name' => 'required|string|max:255',
             'number' => 'required|integer',
             'category' => 'nullable|in:male,female',
-            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:10240',
+        ], [
+            'profile.image' => 'The profile must be a valid image file (JPG, PNG, GIF, or WEBP).',
+            'profile.mimes' => 'The profile must be a JPG, PNG, GIF, or WEBP file.',
+            'profile.max' => 'The profile image must not be larger than 10MB.',
         ]);
 
         $contestant->name = $validatedData['name'];
